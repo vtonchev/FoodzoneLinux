@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
     category: {type: Schema.Types.ObjectId, ref:"Category"},
-    owner: {type: Schema.Types.ObjectId, ref:"Owner"},
+    subcategory: {type: Schema.Types.ObjectId, ref:"Subcategory"},
     title: String,
     description: String,
     photo: String,

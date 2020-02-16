@@ -36,10 +36,12 @@ app.use(bodyParser.urlencoded({ extended: false}));  //false cant pass data norm
 // require apis
 const productRoutes = require("./routes/product");
 const categoryRoutes = require("./routes/category");
+const subcategoryRoutes = require("./routes/subcategory");
 
 
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
+app.use("/api", subcategoryRoutes);
 
 app.listen(3000, (err) => {
     if(!err){

@@ -8,17 +8,18 @@
                 <b-collapse id="nav-collapse" is-nav>
                     <b-navbar-nav>
                         <!-- Home button -->
-                        <b-nav-item href="#">Начало</b-nav-item>
+                        <b-nav-item href="/">Начало</b-nav-item>
                         <!-- Product dropdown -->
                         <b-nav-item-dropdown text="Продукти"> 
                             <b-dropdown-item href="/product/create">Добави</b-dropdown-item>
-                            <b-dropdown-item href="#">Промени</b-dropdown-item>
-                            <b-dropdown-item href="#">Изтрий</b-dropdown-item>
+                            <b-dropdown-item href="/product/update">Промени</b-dropdown-item>
+                            <b-dropdown-item href="/product/delete">Изтрий</b-dropdown-item>
                         </b-nav-item-dropdown>
                         <!-- Category dropdown -->
                         <b-nav-item-dropdown text="Категории"> 
-                            <b-dropdown-item href="#">Добави</b-dropdown-item>
-                            <b-dropdown-item href="#">Изтрий</b-dropdown-item>
+                            <b-dropdown-item href="/category/create">Добави</b-dropdown-item>
+                            <b-dropdown-item href="/category/update">Промени</b-dropdown-item>
+                            <b-dropdown-item href="/category/delete">Изтрий</b-dropdown-item>
                         </b-nav-item-dropdown>
 
                         
@@ -37,8 +38,8 @@
                             <template v-slot:button-content>
                                 <em>User</em>
                             </template>
-                            <b-dropdown-item href="#">Profile</b-dropdown-item>
-                            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+                            <b-dropdown-item href="#">Профил</b-dropdown-item>
+                            <b-dropdown-item href="#">Изход</b-dropdown-item>
                         </b-nav-item-dropdown>
                     </b-navbar-nav>
                 </b-collapse>
