@@ -1,0 +1,18 @@
+h1{
+    text-align: center;
+}
+input,select,option,textarea{
+    border: solid 1px;
+    border-radius: 5px;
+}
+button{
+    width:20%;
+} 
+#page{
+    font-family: Arial, Helvetica, sans-serif;
+    width:40%;
+    margin:auto;
+}
+#form{
+    display:grid;
+}
