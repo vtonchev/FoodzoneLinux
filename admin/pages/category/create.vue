@@ -4,7 +4,7 @@
         <form id="form">
             <!-- Title -->
             <label for="title">Име</label>
-            <input class="width_100" id="title" type="text" name="title" v-model="title">
+            <input class="width_100" id="title" type="text"  v-model="title">
             <!-- Photo -->
             <label for="photo">Изберете снимка</label>
             <i class="fal fa-plus"></i>

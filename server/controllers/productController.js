@@ -4,11 +4,14 @@ const Product = require("../models/product");
 exports.create_Product = async (req, res) => {
     try{
         const newProduct = new Product({
-            title: req.body.title,
-            description: req.body.description,
             category: req.body.categoryID,
             subcategory: req.body.subcategoryID,
-            photo: req.file.location,
+            title: req.body.title,
+            description: req.body.description,
+            photo: {
+                url: req.file.location,
+                key: req.file.key
+            },
             price: req.body.price,
             weight: req.body.weight,
             stockQuantity: req.body.stockQuantity
@@ -48,7 +51,7 @@ exports.get_All_Products = async (req, res) => {
 // GET products filtered by category
 exports.get_Products_By_Category = async (req, res) => {
     try{
-        const products = await Product.find({category: req.params.id}).populate("category").populate("subcategory").exec();
+        const products = await Product.find({category: req.params.id}).populate("category subcategory").exec();
         res.json({
             success: true,
             products: products
@@ -81,7 +84,7 @@ exports.get_Products_By_Subcategory = async (req, res) =>{
 // GET a single product 
 exports.get_Single_Product =  async (req, res) => {
     try{
-        const product = await Product.find({_id: req.params.id }).populate("category").populate("subcategory").exec();
+        const product = await Product.find({_id: req.params.id }).populate("category subcategory").exec();
         res.json({
             success: true,
             product: product
@@ -93,23 +96,12 @@ exports.get_Single_Product =  async (req, res) => {
         })
     }
 }
-
+// Change a single product
 exports.update_Single_Product = async (req, res) => {
     try{
         const product = await Product.findOneAndUpdate(
             {_id: req.params.id },
-            {
-            $set:{
-                    title: req.body.title,
-                    description: req.body.description,
-                    category: req.body.categoryID,
-                    photo: req.file.buffer,
-                    price: req.body.price,
-                    weight: req.body.weight,
-                    stockQuantity: req.body.stockQuantity         
-                },
-            },
-            {upsert: true} //if the object (product) does not exist then create one 
+            {$set: req.body }, 
         );
         res.json({
             success: true,
@@ -122,7 +114,7 @@ exports.update_Single_Product = async (req, res) => {
         })
     }
 }
-
+// delete  a single Product
 exports.delete_Single_Product = async (req, res) => {
     try{
         const deletedProduct = await Product.findOneAndDelete({ _id: req.params.id })
@@ -139,4 +131,13 @@ exports.delete_Single_Product = async (req, res) => {
             message: err.message
         })
     }
+}
+
+
+
+//////////////////////
+///// SOME TRIES /////
+
+exports.try = async (req, res) => {
+    
 }

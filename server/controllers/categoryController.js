@@ -4,19 +4,22 @@ const Category = require('../models/category');
 exports.create_Category = async (req, res) => {
     try{
         const newCategory = new Category({
-            type: req.body.type,
-            photo: req.file.location
+            title: req.body.title,
+            photo: {
+                url: req.file.location,
+                key: req.file.key
+            }
         })
         await newCategory.save();
 
         res.json({
             success: true,
-            message: "Successfuly created a new category"
+            message: "Вие успешно създадохте нова категория: " + req.body.title
         });
     } catch(err) {
         res.status(500).json({
             success:false,
-            message: err.message
+            message: err.message + "действието беше неуспешно" 
         })
     }
 }

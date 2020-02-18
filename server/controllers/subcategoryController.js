@@ -1,16 +1,20 @@
 const Subcategory = require("../models/subcategory");
-
+// create a new subcategory
 exports.create_Subcategory = async (req, res) => {
     try{
         const newSubcategory = new Subcategory({
-            type: req.body.type,
-            subcategory: req.body.subcategoryID
+            category: req.body.categoryID,
+            title: req.body.title,
+            photo: {
+                url: req.file.location,
+                key: req.file.key
+            }
         })
         await newSubcategory.save();
 
         res.json({
             success: true,
-            message: "Successfuly created a new subcategory inside category: "+ req.body.categoryID
+            message: "Успешно създадохте подкатегория в категория: " + category.title
         });
     } catch(err) {
         res.status(500).json({
@@ -20,9 +24,10 @@ exports.create_Subcategory = async (req, res) => {
     }
 }
 
+// GET Subcategories filltered by Category
 exports.get_Subcategories_By_Category = async (req, res) => {
     try{
-        const subcategories = await Subcategory.find({category: req.params.id}).populate("category").exec();
+        const subcategories = await Subcategory.find({category: req.params.id});
         res.json({
             success: true,
             subcategories: subcategories

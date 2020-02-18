@@ -11,15 +11,21 @@
                         <b-nav-item href="/">Начало</b-nav-item>
                         <!-- Product dropdown -->
                         <b-nav-item-dropdown text="Продукти"> 
-                            <b-dropdown-item href="/product/create">Добави</b-dropdown-item>
-                            <b-dropdown-item href="/product/update">Промени</b-dropdown-item>
-                            <b-dropdown-item href="/product/delete">Изтрий</b-dropdown-item>
+                            <b-dropdown-item href='/product/create'>Добави</b-dropdown-item>
+                            <b-dropdown-item href='/product/update'>Промени</b-dropdown-item>
+                            <b-dropdown-item href='/product/delete'>Изтрий</b-dropdown-item>
                         </b-nav-item-dropdown>
                         <!-- Category dropdown -->
                         <b-nav-item-dropdown text="Категории"> 
                             <b-dropdown-item href="/category/create">Добави</b-dropdown-item>
                             <b-dropdown-item href="/category/update">Промени</b-dropdown-item>
                             <b-dropdown-item href="/category/delete">Изтрий</b-dropdown-item>
+                        </b-nav-item-dropdown>
+                        <!-- Subcategory dropdown -->
+                        <b-nav-item-dropdown text="Подкатегории"> 
+                            <b-dropdown-item href="/subcategory/create">Добави</b-dropdown-item>
+                            <b-dropdown-item href="/subcategory/update">Промени</b-dropdown-item>
+                            <b-dropdown-item href="/subcategory/delete">Изтрий</b-dropdown-item>
                         </b-nav-item-dropdown>
 
                         

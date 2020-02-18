@@ -6,8 +6,12 @@ const productSchema = new Schema({
     subcategory: {type: Schema.Types.ObjectId, ref:"Subcategory"},
     title: String,
     description: String,
-    photo: String,
-    price: Number,
+    photo: {
+        url: String,
+        key: String
+    },
+    price: mongoose.Decimal128,
+    weight: mongoose.Decimal128,
     stockQuantity: Number,
     rating: [Number]
 })

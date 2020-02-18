@@ -1,0 +1,69 @@
+<template>
+    <div id="page">
+        <h1>Добавете нова подкатегория</h1>
+        <form id="form">
+            <!-- Category selection -->
+            <label for="category">Изберете категория</label>
+            <select name="categoryID" id="category" v-model="categoryID" @change="onCategorySelected">
+                <option v-for="category in categories" :value="category._id" :key="category._id">{{category.title}}</option>
+            </select>
+            <!-- title -->
+            <label for="type">Име</label>
+            <input class="width_100" id="title" type="text" v-model="title">
+            <!-- Photo -->
+            <label for="photo">Изберете снимка</label>
+            <i class="fas fa-plus"></i>
+            <input id="photo" type="file"  @change="onFileSelected" />
+            <button class="btn btn-success" @click="onAddSubcategory"> Добави </button>
+        </form>
+        <div>
+            <b-list-group>
+                <b-list-group-item v-for="subcategory in subcategories" :key="subcategory._id">
+                    {{subcategory.title}}
+                </b-list-group-item>
+            </b-list-group>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    async asyncData({ $axios }){
+        try {
+            const response = await $axios.$get("/api/categories")
+
+            return {
+                categories: response.categories
+            }
+            console.log(categories)
+        } catch(err) {
+            console.log(err)
+        }
+    },
+    data(){
+        return{
+            title:"",
+            categoryID: "", 
+            selectedFile: null,
+            subcategories:[]
+        }
+    },
+    methods:{
+        onFileSelected(event){
+            this.selectedFile = event.target.files[0];
+        },
+        async onCategorySelected({$axios}){
+            const response = await this.$axios.$get('/api/subcategories/categories/'+this.categoryID)
+            this.subcategories = response.subcategories
+        },
+        async onAddSubcategory(){
+            let data = new FormData();
+            data.append("categoryID", this.categoryID);
+            data.append("title", this.title);       
+            data.append("photo", this.selectedFile);    
+            let result = await this.$axios.$post("/api/subcategories", data);
+            this.$router.push("/");
+        }
+    }
+}
+</script>

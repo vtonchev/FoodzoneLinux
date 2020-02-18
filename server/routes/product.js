@@ -23,8 +23,8 @@ router.get("products/subcategories/:id", productController.get_Products_By_Subca
 //GET request - get a single product
 router.get("/products/:id", productController.get_Single_Product)
 
-//PUT request - Update a single product
-router.put("/products/:id", upload.single("photo") , productController.update_Single_Product)
+//PATCH request - Update a single product
+router.patch("/products/:id", upload.single("photo") , productController.update_Single_Product)
 
 //DELETE request - delete a single product
 router.delete("/products/:id", productController.delete_Single_Product)
