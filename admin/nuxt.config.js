@@ -17,7 +17,10 @@ export default {
     ],
     link: [
       { rel: 'stylesheet', href: '/css/default.css' }
-    ]
+    ],
+    script:[
+      { src:"https://kit.fontawesome.com/bac9e42282.js", crossorigin:"anonymous" }
+    ],
   },
   /*
   ** Customize the progress-bar color

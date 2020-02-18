@@ -1,39 +1,48 @@
 <template>
     <div id="page">
         <h1>Добавете нов продукт</h1>
-        <form id="form">
-            <!-- Category ID selection -->
-            <label for="category">Категория</label>
-            <select name="categoryID" id="category" v-model="categoryID" @change="onCategorySelected">
-                <option v-for="category in categories" :value="category._id" :key="category._id" >{{category.title}}</option>
-            </select>
-            <!-- Subcategory ID selection -->
-            <label for="subcategory">Подкатегория</label>
-            <select name="subcategoryID" id="subcategory" v-model="subcategoryID">
-                <option v-for="subcategory in subcategories" :value="subcategory._id" :key="subcategory._id">{{subcategory.title}}</option>
-            </select>
-            <!-- Title -->
-            <label for="title">Име</label>
-            <input class="width_100" id="title" type="text" name="title" v-model="title">
-            <!-- Price -->
-            <label for="price">Цена</label>
-            <input id="price" type="number" step=".01" v-model="price">
-            <!-- Weight -->
-            <label for="weight">Количество на единица продукт <em>(в грамове)</em></label>
-            <input id="weight" type="number" v-model="weight">
-            <!-- StockQuantity -->
-            <label for="stockQuantity">Наличност <em>(брой)</em></label>
-            <input id="stockQuantity" type="number" v-model="stockQuantity">
-            <!-- Description -->
-            <label for="description">Описание</label>
-            <textarea id="description" cols="30" rows="10" v-model="description"></textarea>
-            <!-- Photo -->
-            <label for="photo">Изберете снимка</label>
-            <i class="fal fa-plus"></i>
-            <input id="photo" type="file"  @change="onFileSelected" />
-            <button class="btn btn-success" @click="onAddProduct" >Добави</button>
+        <div class="d-flex justify-content-between">
+            <form id="form">
+                <!-- Category ID selection -->
+                <label for="category">Категория</label>
+                <select name="categoryID" id="category" v-model="categoryID" @change="onCategorySelected">
+                    <option v-for="category in categories" :value="category._id" :key="category._id" >{{category.title}}</option>
+                </select>
+                <!-- Subcategory ID selection -->
+                <label for="subcategory">Подкатегория</label>
+                <select name="subcategoryID" id="subcategory" v-model="subcategoryID">
+                    <option v-for="subcategory in subcategories" :value="subcategory._id" :key="subcategory._id">{{subcategory.title}}</option>
+                </select>
+                <!-- Title -->
+                <label for="title">Име</label>
+                <input class="width_100" id="title" type="text" name="title" v-model="title">
+                <!-- Price -->
+                <label for="price">Цена</label>
+                <input id="price" type="number" step=".01" v-model="price">
+                <!-- Weight -->
+                <label for="weight">Количество на единица продукт <em>(в грамове)</em></label>
+                <input id="weight" type="number" v-model="weight">
+                <!-- StockQuantity -->
+                <label for="stockQuantity">Наличност <em>(брой)</em></label>
+                <input id="stockQuantity" type="number" v-model="stockQuantity">
+                <!-- Description -->
+                <label for="description">Описание</label>
+                <textarea id="description" cols="30" rows="10" v-model="description"></textarea>
+                <!-- Photo -->
+                <label for="photo">Изберете снимка</label>
+                <i class="fal fa-plus"></i>
+                <input id="photo" type="file"  @change="onFileSelected" />
+                <button class="btn btn-success" @click="onAddProduct" >Добави</button>
+            </form>
+            <div id="image_preview">
+                <img v-if="imageUrl" :src="imageUrl" />
+            </div>
+        </div>
+            
+        <form>
+
         </form>
-            <div id="message">
+            <div v-if="message" id="message">
                 <p>{{message}}</p>
             </div>
     </div>    
@@ -66,12 +75,14 @@ export default {
             description: "",
             weight: 0,
             stockQuantity: 0,
-            selectedFile: null,        
+            selectedFile: null, 
+            imageUrl:""       
         }
     },
     methods:{
         onFileSelected(event){
             this.selectedFile = event.target.files[0];
+            this.imageUrl = URL.createObjectURL(this.selectedFile)
         },
         // show all subcategories of the selected category
         async onCategorySelected( {$axios} ){
@@ -89,7 +100,7 @@ export default {
             data.append("description", this.description);    
             data.append("photo", this.selectedFile);    
             const result = await this.$axios.$post("/api/products", data);
-            this.message = result.message
+            this.message = await result.message
         }
     }
 }

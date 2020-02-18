@@ -16,7 +16,6 @@ dotenv.config();
 app.use(cors());
 
 // Database connection
-mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

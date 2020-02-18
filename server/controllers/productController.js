@@ -35,7 +35,7 @@ exports.create_Product = async (req, res) => {
 // GET all products 
 exports.get_All_Products = async (req, res) => {
     try{
-        const products = await Product.find().populate("category").populate("subcategory").exec();
+        const products = await Product.find().populate("category subcategory").exec();
         res.json({
             success: true,
             products: products
@@ -68,7 +68,8 @@ exports.get_Products_By_Category = async (req, res) => {
 
 exports.get_Products_By_Subcategory = async (req, res) =>{
     try {
-        const products = await Product.find({subcategory: req.params.id}).populate("category").populate("subcategory").exec();
+        const products = await Product.find({subcategory: req.params.id}).populate("category subcategory").exec();
+        console.log(products)
         res.json({
             success: true,
             products: products

@@ -6,11 +6,13 @@
             <!-- Category ID selection -->
             <label for="category">Категория</label>
             <select  id="category" v-model="categoryID"  @change="onCategorySelected">
-                <option v-for="category in categories" :value="category._id" :key="category._id" >{{category.title}}</option>
+                <option disabled selected>{{product[0].category.title}}</option>
+                <option v-for="category in categories" :value="category._id" :key="category._id">{{category.title}}</option>
             </select>
             <!-- Subcategory ID selection -->
             <label for="subcategory">Подкатегория</label>
             <select  id="subcategory"  v-model="subcategoryID">
+                <option disabled selected>{{product[0].subcategory.title}}</option>
                 <option v-for="subcategory in subcategories" :value="subcategory._id" :key="subcategory._id" >{{subcategory.title}}</option>
             </select>
             <!-- Title -->
@@ -87,10 +89,10 @@ export default {
         async onUpdateProduct({ params }){
             const data = new FormData();
             if(this.categoryID){
-                data.append("categoryID", this.categoryID);
+                data.append("category", this.categoryID);
             }
-            if(this.subcategoryId){
-                data.append("subcategoryID", this.subcategoryID);
+            if(this.subcategoryID){
+                data.append("subcategory", this.subcategoryID);
             }
             if(this.title){
                 data.append("title", this.title);
