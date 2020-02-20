@@ -18,19 +18,18 @@
                 <input class="width_100" id="title" type="text" name="title" v-model="title">
                 <!-- Price -->
                 <label for="price">Цена</label>
-                <input id="price" type="number" step=".01" v-model="price">
+                <input id="price" type="number" step=".01" v-model="price"  placeholder="0">
                 <!-- Weight -->
                 <label for="weight">Количество на единица продукт <em>(в грамове)</em></label>
-                <input id="weight" type="number" v-model="weight">
+                <input id="weight" type="number" v-model="weight" placeholder="0">
                 <!-- StockQuantity -->
                 <label for="stockQuantity">Наличност <em>(брой)</em></label>
-                <input id="stockQuantity" type="number" v-model="stockQuantity">
+                <input id="stockQuantity" type="number" v-model="stockQuantity"  placeholder="0">
                 <!-- Description -->
                 <label for="description">Описание</label>
-                <textarea id="description" cols="30" rows="10" v-model="description"></textarea>
+                <textarea id="description" rows="2" v-model="description"></textarea>
                 <!-- Photo -->
                 <label for="photo">Изберете снимка</label>
-                <i class="fal fa-plus"></i>
                 <input id="photo" type="file"  @change="onFileSelected" />
                 <button class="btn btn-success" @click="onAddProduct" >Добави</button>
             </form>
@@ -48,8 +47,10 @@
     </div>    
 </template>
 
-<style>
-   
+<style scoped>
+   img{
+       width:100%;
+   }
 </style>
 
 <script>
@@ -71,10 +72,10 @@ export default {
             categoryID: null,
             subcategoryID: null,
             title: "",
-            price: 0,
+            price: null,
             description: "",
-            weight: 0,
-            stockQuantity: 0,
+            weight: null,
+            stockQuantity: null,
             selectedFile: null, 
             imageUrl:""       
         }

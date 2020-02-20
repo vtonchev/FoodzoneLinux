@@ -1,20 +1,19 @@
 <template >
-    <div>
+    <b-col>
         <b-card
-            :title="product.title"
             :img-src="product.photo.url"
             img-top
             tag="article"
-            style="max-width: 20rem;"
+            style="max-width: 20rem; "
             class="mb-2"
-        >
-            <b-card-text>
-            {{product.description}}
-            </b-card-text>
+        >   <b-card-sub-title class="mb-3">
+                {{product.category.title}}, {{product.subcategory.title}}
+            </b-card-sub-title>
+            <b-card-title>{{product.title}}</b-card-title>
             <n-link :to="{ name: 'product-update-id', params: {id: product._id} }" ><b-button  variant="primary">Промени</b-button></n-link>
             <b-button  variant="danger" @click="onDelete">Изтрий</b-button>
         </b-card>
-    </div>
+    </b-col>
 </template>
 
 <script>
@@ -29,7 +28,15 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+    .card-title{
+        font-size: 1rem;
+        height:40px;
+    }
+    img{
+        width:100%;
+        height:auto;
+        max-height:250px;
+    }
 </style>
 

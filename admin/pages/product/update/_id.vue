@@ -2,7 +2,6 @@
     <div id="page">
         <h1>Промяна на продукта</h1>
         <form id="form">
-            <img :src="product[0].photo.url" alt="">
             <!-- Category ID selection -->
             <label for="category">Категория</label>
             <select  id="category" v-model="categoryID"  @change="onCategorySelected">
@@ -32,10 +31,12 @@
             <textarea id="description" cols="30" rows="10" v-model="description" :placeholder="product[0].description"></textarea>
             <!-- Photo -->
             <label for="photo">Изберете снимка</label>
-            <i class="fal fa-plus"></i>
             <input id="photo" type="file"  @change="onFileSelected" />
             <button class="btn btn-success" @click="onUpdateProduct" >Промени</button>
         </form>
+        <div style="width:50%;">
+            <img :src="product[0].photo.url" alt="">
+        </div>
     </div>
 </template>
 <style>

@@ -25,7 +25,7 @@ export default {
 
 <style>
 .modal-backdrop{
-    z-index:0;
+    z-index:1;
 }
 body {
   font-family: 'Roboto', sans-serif;
@@ -34,7 +34,7 @@ body {
 p, header{
   margin:0;
   padding:0;
-  z-index: 1;
+  z-index: 2;
 }
 header{
   position:sticky;
