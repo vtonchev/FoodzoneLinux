@@ -23,7 +23,7 @@
                 </div>
                     <button type="submit" class="btn btn-primary">Вход</button>
                 <div class="mt-1">
-                    <nuxt-link to="/registration" class="d-block">Регистрация</nuxt-link>
+                    <nuxt-link to="/signup" class="d-block">Регистрация</nuxt-link>
                     <a class="d-block" href="#">Забравена парола</a>
                 </div>
                 </form>

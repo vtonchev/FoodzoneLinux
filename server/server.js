@@ -16,10 +16,11 @@ dotenv.config();
 app.use(cors());
 
 // Database connection
+mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true
+  useCreateIndex: true,
 }, (err) => {
     if(!err){
         console.log("Connected to the database")
@@ -37,12 +38,13 @@ app.use(bodyParser.urlencoded({ extended: false}));  //false cant pass data norm
 const productRoutes = require("./routes/product");
 const categoryRoutes = require("./routes/category");
 const subcategoryRoutes = require("./routes/subcategory");
+const authRoutes = require('./routes/auth');
 
 
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", subcategoryRoutes);
-
+app.use("/api", authRoutes);
 app.listen(3000, (err) => {
     if(!err){
         console.log("Listening on PORT",3000);

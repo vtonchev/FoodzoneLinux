@@ -2,55 +2,129 @@
     <div id="page">
         <h1>Добавете нов продукт</h1>
         <div class="d-flex justify-content-between">
-            <form id="form">
-                <!-- Category ID selection -->
-                <label for="category">Категория</label>
-                <select name="categoryID" id="category" v-model="categoryID" @change="onCategorySelected">
-                    <option v-for="category in categories" :value="category._id" :key="category._id" >{{category.title}}</option>
-                </select>
-                <!-- Subcategory ID selection -->
-                <label for="subcategory">Подкатегория</label>
-                <select name="subcategoryID" id="subcategory" v-model="subcategoryID">
-                    <option v-for="subcategory in subcategories" :value="subcategory._id" :key="subcategory._id">{{subcategory.title}}</option>
-                </select>
-                <!-- Title -->
-                <label for="title">Име</label>
-                <input class="width_100" id="title" type="text" name="title" v-model="title">
-                <!-- Price -->
-                <label for="price">Цена</label>
-                <input id="price" type="number" step=".01" v-model="price"  placeholder="0">
-                <!-- Weight -->
-                <label for="weight">Количество на единица продукт <em>(в грамове)</em></label>
-                <input id="weight" type="number" v-model="weight" placeholder="0">
-                <!-- StockQuantity -->
-                <label for="stockQuantity">Наличност <em>(брой)</em></label>
-                <input id="stockQuantity" type="number" v-model="stockQuantity"  placeholder="0">
-                <!-- Description -->
-                <label for="description">Описание</label>
-                <textarea id="description" rows="2" v-model="description"></textarea>
-                <!-- Photo -->
-                <label for="photo">Изберете снимка</label>
-                <input id="photo" type="file"  @change="onFileSelected" />
-                <button class="btn btn-success" @click="onAddProduct" >Добави</button>
-            </form>
-            <div id="image_preview">
-                <img v-if="imageUrl" :src="imageUrl" />
+            <div class="w-30">
+                <div id="form">
+                    <!-- Category ID selection -->
+                    <label for="category">Категория</label>
+                    <select name="categoryID" id="category" v-model="categoryID" @change="onCategorySelected">
+                        <option v-for="category in categories" :value="category._id" :key="category._id" >{{category.title}}</option>
+                    </select>
+                    <!-- Subcategory ID selection -->
+                    <label for="subcategory">Подкатегория</label>
+                    <select name="subcategoryID" id="subcategory" v-model="subcategoryID">
+                        <option v-for="subcategory in subcategories" :value="subcategory._id" :key="subcategory._id">{{subcategory.title}}</option>
+                    </select>
+                    <!-- Title -->
+                    <label for="title">Име</label>
+                    <input class="width_100" id="title" type="text" name="title" v-model="title">
+                    <!-- Price -->
+                    <label for="price">Цена</label>
+                    <input id="price" type="number" step=".01" v-model="price"  placeholder="0">
+                    <!-- Weight -->
+                    <label for="weight">Количество на единица продукт <em>(в грамове)</em></label>
+                    <input id="weight" type="number" v-model="weight" placeholder="0">
+                    <!-- StockQuantity -->
+                    <label for="stockQuantity">Наличност <em>(брой)</em></label>
+                    <input id="stockQuantity" type="number" v-model="stockQuantity"  placeholder="0">
+                    <!-- Description -->
+                    <label for="description">Описание</label>
+                    <textarea id="description" rows="2" v-model="description"></textarea>
+                    <!-- On sale -->
+                    <label for='sale'>Промоция<em>(в проценти)</em></label>
+                    <input id='sale' type='number' v-model="sale">
+                    <!-- Photo -->
+                    <label for="photo">Изберете снимка</label>
+                    <input id="photo" type="file"  @change="onFileSelected" />
+                    <button class="btn btn-success" @click="onAddProduct" >Добави</button>
+                </div>
+            </div>
+
+            <!-- Show the selected image -->
+            <div class="mx-5 w-25">
+                <div id="image_preview" style="border:solid 1px; border-style:dashed;">
+                    <img v-if="imageUrl" :src="imageUrl" />
+                    <div v-else style="width:100%; height:320px; margin:auto;"><p style="width:100%; text-align:center;">Добави снимка</p></div>
+                </div>
+                <div style="display:grid">
+                    <label for="ingriedients">Съставки</label>
+                    <textarea id="ingriedients" rows="1" v-model="properties.ingriedients"></textarea>
+                    <label for="storage_conditions">Условия за съхранение</label>
+                    <textarea id="storage_conditions" rows="1" v-model="properties.storageConditions"></textarea>
+                    <label for="consumation">Начин на употреба</label>
+                    <textarea id="consumation" rows="1" v-model="properties.consumtionWay"></textarea>
+                    <label for="manufacturer">Производител</label>
+                    <input id="manufacturer" type="text" v-model="properties.manufacturer">
+                </div>
+            </div>
+            
+            <!-- Хранителна стойност -->
+            <div class="w-30">
+                <table>
+                    <tr>
+                        <th>Хранителна стойност за:</th>
+                        <th>100г</th>
+                    </tr>
+                    <tr>
+                        <td>Енергийност (ккал/ kJ)</td>
+                        <td><input type="text" v-model="properties.calories"></td>
+                    </tr>
+                    <tr>
+                        <td>Въглехидрати(г)</td>
+                        <td><input type="text" v-model="properties.carbohydrates"></td>
+                    </tr>
+                    <tr>
+                        <td>от които захари (г)</td>
+                        <td><input type="text" v-model="properties.sugars"></td>
+                    </tr>
+                    <tr>
+                        <td>Мазнини (г)</td>
+                        <td><input type="text" v-model="properties.fats"></td>
+                    </tr>
+                    <tr>
+                        <td>от които наситени (г)</td>
+                        <td><input type="text" v-model="properties.saturated"></td>
+                    </tr>
+                    <tr>
+                        <td>Протеини (г)</td>
+                        <td><input type="text" v-model="properties.proteins"></td>
+                    </tr>
+                    <tr>
+                        <td>Сол (г)</td>
+                        <td><input type="text" v-model="properties.salt"></td>
+                    </tr>   
+                    <tr>
+                        <td>Фибри (г)</td>
+                        <td><input type="text" v-model="properties.fibers"></td>
+                    </tr>         
+                </table>
+                <div style="width:100%; height:2rem;"></div>
+                <table style="width:100%;">
+                    <tr>
+                        <td class="w-50">Срок на годност:</td>
+                        <td><input type="date" v-model="properties.expirationDate"></td>
+                    </tr>
+                    <tr>
+                        <td class="w-50">Марка:</td>
+                        <td><input type="text" v-model="properties.brand"></td>
+                    </tr>
+                    <tr>
+                        <td class="w-50">Произход:</td>
+                        <td><input type="text" placeholder="страна" v-model="properties.origin"></td>
+                    </tr>
+                </table>
+                <div style="width:100%; height:2rem;"></div>
+                
             </div>
         </div>
-            
-        <form>
-
-        </form>
-            <div v-if="message" id="message">
-                <p>{{message}}</p>
-            </div>
     </div>    
 </template>
 
 <style scoped>
-   img{
-       width:100%;
-   }
+    
+    img  {
+        width:100%;
+        max-height:320px;
+    }
 </style>
 
 <script>
@@ -66,8 +140,7 @@ export default {
         }
     },
     data(){
-        return{
-            message:"",
+        return {
             subcategories: [],
             categoryID: null,
             subcategoryID: null,
@@ -76,19 +149,39 @@ export default {
             description: "",
             weight: null,
             stockQuantity: null,
-            selectedFile: null, 
-            imageUrl:""       
+            selectedFile: null,
+            sale:null,
+            imageUrl:"",
+            properties:{
+                ingriedients: '',
+                storageConditions: '',
+                consumtionWay: '',
+                manufacturer: '',
+                calories: '',
+                carbohydrates: '',
+                sugars: '',
+                fats: '',
+                saturated: '',
+                proteins: '',
+                salt: '',
+                fibers: '',
+                expirationDate: '',
+                brand: '',
+                origin: ''
+            }
         }
     },
     methods:{
         onFileSelected(event){
             this.selectedFile = event.target.files[0];
             this.imageUrl = URL.createObjectURL(this.selectedFile)
+            
         },
         // show all subcategories of the selected category
         async onCategorySelected( {$axios} ){
             const response = await this.$axios.$get("/api/subcategories/categories/" + this.categoryID)
             this.subcategories = response.subcategories
+            this.subcategoryID = null;
         },
         async onAddProduct(){
             const data = new FormData();
@@ -99,7 +192,8 @@ export default {
             data.append("weight", this.weight);    
             data.append("stockQuantity", this.stockQuantity);    
             data.append("description", this.description);    
-            data.append("photo", this.selectedFile);    
+            data.append("photo", this.selectedFile);
+            data.append("properties", JSON.stringify(this.properties));  
             const result = await this.$axios.$post("/api/products", data);
             this.message = await result.message
         }

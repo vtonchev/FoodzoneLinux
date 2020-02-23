@@ -40,3 +40,25 @@ exports.get_All_Categories = async (req, res) => {
         })
     }
 }
+
+exports.update_A_Single_Category = async (req, res) => { 
+    try {
+        await Category.findOneAndUpdate({_id: req.params.id },
+            {
+                $set: req.body
+            }
+        )
+        if(req.file !== undefined){
+            await Category.findOneAndUpdate({_id:req.params.id},{
+                $set: {
+                    photo: {
+                        url: req.file.location,                                  
+                        key: req.file.key       
+                    }
+                }
+            })
+        }   
+    } catch {
+
+    };
+}

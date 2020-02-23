@@ -14,7 +14,8 @@ exports.create_Product = async (req, res) => {
             },
             price: req.body.price,
             weight: req.body.weight,
-            stockQuantity: req.body.stockQuantity
+            stockQuantity: req.body.stockQuantity,
+            properties: JSON.parse(req.body.properties),    
         });
         await newProduct.save();
         res.json({
@@ -69,7 +70,6 @@ exports.get_Products_By_Category = async (req, res) => {
 exports.get_Products_By_Subcategory = async (req, res) =>{
     try {
         const products = await Product.find({subcategory: req.params.id}).populate("category subcategory").exec();
-        console.log(products)
         res.json({
             success: true,
             products: products
@@ -97,22 +97,36 @@ exports.get_Single_Product =  async (req, res) => {
         })
     }
 }
-// Change a single product
+// Update a single product
 exports.update_Single_Product = async (req, res) => {
     try{
-        const product = await Product.findOneAndUpdate(
-            {_id: req.params.id },
-            {$set: req.body }, 
-        );
+        req.body.properties = JSON.parse(req.body.properties);
+        console.log(req.body);
+        await Product.findOneAndUpdate({_id: req.params.id },
+            {
+                $set: req.body
+            }
+        )
+        if(req.file !== undefined){
+            await Product.findOneAndUpdate({_id:req.params.id},{
+                $set: {
+                    photo: {
+                        url: req.file.location,
+                        key: req.file.key
+                    }
+                }
+            })
+        }   
         res.json({
             success: true,
-            updatedProduct: product
         })
     } catch(err) {
+        console.log(err.message);
         res.status(500).json({
             success:false,
             message: err.message
         })
+        
     }
 }
 // delete  a single Product

@@ -11,7 +11,7 @@
             </b-card-sub-title>
             <b-card-title>{{product.title}}</b-card-title>
             <n-link :to="{ name: 'product-update-id', params: {id: product._id} }" ><b-button  variant="primary">Промени</b-button></n-link>
-            <b-button  variant="danger" @click="onDelete">Изтрий</b-button>
+            <b-button  variant="outline-danger" @click="onDelete"><i class="far fa-trash-alt"></i></b-button>
         </b-card>
     </b-col>
 </template>
@@ -21,6 +21,7 @@ export default {
     props:['product'],
     methods:{
         async onDelete({ $axios, $router}){
+            
             await this.$axios.$delete('api/products/'+ this.product._id);
             this.$router.go();
         }

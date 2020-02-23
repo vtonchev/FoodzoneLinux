@@ -54,12 +54,18 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
+    '@nuxtjs/auth'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    proxy: true,
+    baseURL: "http://localhost:3000"
+  },
+  proxy:{
+    '/api': "http://localhost:3000"
   },
   /*
   ** Build configuration
@@ -69,6 +75,18 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+    }
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            propertyName: 'token'
+          },
+          logout: true
+        }
+      }
     }
   }
 }

@@ -24,7 +24,7 @@ router.get("/products/subcategories/:id", productController.get_Products_By_Subc
 router.get("/products/:id", productController.get_Single_Product)
 
 //PATCH request - Update a single product
-router.patch("/products/:id", upload.single("photo") , productController.update_Single_Product)
+router.patch("/products/:id", upload.single("photo"), productController.update_Single_Product)
 
 //DELETE request - delete a single product
 router.delete("/products/:id", productController.delete_Single_Product)

@@ -16,13 +16,15 @@ button{
     margin:auto;
 }
 #form{
-    width:50%;
-    display: inline-grid;
+    display: grid;
+}
+.w-30{
+    width:35%;
 }
 #image_preview{
-    width:20%;
+    width:100%;
     margin: 0 auto;
-    display: inline-grid;
+    display: grid;
 }
 
 input:focus, select:focus, textarea:focus{

@@ -26,7 +26,14 @@
                         </li>
                     </ul>
                     <div class="text-center text-sm-left">
-                    <LoginPanel />
+                        <template v-if='$auth.$state.loggedIn'>
+                            <a href="#" type="button"  data-toggle="modal" data-target="#login_panel" aria-haspopup="true" aria-expanded="false">
+                                Здравейте, {{$auth.$state.user.name}}
+                            </a>                            
+                        </template>
+                        <template v-else>
+                            <LoginPanel />
+                        </template>
                     </div>
                 </div>
             </nav>
