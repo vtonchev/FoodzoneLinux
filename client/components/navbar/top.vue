@@ -27,9 +27,12 @@
                     </ul>
                     <div class="text-center text-sm-left">
                         <template v-if='$auth.$state.loggedIn'>
-                            <a href="#" type="button"  data-toggle="modal" data-target="#login_panel" aria-haspopup="true" aria-expanded="false">
-                                Здравейте, {{$auth.$state.user.name}}
-                            </a>                            
+
+                            <a href="#">
+                                Здравейте, {{$auth.$state.user.name.firstName}}
+                            </a>
+                            <span> | </span>
+                            <a href="#" @click="onLogout">изход</a>                            
                         </template>
                         <template v-else>
                             <LoginPanel />
@@ -47,6 +50,11 @@ import LoginPanel from "~/components/navbar/loginPanel"
 export default {
     components:{
         LoginPanel
+    },
+    methods:{
+        async onLogout(){
+           await this.$auth.logout();
+        }
     }
 }
 </script>

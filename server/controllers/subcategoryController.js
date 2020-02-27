@@ -23,7 +23,21 @@ exports.create_Subcategory = async (req, res) => {
         })
     }
 }
-
+//GET a single Subcategory
+exports.get_A_Single_Subcategory = async (req, res) => {
+    try{
+        const subcategory = await Subcategory.find({_id: req.params.id});
+        res.json({
+            success: true,
+            subcategory: subcategory
+        })
+    } catch(err) {
+        res.status(500).json({
+            success:false,
+            message: err.message
+        })
+    }
+}
 // GET Subcategories filltered by Category
 exports.get_Subcategories_By_Category = async (req, res) => {
     try{

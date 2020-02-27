@@ -40,8 +40,8 @@
                     <img :src="imageUrl" />
                 </div>
                 <div style="display:grid">
-                    <label for="ingriedients">Съставки</label>
-                    <textarea id="ingriedients" rows="1" v-model="properties.ingredients" :placeholder="product[0].properties.ingredients"></textarea>
+                    <label for="ingredients">Съставки</label>
+                    <textarea id="ingredients" rows="1" v-model="properties.ingredients" ></textarea>
                     <label for="storage_conditions">Условия за съхранение</label>
                     <textarea id="storage_conditions" rows="1" v-model="properties.storageConditions"></textarea>
                     <label for="consumation">Начин на употреба</label>
@@ -53,57 +53,63 @@
             <!-- Хранителна стойност -->
             <div class="w-30">
                 <table>
-                    <tr>
-                        <th>Хранителна стойност за:</th>
-                        <th>100г</th>
-                    </tr>
-                    <tr>
-                        <td>Енергийност (ккал/ kJ)</td>
-                        <td><input type="text" v-model="properties.calories"></td>
-                    </tr>
-                    <tr>
-                        <td>Въглехидрати(г)</td>
-                        <td><input type="text" v-model="properties.carbohydrates"></td>
-                    </tr>
-                    <tr>
-                        <td>от които захари (г)</td>
-                        <td><input type="text" v-model="properties.sugars"></td>
-                    </tr>
-                    <tr>
-                        <td>Мазнини (г)</td>
-                        <td><input type="text" v-model="properties.fats"></td>
-                    </tr>
-                    <tr>
-                        <td>от които наситени (г)</td>
-                        <td><input type="text" v-model="properties.saturated"></td>
-                    </tr>
-                    <tr>
-                        <td>Протеини (г)</td>
-                        <td><input type="text" v-model="properties.proteins"></td>
-                    </tr>
-                    <tr>
-                        <td>Сол (г)</td>
-                        <td><input type="text" v-model="properties.salt"></td>
-                    </tr>   
-                    <tr>
-                        <td>Фибри (г)</td>
-                        <td><input type="text" v-model="properties.fibers"></td>
-                    </tr>         
+                    <thead>
+                        <tr>
+                            <th>Хранителна стойност за:</th>
+                            <th>100г</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Енергийност (ккал/ kJ)</td>
+                            <td><input type="text" v-model="properties.calories"></td>
+                        </tr>
+                        <tr>
+                            <td>Въглехидрати(г)</td>
+                            <td><input type="text" v-model="properties.carbohydrates"></td>
+                        </tr>
+                        <tr>
+                            <td>от които захари (г)</td>
+                            <td><input type="text" v-model="properties.sugars"></td>
+                        </tr>
+                        <tr>
+                            <td>Мазнини (г)</td>
+                            <td><input type="text" v-model="properties.fats"></td>
+                        </tr>
+                        <tr>
+                            <td>от които наситени (г)</td>
+                            <td><input type="text" v-model="properties.saturated"></td>
+                        </tr>
+                        <tr>
+                            <td>Протеини (г)</td>
+                            <td><input type="text" v-model="properties.proteins"></td>
+                        </tr>
+                        <tr>
+                            <td>Сол (г)</td>
+                            <td><input type="text" v-model="properties.salt"></td>
+                        </tr>   
+                        <tr>
+                            <td>Фибри (г)</td>
+                            <td><input type="text" v-model="properties.fibers"></td>
+                        </tr>   
+                    </tbody>      
                 </table>
                 <div style="width:100%; height:2rem;"></div>
                 <table style="width:100%;">
-                    <tr>
-                        <td class="w-50">Срок на годност:</td>
-                        <td><input type="date" v-model="properties.expirationDate"></td>
-                    </tr>
-                    <tr>
-                        <td class="w-50">Марка:</td>
-                        <td><input type="text" v-model="properties.brand"></td>
-                    </tr>
-                    <tr>
-                        <td class="w-50">Произход:</td>
-                        <td><input type="text" placeholder="страна" v-model="properties.origin"></td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td class="w-50">Срок на годност:</td>
+                            <td><input type="date"  v-model="properties.expirationDate"></td>
+                        </tr>
+                        <tr>
+                            <td class="w-50">Марка:</td>
+                            <td><input type="text" v-model="properties.brand"></td>
+                        </tr>
+                        <tr>
+                            <td class="w-50">Произход:</td>
+                            <td><input type="text" placeholder="страна" v-model="properties.origin"></td>
+                        </tr>
+                    </tbody>
                 </table>
                 <div style="width:100%; height:2rem;"></div>  
             </div> 
@@ -135,29 +141,30 @@ export default {
         }
     },
     created () {
-        const expirationDate = new Date(this.product[0].properties.expirationDate).toISOString().slice(0,10);
+        //CategoryID SubcategoryID and img !!!!!!! ALLWAYS NEEDED !!!!!!
         this.categoryID = this.product[0].category._id;
         this.$axios.$get("/api/subcategories/categories/" + this.categoryID)
         .then(response => this.subcategories = response.subcategories);
         this.subcategoryID = this.product[0].subcategory._id;
-        this.imageUrl = this.product[0].photo.url;
-        this.properties = {
-            ingredients: this.product[0].properties.ingredients,
-            storageConditions: this.product[0].properties.storageConditions,
-            consumtionWay: this.product[0].properties.consumtionWay,
-            manufacturer: this.product[0].properties.manufacturer,
-            calories: this.product[0].properties.calories,
-            carbohydrates: this.product[0].properties.carbohydrates,
-            sugars: this.product[0].properties.sugars,
-            fats: this.product[0].properties.fats,
-            saturated: this.product[0].properties.saturated,
-            proteins: this.product[0].properties.proteins,
-            salt: this.product[0].properties.salt,
-            fibers: this.product[0].properties.fibers,
-            expirationDate: expirationDate,
-            brand: this.product[0].properties.brand,
-            origin: this.product[0].properties.origin
-        }
+        this.imageUrl = this.product[0].photo.url;  
+        //CHECK IF PROPERTIES EXISTS and then checks every single one of them 
+        if(this.product[0].properties){
+            let propertyNames = [
+                'ingredients','storageConditions','consumtionWay','manufacture',
+                'calories','carbohydrates','sugars','fats','saturated','proteins',
+                'salt','fibers','brand','origin'
+            ]
+            propertyNames.forEach(propertyName => {
+                let name = propertyName
+                if(this.product[0].properties[name]){
+                    this.properties[name] = this.product[0].properties[name]
+                }
+            });
+            if(this.product[0].properties.expirationDate){
+                var expirationDate = new Date(this.product[0].properties.expirationDate).toISOString().slice(0,10)
+            }
+            this.properties.expirationDate = expirationDate;
+        }                                                                                               
     },
     data(){
         return{
@@ -204,31 +211,34 @@ export default {
         },
         async onUpdateProduct({ params, $router }){
             const data = new FormData();
+            const productValues = ['title','price','weight','stockQuantity','description']
+            productValues.forEach(value => {
+                if(this[value]){
+                    data.append(value,this[value]);
+                }
+            })
             if(this.categoryID){
                 data.append("category", this.categoryID);
             }
             if(this.subcategoryID){
                 data.append("subcategory", this.subcategoryID);
             }
-            if(this.title){
-                data.append("title", this.title);
-            }    
-            if(this.price){
-                data.append("price", this.price); 
-            }
-            if(this.weight){
-                data.append("weight", this.weight);   
-            }   
-            if(this.stockQuantity){
-                data.append("stockQuantity", this.stockQuantity); 
-            }
-            if(this.description){
-                data.append("description", this.description);   
-            }   
             if(this.selectedFile){
                 data.append("photo", this.selectedFile);
-            }
-            data.append("properties",JSON.stringify(this.properties)); 
+            }   
+            let properties = {};
+            let propertyNames = [
+                'ingredients','storageConditions','consumtionWay','manufacture',
+                'calories','carbohydrates','sugars','fats','saturated','proteins',
+                'salt','fibers','expirationDate','brand','origin'
+            ]
+            propertyNames.forEach(propertyName => {
+                let name = propertyName
+                if(this.properties[name]){
+                    properties[name] = this.properties[name]
+                }
+            });
+            data.append("properties",JSON.stringify(properties)); 
 
             await this.$axios.$patch('/api/products/'+ this.product[0]._id, data);
             await this.$router.go();

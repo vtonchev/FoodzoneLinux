@@ -3,7 +3,15 @@
         <!-- Here will be placed the products of a specific category -->
         <div class="mx-lg-auto" id="products_page">
             <div class="row justify-content-between main-content">
-                
+                <b-container>
+                    <b-row cols="1" cols-sm="2" cols-md="3" cols-lg="4">
+                        <Card 
+                        v-for='product in products' 
+                        :key='product._id'
+                        :product='product'>
+                        </Card>
+                    </b-row>
+                </b-container>
             </div>
         </div>
         <Sidebar />
@@ -17,7 +25,24 @@ export default {
     components:{
         Sidebar,
         Card
-    }
+    },
+    async asyncData({$axios, params}){
+        try {
+            const categories = $axios.$get("/api/categories");
+            const products = $axios.$get(`/api/products/categories/${params.category}`)
+            const [catResponse, productsResponse]= await Promise.all([
+              categories,
+              products
+            ]);
+            return {
+                categories: catResponse.categories,
+                products: productsResponse.products
+            }
+        } catch(err) {
+            console.log(err)
+        }
+    },
+    
 }
 </script>
 

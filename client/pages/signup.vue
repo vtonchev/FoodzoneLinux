@@ -1,19 +1,39 @@
 <template>
     <div id="registration_box">
-        <b-form>
-          <b-form-group label="Име и фамилия">
+        <h3 style="text-align:center;color: #343A40;">Регистрация</h3>
+        <b-form @submit="onSignup" >
+          <b-form-group label="Име:">
             <b-form-input
-            v-model='name'
+            v-model='name.firstName'
             required 
-            placeholder='Георги Петков'
+            placeholder='Георги'
             >
             </b-form-input>
           </b-form-group>
+
+          <b-form-group label="Фамилия:">
+            <b-form-input
+            v-model='name.lastName'
+            required 
+            placeholder='Петков'
+            >
+            </b-form-input>
+          </b-form-group>
+
+          <b-form-group label="Телефон:">
+            <b-form-input
+            v-model='phone'
+            required 
+            placeholder='0894127822'
+            >
+            </b-form-input>
+          </b-form-group>
+
           <b-form-group id="input-group-1" label="Е-майл:" label-for="input-1">
               <b-form-input
               id="input-1"
               v-model="email"
-              type="email"
+              type= 'email'
               required
               placeholder="example@gmail.com"
               ></b-form-input>
@@ -25,12 +45,12 @@
               id="input-2"
               v-model="password"
               required
-              type="password"
+              type= 'password'
               placeholder="Парола"
               ></b-form-input>
           </b-form-group>
 
-            <b-button @click="onSignup" variant="primary">Регистрация</b-button>
+          <b-button  type='submit' variant="outline-success">Регистрация</b-button>
         </b-form>
         
   </div>
@@ -38,24 +58,35 @@
 
 <script>
   export default {
+    middleware:'auth',
+    auth:'guest',
     data() {
       return {
         
-        name: '',
+        name: {
+          firstName: '',
+          lastName: ''
+        },
+        phone:'',
         email: '',
         password: ''
   
       }
     },
     methods: {
-      async onSignup() {
+      async onSignup(e) {
+        e.preventDefault()
         try{
           const data = {
-            name: this.name,
+            phone: this.phone,
             email: this.email,
             password: this.password
           }
+          data['name'] = JSON.stringify(this.name)
+          console.log(data)
           const response = await this.$axios.$post('/api/auth/signup', data);
+          console.log(response)
+          console.log(response.success)
           if (response.success) {
             this.$auth.loginWith('local', {
               data: {
@@ -77,8 +108,8 @@
 <style>
 #registration_box{
     margin:1rem auto;
-    width:500px;
-    color: black;
+    width:300px;
+    color: #343A40;
 }
 @media screen and (max-width: 1199px){
     #registration_box{

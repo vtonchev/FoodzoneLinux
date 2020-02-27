@@ -1,5 +1,11 @@
 <template>
     <div id="page">
+            <b-alert v-if="message" :show="5" dismissible variant="success">
+                <p>{{message}}</p>
+            </b-alert>
+            <b-alert v-if="err" dismissible variant="danger">
+                <p>{{err}}</p>
+            </b-alert>
         <h1>Добавете нов продукт</h1>
         <div class="d-flex justify-content-between">
             <div class="w-30">
@@ -46,7 +52,7 @@
                     <div v-else style="width:100%; height:320px; margin:auto;"><p style="width:100%; text-align:center;">Добави снимка</p></div>
                 </div>
                 <div style="display:grid">
-                    <label for="ingriedients">Съставки</label>
+                    <label for="ingredients">Съставки</label>
                     <textarea id="ingriedients" rows="1" v-model="properties.ingriedients"></textarea>
                     <label for="storage_conditions">Условия за съхранение</label>
                     <textarea id="storage_conditions" rows="1" v-model="properties.storageConditions"></textarea>
@@ -60,57 +66,64 @@
             <!-- Хранителна стойност -->
             <div class="w-30">
                 <table>
-                    <tr>
-                        <th>Хранителна стойност за:</th>
-                        <th>100г</th>
-                    </tr>
-                    <tr>
-                        <td>Енергийност (ккал/ kJ)</td>
-                        <td><input type="text" v-model="properties.calories"></td>
-                    </tr>
-                    <tr>
-                        <td>Въглехидрати(г)</td>
-                        <td><input type="text" v-model="properties.carbohydrates"></td>
-                    </tr>
-                    <tr>
-                        <td>от които захари (г)</td>
-                        <td><input type="text" v-model="properties.sugars"></td>
-                    </tr>
-                    <tr>
-                        <td>Мазнини (г)</td>
-                        <td><input type="text" v-model="properties.fats"></td>
-                    </tr>
-                    <tr>
-                        <td>от които наситени (г)</td>
-                        <td><input type="text" v-model="properties.saturated"></td>
-                    </tr>
-                    <tr>
-                        <td>Протеини (г)</td>
-                        <td><input type="text" v-model="properties.proteins"></td>
-                    </tr>
-                    <tr>
-                        <td>Сол (г)</td>
-                        <td><input type="text" v-model="properties.salt"></td>
-                    </tr>   
-                    <tr>
-                        <td>Фибри (г)</td>
-                        <td><input type="text" v-model="properties.fibers"></td>
-                    </tr>         
+                    <thead>
+                        <tr>
+                            <th>Хранителна стойност за:</th>
+                            <th>100г</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Енергийност (ккал/ kJ)</td>
+                            <td><input type="text" v-model="properties.calories"></td>
+                        </tr>
+                        <tr>
+                            <td>Въглехидрати(г)</td>
+                            <td><input type="text" v-model="properties.carbohydrates"></td>
+                        </tr>
+                        <tr>
+                            <td>от които захари (г)</td>
+                            <td><input type="text" v-model="properties.sugars"></td>
+                        </tr>
+                        <tr>
+                            <td>Мазнини (г)</td>
+                            <td><input type="text" v-model="properties.fats"></td>
+                        </tr>
+                        <tr>
+                            <td>от които наситени (г)</td>
+                            <td><input type="text" v-model="properties.saturated"></td>
+                        </tr>
+                        <tr>
+                            <td>Протеини (г)</td>
+                            <td><input type="text" v-model="properties.proteins"></td>
+                        </tr>
+                        <tr>
+                            <td>Сол (г)</td>
+                            <td><input type="text" v-model="properties.salt"></td>
+                        </tr>   
+                        <tr>
+                            <td>Фибри (г)</td>
+                            <td><input type="text" v-model="properties.fibers"></td>
+                        </tr>     
+                    </tbody>     
                 </table>
                 <div style="width:100%; height:2rem;"></div>
                 <table style="width:100%;">
-                    <tr>
-                        <td class="w-50">Срок на годност:</td>
-                        <td><input type="date" v-model="properties.expirationDate"></td>
-                    </tr>
-                    <tr>
-                        <td class="w-50">Марка:</td>
-                        <td><input type="text" v-model="properties.brand"></td>
-                    </tr>
-                    <tr>
-                        <td class="w-50">Произход:</td>
-                        <td><input type="text" placeholder="страна" v-model="properties.origin"></td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td class="w-50">Срок на годност:</td>
+                            <td><input type="date" v-model="properties.expirationDate"></td>
+                        </tr>
+                        <tr>
+                            <td class="w-50">Марка:</td>
+                            <td><input type="text" v-model="properties.brand"></td>
+                        </tr>
+                        <tr>
+                            <td class="w-50">Произход:</td>
+                            <td><input type="text" placeholder="страна" v-model="properties.origin"></td>
+                        </tr>
+                    </tbody>
+                    
                 </table>
                 <div style="width:100%; height:2rem;"></div>
                 
@@ -125,6 +138,7 @@
         width:100%;
         max-height:320px;
     }
+    
 </style>
 
 <script>
@@ -144,30 +158,32 @@ export default {
             subcategories: [],
             categoryID: null,
             subcategoryID: null,
-            title: "",
+            title: null,
             price: null,
-            description: "",
+            description: null,
             weight: null,
             stockQuantity: null,
             selectedFile: null,
-            sale:null,
-            imageUrl:"",
+            sale: null,
+            imageUrl: null,
+            message: null,
+            err: null,
             properties:{
-                ingriedients: '',
-                storageConditions: '',
-                consumtionWay: '',
-                manufacturer: '',
-                calories: '',
-                carbohydrates: '',
-                sugars: '',
-                fats: '',
-                saturated: '',
-                proteins: '',
-                salt: '',
-                fibers: '',
-                expirationDate: '',
-                brand: '',
-                origin: ''
+                ingredients: null,
+                storageConditions: null,
+                consumtionWay: null,
+                manufacturer: null,
+                calories: null,
+                carbohydrates: null,
+                sugars: null,
+                fats: null,
+                saturated: null,
+                proteins: null,
+                salt: null,
+                fibers: null,
+                expirationDate: null,
+                brand: null,
+                origin: null
             }
         }
     },
@@ -175,16 +191,15 @@ export default {
         onFileSelected(event){
             this.selectedFile = event.target.files[0];
             this.imageUrl = URL.createObjectURL(this.selectedFile)
-            
         },
         // show all subcategories of the selected category
         async onCategorySelected( {$axios} ){
             const response = await this.$axios.$get("/api/subcategories/categories/" + this.categoryID)
-            this.subcategories = response.subcategories
-            this.subcategoryID = null;
+            this.subcategories = response.subcategories;
+            this.subcategoryID = null
         },
         async onAddProduct(){
-            const data = new FormData();
+            let data = new FormData();
             data.append("categoryID", this.categoryID);
             data.append("subcategoryID", this.subcategoryID);
             data.append("title", this.title);    
@@ -193,9 +208,28 @@ export default {
             data.append("stockQuantity", this.stockQuantity);    
             data.append("description", this.description);    
             data.append("photo", this.selectedFile);
-            data.append("properties", JSON.stringify(this.properties));  
-            const result = await this.$axios.$post("/api/products", data);
-            this.message = await result.message
+            // properties
+            let properties = {};
+            let propertyNames = [
+                'ingredients','storageConditions','consumtionWay','manufacture',
+                'calories','carbohydrates','sugars','fats','saturated','proteins',
+                'salt','fibers','expirationDate','brand','origin'
+            ]
+            propertyNames.forEach(propertyName => {
+                let name = propertyName
+                if(this.properties[name]){
+                    properties[name] = this.properties[name]
+                }
+            });
+            data.append("properties", JSON.stringify(properties));
+            // end of adding-properties function
+            let result = await this.$axios.$post("/api/products", data);
+            console.log(result);
+            if (result) {
+                this.message = "Успешно създадохте продукт"
+            } else {
+                this.err = 'Възникна грешка при създаването на продукта: '
+            }
         }
     }
 }

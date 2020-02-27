@@ -15,6 +15,12 @@ router.post("/categories", upload.single("photo"), categoryController.create_Cat
 //GET request - get all categories 
 router.get("/categories", categoryController.get_All_Categories)
 
+//GET request - get a single category
+router.get('/categories/:id', categoryController.get_A_Single_Category)
+
+//PATCH request - update a single category
+router.patch('/categories/:id', upload.single("photo"), categoryController.update_A_Single_Category)
+
 
 
 module.exports = router;

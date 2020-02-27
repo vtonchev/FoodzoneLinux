@@ -1,16 +1,19 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
-exports.register_New_User =  async (req, res) => {
-    if(!req.body.email || !req.body.password) {
+exports.register_New_User =  async function (req, res) {
+    if(req.body.email == false || req.body.password == false) {
         res.json({
-            success:false,
+            success: false,
             message: "Моля въведете имейл или парола"
         })
     } else {
         try {
+            req.body.name = JSON.parse(req.body.name)
+            console.log(req.body.name)
             const newUser = new User({
                 name: req.body.name,
+                phone:req.body.phone,
                 email: req.body.email,
                 password: req.body.password
             });
@@ -52,20 +55,20 @@ exports.show_User = async (req,res) => {
 exports.login_User = async (req, res) => {
     try {
         let foundUser = await User.findOne({ email: req.body.email });
-        if (!foundUser) {
+        if (foundUser == false) {
             res.status(403).json({
                 success: false,
                 message: 'Грешен потребител или парола'
             })
         } else {
             if (foundUser.comparePassword(req.body.password)) {
-                let token = jwt.sign(foundUser.toJSON(), process.env.TOKEN_SECRET, {
+                const token = jwt.sign(foundUser.toJSON(), process.env.TOKEN_SECRET, {
                     expiresIn: 604800 //1week
                 })
-
                 res.json({ 
                     success: true, 
-                    token: token})
+                    token: token
+                })
             } else {
                 res.status(403).json({
                     success:false,

@@ -24,9 +24,8 @@ exports.create_Product = async (req, res) => {
         });
 
     } catch(err) {
-
         res.status(500).json({
-            success: false,
+            status: false,
             message: err.message
         })
     }
@@ -43,7 +42,7 @@ exports.get_All_Products = async (req, res) => {
         })
     } catch(err) {
         res.status(500).json({
-            success:false,
+            success: false,
             message: err.message
         })
     }
@@ -57,7 +56,7 @@ exports.get_Products_By_Category = async (req, res) => {
             success: true,
             products: products
         })
-    } catch {
+    } catch (err){
         res.status(500).json({
             success: false,
             message: err.message

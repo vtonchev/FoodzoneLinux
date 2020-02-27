@@ -15,7 +15,7 @@ import Top from "~/components/navbar/top"
 import Middle from "~/components/navbar/middle"
 import Bottom from "~/components/navbar/bottom"
 export default {
-    components:{
+    components: {
         Top,
         Middle,
         Bottom
@@ -24,9 +24,10 @@ export default {
 </script>
 
 <style>
-.modal-backdrop{
-    z-index:1;
-}
+/* .modal-backdrop {
+    display: none;    
+} */
+
 body {
   font-family: 'Roboto', sans-serif;
   color:white;

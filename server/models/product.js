@@ -15,23 +15,7 @@ const productSchema = new Schema({
     weight: mongoose.Decimal128,
     stockQuantity: Number,
     rating: [Number],
-    properties: {
-        ingredients: String,
-        storageConditions: String,
-        consumtionWay: String,
-        manufacturer: String,
-        calories: String,
-        carbohydrates: String,
-        sugars: String,
-        fats: String,
-        saturated: String,
-        proteins: String,
-        salt: String,
-        fibers: String,
-        expirationDate: Date,
-        brand: String,
-        origin: String
-    }
-})
+    properties:  {}, 
+}, { minimize: true })
 
 module.exports = mongoose.model("Product", productSchema);

@@ -3,14 +3,14 @@ const Category = require('../models/category');
 // create a new category 
 exports.create_Category = async (req, res) => {
     try{
-        const newCategory = new Category({
-            title: req.body.title,
-            photo: {
-                url: req.file.location,
-                key: req.file.key
-            }
-        })
-        await newCategory.save();
+        const newCategory = new Category
+        newCategory.title = req.body.title
+        if(req.file){
+            newCategory.photo.url = req.file.location 
+            newCategory.photo.key = req.file.key
+            await newCategory.save();
+        }
+        
 
         res.json({
             success: true,
@@ -41,6 +41,23 @@ exports.get_All_Categories = async (req, res) => {
     }
 }
 
+//get a single category
+exports.get_A_Single_Category = async (req, res ) => {
+    try {
+        const category = await Category.findOne({_id: req.params.id})
+        res.json({
+            success: true,
+            category: category
+        })
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+// update a single category
 exports.update_A_Single_Category = async (req, res) => { 
     try {
         await Category.findOneAndUpdate({_id: req.params.id },
@@ -58,7 +75,10 @@ exports.update_A_Single_Category = async (req, res) => {
                 }
             })
         }   
-    } catch {
-
+    } catch(err) {
+        res.status(500).json({
+            success:false,
+            message: err.message
+        })
     };
 }

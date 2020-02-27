@@ -1,7 +1,7 @@
 <template>
     
     <div>
-        <h1>Редактирайте категорията</h1>
+        <h1>Редактирайте подкатегорията</h1>
         <div class="w-50 m-auto">
             <div id="image_preview" style="border:solid 1px; border-style:dashed; width:50%;">
                 <img :src="newImageUrl" style='width:100%; height:auto'/>
@@ -24,14 +24,14 @@
 <script>
 export default {
     async asyncData( {$axios, params } ){
-        const response = await $axios.$get(`/api/categories/${params.id}`);
+        const response = await $axios.$get(`/api/subcategories/${params.id}`);
         return{
-            category: response.category
+            subcategory: response.subcategory
         }
     },
     created(){
-        this.newImageUrl = this.category.photo.url;
-        this.title = this.category.title;
+        this.newImageUrl = this.subcategory[0].photo.url;
+        this.title = this.subcategory[0].title;
     },
     data(){
         return{
@@ -51,9 +51,8 @@ export default {
             data.append("title", this.title)
             if(this.selectedFile){
                 data.append("photo", this.selectedFile)   
-            } 
-            console.log(data)        
-            let result = await this.$axios.$patch("/api/categories/" + this.category._id, data);
+            }       
+            let result = await this.$axios.$patch("/api/subcategories/" + this.subcategory._id, data);
             await this.$router.go();
         }
     }

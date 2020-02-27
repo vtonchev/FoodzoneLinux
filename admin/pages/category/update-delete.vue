@@ -1,12 +1,19 @@
 <template>
     <div class="container">
-        <b-row v-for='category in categories' :key='category._id'>
+        <b-row v-for='category in categories'  :key='category._id' cols='1'>
             <b-col class="category_outer_box">
+                <b-button  v-b-toggle="category._id" variant="primary" @click="onSubcategories"  :value='category._id' >+</b-button>
                 <span class="category_title_box">{{category.title}}</span>
-                <img :src="imageUrl" v-if="imageUrl">
-                <img :src="category.photo.url" v-else alt="">
-                <input class="image_input" type="file" @change="onFileSelected">
+                <img v-if='category.photo.url' :src="category.photo.url" alt="">
                 <n-link :to="{ name: 'category-update-id', params: {id: category._id} }"><b-button  size="sm" variant="outline-primary">Промени</b-button></n-link>
+            </b-col>
+            <b-col>
+                <b-collapse :id="category._id" class="mt-2">
+                    <b-card v-for='subcategory in subcategories' :key='subcategory._id' >
+                        <span class="card-text"> {{subcategory.title}} </span>
+                        <n-link :to="{ name: 'subcategory-update-id', params: {id: subcategory._id} }" style="margin-right:10px"><b-button  size="sm" variant="outline-primary">Промени</b-button></n-link>
+                    </b-card>
+                </b-collapse>
             </b-col>
         </b-row>
     </div>
@@ -14,23 +21,34 @@
 <script>
 export default {
     async asyncData({$axios}){
-        const catResponse = await $axios.$get('/api/categories/'); 
+        let catResponse = await $axios.$get('/api/categories/'); 
+        let categories = catResponse.categories;
         return{
-            categories: catResponse.categories,   
+            categories:categories
+        }
+    }, 
+    data(){
+        return{
+            subcategories : [],
+            id : null,
         }
         
     },
-    data(){
-        return{
-            imageUrl:'',
-            selectedFile:null,
-        }
-    },
+    
     methods:{
-        onFileSelected(event){
-            this.selectedFile = event.target.files[0];
-            this.imageUrl = URL.createObjectURL(this.selectedFile)
-        }, 
+        async onSubcategories(e){
+            let id = e.target.value
+            if(this.id) {           
+                    this.$root.$emit('bv::toggle::collapse', this.id)    
+            }
+            
+            await this.$axios.$get('api/subcategories/categories/' + id).then(response => {
+                console.log(response)
+                this.subcategories = response.subcategories
+            }) 
+            
+            this.id = id
+        }
     }
 }
 </script>
@@ -59,5 +77,13 @@ export default {
     }
     .button{
         margin:0 !important;
+    }
+    .card-body{
+        padding:0 !important;
+        display:flex;
+    }
+    .card-text{
+        height: fit-content;
+        margin-right: auto;
     }
 </style>
