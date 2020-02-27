@@ -2,22 +2,23 @@
     <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 card_col mt-5 p-0 ">  <!-- margin top===3rem   -->
         <div class="card mx-lg-0" @mouseover='hover = true' @mouseleave='hover = false' >
             <img :src = product.photo.url class="card-img-top" alt="...">
-            <nuxt-link to="/shop/:product">
                 <div class="card-body">
-                <p>{{product.category.title}}</p>
-                <p class="card-title">{{product.title}}</p>
-                <transition name="hover">
-                    <p v-if="hover==false">{{product.price.$numberDecimal}} лв</p>
-                </transition>
-                <transition>
-                    <p v-if="hover==true"></p>
-                </transition>
+                    <nuxt-link to="/shop/:product">
+                    <p>{{product.category.title}}</p>
+                    <p class="card-title">{{product.title}}</p>
+                    </nuxt-link>
+                    <transition name="hover" mode="out-in">
+                        <p v-if="hover==false" key='price'>{{product.price.$numberDecimal}} лв</p>
+                        <button @click='addProductToCart(product)' v-else key="cart" style="display:contents;"><img src='/img/cartIcon.png'> Купи</button>
+                        
+                    </transition>
                 </div>
-            </nuxt-link>
+            
         </div>
     </div>
 </template>
 <script>
+import {mapActions} from 'vuex'
 export default {
     props:['product'],
     data(){
@@ -25,6 +26,9 @@ export default {
             hover: false
         }
     },
+    methods:{
+        ...mapActions(['addProductToCart'])
+    }
 }
 </script>
 <style>
@@ -50,13 +54,6 @@ export default {
     }
     .card-body{
     padding:15px;
-    }
-    .hover-enter-active{
-        transition: 0.5s;
-    }
-    .hover-leave-active{
-        transition: 0.5s;
-        opacity: 0;
     }
     
 </style>

@@ -38,8 +38,8 @@
                 <!-- CART -->
                 <nuxt-link to="/cart" class="col-6 order-2 order-sm-3 col-sm-auto p-0" id="cart">
                 <div class="shopping-cart-div-out mx-auto">
-                    <span class="fas fa-shopping-cart fa-2x"></span>
-                    <span id="price">67лв</span>           
+                    <span class="fas fa-shopping-cart fa-1x"></span>
+                    <span id="price">{{getTotalPrice}} лв</span>           
                 </div>
                 </nuxt-link>
 
@@ -91,14 +91,30 @@ a{
   display: inline-flex;
   background-color: #E52121;
   width:120px;
+  border-radius: 4px;
 }
 .fa-shopping-cart{
-  margin:8px;
+    height: auto;
+    margin-left: auto;
+    margin-right:5px;
 } 
 #price{
-  margin:10px;
+    font-weight: bold;
+    width: fit-content;
+    margin-top:auto;
+    margin-bottom:auto;
+    margin-right: auto;
+    font-size: 15px;
 }
 #cart{
   display:flex;
 }
 </style>
+<script>
+import {mapGetters} from 'vuex';
+export default {
+  computed:{
+    ...mapGetters(['getTotalPrice'])
+  }
+}
+</script>
