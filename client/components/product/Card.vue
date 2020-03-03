@@ -1,21 +1,26 @@
 <template>
-    <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 card_col mt-5 p-0 ">  <!-- margin top===3rem   -->
-        <div class="card mx-lg-0" @mouseover='hover = true' @mouseleave='hover = false' >
-            <img :src = product.photo.url class="card-img-top" alt="...">
-                <div class="card-body">
-                    <nuxt-link to="/shop/:product">
-                    <p>{{product.category.title}}</p>
-                    <p class="card-title">{{product.title}}</p>
-                    </nuxt-link>
-                    <transition name="hover" mode="out-in">
-                        <p v-if="hover==false" key='price'>{{product.price.$numberDecimal}} лв</p>
-                        <button @click='addProductToCart(product)' v-else key="cart" style="display:contents;"><img src='/img/cartIcon.png'> Купи</button>
-                        
-                    </transition>
-                </div>
-            
+        <div class="col p-0">
+            <div class="card mx-lg-0 product_card" @mouseover='hover = true' @mouseleave='hover = false' >
+                <img :src = product.photo.url class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <p>{{product.category.title}}, {{product.subcategory.title}}</p>
+                        <nuxt-link to="/shop/:product">
+                            <p class="card-title">{{product.title}}</p>
+                        </nuxt-link>
+                        <transition name="hover" mode="out-in">
+                            <span  class="d-none d-lg-block">
+                                <p v-if="hover==false" key='price'>{{product.price.$numberDecimal}} лв</p>
+                                <button @click='addProductToCart(product)' v-if="hover==true" key="cart" style="display:contents; color:green; font-weight:600;"><span class="fas fa-shopping-cart fa-1x"></span> Купи</button>
+                            </span>
+                        </transition>
+                        <span class="d-block d-lg-none">
+                            <span>{{product.price.$numberDecimal}}</span>
+                            <button class="custom_button float-right" @click='addProductToCart(product)'>Купи</button>
+                        </span>
+                    </div>
+                
+            </div>
         </div>
-    </div>
 </template>
 <script>
 import {mapActions} from 'vuex'
@@ -31,14 +36,14 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
     .card-img-top {
     padding:0;
     margin:0;
     width:190px;
     height:190px;
     }
-    .card{
+    .product_card{
     margin-bottom: 20px;
     width:min-content;
     height: 20rem;
@@ -54,6 +59,13 @@ export default {
     }
     .card-body{
     padding:15px;
+    }
+    .custom_button{
+        background-color: transparent;
+        border:none;
+    }
+    .custom_button:focus{
+        outline-color: green;
     }
     
 </style>

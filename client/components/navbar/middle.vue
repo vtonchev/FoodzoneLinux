@@ -36,12 +36,35 @@
                 </div>
 
                 <!-- CART -->
-                <nuxt-link to="/cart" class="col-6 order-2 order-sm-3 col-sm-auto p-0" id="cart">
-                <div class="shopping-cart-div-out mx-auto">
-                    <span class="fas fa-shopping-cart fa-1x"></span>
-                    <span id="price">{{getTotalPrice}} лв</span>           
+                <div class="col-6 order-2 order-sm-3 col-sm-auto p-0" id="cart" >
+                  <span 
+                  @mouseover="visible = true"
+                  @mouseleave="visible = false"
+                  >
+                    <b-button class="shopping-cart-div-out mx-auto p-0" 
+                    :class="visible ? null : 'collapsed'"
+                    :aria-expanded="visible ? 'true' : 'false'"
+                    aria-controls="collapse-4"
+                    @click="onCartClick"
+                    >
+                      <span class="fas fa-shopping-cart fa-1x"></span>
+                      <span id="price">{{getTotalPrice}} лв</span>           
+                    </b-button>
+                    <b-collapse id="collapse-4" v-model="visible" class="mt-2 cart_products" >
+                      <b-card class='d-none d-lg-block'>
+                        <div v-if="getCart == 0">Няма продукти в количката!</div>
+                        <div style="display: flow-root; margin-bottom:1.25rem;" v-for="product in getCart" :key="product._id">
+                          <img width="60" height="60" :src="product.photo.url" alt="" class="mr-3" style="float: left;">
+                          <span style="vertical-align: top; color:#2E2E2E; display: inline-block; font-size:16px; font-weight:700;">{{product.title}}</span>
+                          <button @click="$store.commit('removeProduct', product)" style="display:contents; margin:0 5px; display:contents"><span style="display: inline-table; font-weight:700; margin-left:20px">&times;</span></button>
+                          <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400;">{{product.quantity}} </span>
+                          <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400; padding:0 5px; ">&times;</span>
+                          <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400;"> {{product.price.$numberDecimal}}лв</span>
+                        </div> 
+                      </b-card>
+                    </b-collapse>
+                  </span>
                 </div>
-                </nuxt-link>
 
             </div>
 
@@ -50,7 +73,7 @@
     </div>
 </template>
 
-<style scoped>
+<style>
 a{
   color:white;
   text-decoration: none;
@@ -75,9 +98,7 @@ a{
 .form-control{
   height: inherit;
 }
-.search-bar,.form-control{
-  width: inherit;
-}
+
 .search-bar{
   position:relative;
 }
@@ -88,10 +109,10 @@ a{
   height:90%;
 }
  .shopping-cart-div-out{
-  display: inline-flex;
   background-color: #E52121;
   width:120px;
   border-radius: 4px;
+  border: 0;
 }
 .fa-shopping-cart{
     height: auto;
@@ -109,12 +130,32 @@ a{
 #cart{
   display:flex;
 }
+.cart_products{
+  position: absolute;
+  z-index: 200;
+  top: 3rem;
+  right: 0;
+  width: max-content;
+
+}
 </style>
 <script>
 import {mapGetters} from 'vuex';
 export default {
   computed:{
-    ...mapGetters(['getTotalPrice'])
+    ...mapGetters(['getTotalPrice', 'getCart']),
+  },
+  data(){
+    return {
+        visible: false
+      }
+  },
+  methods:{
+    onCartClick(){
+      if(this.$store.state.cart != 0){
+        this.$router.push('/shop/cart');
+      }
+    }
   }
 }
 </script>

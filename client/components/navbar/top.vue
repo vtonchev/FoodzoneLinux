@@ -62,7 +62,10 @@ export default {
 <style>
     #top-menu a{
     color:white;
-    }   
+    } 
+    .nav-item{
+    color:white;
+    }  
     #top-menu a:hover {
     text-decoration: none;
     color: #6C757D;

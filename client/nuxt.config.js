@@ -3,7 +3,8 @@
 export default {
   server: {
     port: 5000, 
-    timing: false
+    timing: false,  
+    host: '0.0.0.0',
   },
   mode: 'universal',
   /*
@@ -39,6 +40,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    {src: '~/plugins/localStorage.js', ssr: false}
   ],
   /*
   ** Nuxt.js dev-modules

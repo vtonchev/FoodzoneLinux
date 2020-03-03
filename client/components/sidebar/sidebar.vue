@@ -12,12 +12,6 @@
 </template>
 
 <style scoped>
-.sidebar{
-    position:absolute;
-    right:0;
-    top:3rem;
-    width:17%;
-  }
   h6{
     color:black;
   }

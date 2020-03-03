@@ -24,13 +24,12 @@ export default {
 </script>
 
 <style>
-/* .modal-backdrop {
-    display: none;    
-} */
-
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap&subset=cyrillic');
 body {
-  font-family: 'Roboto', sans-serif;
-  color:white;
+  font-family: 'Roboto';
+}
+body a:hover{
+  text-decoration: none;
 }
 p, header{
   margin:0;
@@ -43,13 +42,10 @@ header{
   width:100%
 }
 /* creates a grey shadow on click NOT DEFAULT BLUE */
-
 .form-control:focus {
   border:initial;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
-
 #inner_box_top, #inner_box_middle, #inner_box_bottom{
   width:1200px;
   margin:0 auto;

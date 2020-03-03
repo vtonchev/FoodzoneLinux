@@ -4,7 +4,7 @@
             
             <b-modal id="login_panel" size="sm"  centered hide-footer hide-header>
                 
-                    <form class="mx-auto py-3" method="post" style="color:black">
+                    <form class="mx-auto py-3" method="post">
                         <div class="form-group" >
                             <label for="email_login">Е-мейл</label>
                             <input v-model='email' type="email" class="form-control" id="email_login" placeholder="email@abv.bg">
@@ -31,14 +31,10 @@
 </template>
 
 <style scoped>
-    #login_panel, #login_panel a{
-        
-    }
-
     .modal label,.modal a,.modal span{
         font-weight: 600;
+        color: black;
     }
-
 </style>
 
 <script>
@@ -60,7 +56,6 @@ export default {
                         password: this.password
                     }
                 });
-                
             } catch (err) {
                 console.log(err)
             }

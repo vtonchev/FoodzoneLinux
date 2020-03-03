@@ -1,10 +1,9 @@
 <template>
-    <main>
-        <!-- Here will be placed the products of a specific category -->
-        <div class="mx-lg-auto" id="products_page">
-            <div class="row justify-content-between main-content">
-                <b-container>
-                    <b-row cols="1" cols-sm="2" cols-md="3" cols-lg="4">
+    <main id="products_page">
+        <div class="mx-lg-auto" >
+            <div class="row m-0">
+                <b-container class="p-0">
+                    <b-row cols="1" cols-sm="2" cols-md="3" cols-lg="4" class="m-0">
                         <Card 
                         v-for='product in products' 
                         :key='product._id'
@@ -14,16 +13,14 @@
                 </b-container>
             </div>
         </div>
-        <Sidebar />
     </main>
 </template>
 
 <script>
-import Sidebar from "~/components/sidebar/sidebar"
 import Card from "~/components/product/card"
 export default {
+    layout: 'sidebarLayout',
     components:{
-        Sidebar,
         Card
     },
     async asyncData({$axios, params}){
@@ -46,7 +43,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .card-body p:first-child{
     color: #A0A0A9;
     font-weight:400;
@@ -63,16 +60,10 @@ export default {
     margin:0;
     width:85%;
     }
-    #products_page{
-    position:relative;
-    width:1200px;
-    margin-right: auto;
-    }
+    
 
     @media only screen and (max-width: 1199px) {
-    #products_page{
-        width:980px;
-    }
+    
     .main-content{
         width:83%;
     }
@@ -80,11 +71,7 @@ export default {
     }
 
     @media only screen and (max-width: 991px) {
-        #products_page{
-            width:auto;
-            margin:0 3rem;
-
-        }
+        
 
         .card{
             width: 90%;
@@ -98,9 +85,7 @@ export default {
 
     }
     @media only screen and (max-width: 767px){
-        #products_page{
-            margin:0 10px;
-        }
+        
         .card_col:nth-child(2n) .card{
             margin-left:auto;
         }
@@ -110,10 +95,7 @@ export default {
     }
     /* Extra small devices (phones, 600px and down) */
     @media only screen and (max-width: 575px) {
-        .card{
-            width:auto;
-            height: fit-content;
-        }
+        
         .card-img-top {
             width:100%;
             height:auto;

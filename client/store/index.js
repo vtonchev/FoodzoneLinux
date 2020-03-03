@@ -11,7 +11,7 @@ export const actions = {
         if(!cartProduct) {
             commit('pushProductToCart', product);
         } else {
-            commit('incrementProductQty', product);
+            commit('incrementProductQty', cartProduct);
         }
         commit('incrementTotalPrice');
     }
@@ -36,11 +36,42 @@ export const mutations = {
                 state.totalPrice += product.price.$numberDecimal*product.quantity
             })
         }
+    },
+    changeQty( state, {product, qty} ){
+        let cartProduct = state.cart.find(prod => prod._id === product._id)
+        cartProduct.quantity = qty;
+
+        state.totalPrice = 0;
+        if (state.cart.length > 0) {
+            state.cart.map(product => {
+                state.totalPrice += product.price.$numberDecimal*product.quantity
+            })
+        }
+
+        let indexOfProduct = state.cart.indexOf(cartProduct);
+        state.cart.splice(indexOfProduct, 1, cartProduct);
+    },
+    /* 
+        1.get the index of the product thet we want to delete  
+        2.remove that product by using splice
+    */
+    removeProduct(state,product){
+        let indexOfProduct = state.cart.indexOf(product);
+        state.cart.splice(indexOfProduct, 1);
+        state.totalPrice = 0;
+        if (state.cart.length > 0) {
+            state.cart.map(product => {
+                state.totalPrice += product.price.$numberDecimal*product.quantity
+            })
+        }
     }
 }
 
 export const getters = {
     getTotalPrice(state) {
         return state.totalPrice.toFixed(2);
+    },
+    getCart(state) {
+        return state.cart
     }
 }
