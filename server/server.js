@@ -39,12 +39,13 @@ const productRoutes = require("./routes/product");
 const categoryRoutes = require("./routes/category");
 const subcategoryRoutes = require("./routes/subcategory");
 const authRoutes = require('./routes/auth');
-
+const orderDateTimeRoutes = require('./routes/orderDateTime');
 
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", subcategoryRoutes);
 app.use("/api", authRoutes);
+app.use("/api", orderDateTimeRoutes);
 app.listen(3000, (err) => {
     if(!err){
         console.log("Listening on PORT",3000);
