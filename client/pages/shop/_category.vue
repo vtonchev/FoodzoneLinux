@@ -1,19 +1,13 @@
 <template>
-    <main id="products_page">
-        <div class="mx-lg-auto" >
-            <div class="row m-0">
-                <b-container class="p-0">
-                    <b-row cols="1" cols-sm="2" cols-md="3" cols-lg="4" class="m-0">
-                        <Card 
-                        v-for='product in products' 
-                        :key='product._id'
-                        :product='product'>
-                        </Card>
-                    </b-row>
-                </b-container>
-            </div>
-        </div>
-    </main>
+<b-row class="m-0">
+    <b-col cols='auto' class="p-0" v-for='product in products' :key='product._id'>
+        <Card 
+        :product='product'
+        >
+        </Card> 
+    </b-col>
+</b-row>
+    
 </template>
 
 <script>

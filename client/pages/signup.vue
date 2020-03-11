@@ -83,10 +83,10 @@
             password: this.password
           }
           data['name'] = JSON.stringify(this.name)
-          console.log(data)
+          // console.log(data)
           const response = await this.$axios.$post('/api/auth/signup', data);
-          console.log(response)
-          console.log(response.success)
+          // console.log(response)
+          // console.log(response.success)
           if (response.success) {
             this.$auth.loginWith('local', {
               data: {

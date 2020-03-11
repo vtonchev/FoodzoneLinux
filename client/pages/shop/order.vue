@@ -21,25 +21,29 @@
             <b-list-group class="my-4">
                 <!-- Address -->
                 <b-list-group-item button v-b-toggle.address class="d-flex p-4">
-                    <div class="d-inline-block icon mr-4"><i class="fas fa-map-marker-alt fa-2x ml-2"></i></div>
-                    <div class="w-75 d-inline-block"><span>Къде да доставим поръчката Ви?</span></div>
+                    <div class="d-inline-block align-self-center text-info icon mr-4"><i class="fas fa-map-marker-alt fa-2x ml-2"></i></div>
+                    <div class="d-grid w-75 mr-2">
+                        <div class="text-dark"><span>Къде да доставим поръчката Ви?</span></div>
+                        <div v-if="address.city&&address.street">{{address.city}}, {{address.street}}</div>
+                    </div>
+                    <div v-if="address.city && address.street" class="d-inline-block align-self-center ml-auto"><i class="fas fa-check-circle fa-2x text-success"></i></div>
                 </b-list-group-item>
-                <b-collapse id="address" visible >
-                    <div class="collapse_content">
+                <b-collapse id="address" accordion="order_form" >
+                    <b-form class="collapse_content" @submit.prevent="validateAddress">
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <label style="color:#5AA240">Град</label>
-                                <b-form-select  @change="addressValidation" v-model="address.city" :options="cityOptions" required></b-form-select>
+                                <b-form-select v-model="address.city" :options="cityOptions" required></b-form-select>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <label>Комплекс</label>
-                                <b-form-input id="city" @change="addressValidation" v-model="address.housingArea" type="text"></b-form-input> 
+                                <b-form-input id="city" v-model="address.housingArea" type="text"></b-form-input> 
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <label style="color:#5AA240">Улица, номер</label>
-                                <b-form-input @change="addressValidation" v-model="address.street" type="text"></b-form-input>
+                                <b-form-input v-model="address.street" type="text" required></b-form-input>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <label>Вход</label>
@@ -56,233 +60,171 @@
                                 <b-form-input v-model="address.apartment" type="text"></b-form-input>
                             </div>
                         </div>
-                    </div>
+                        <b-button type='submit'>Запази</b-button>
+                    </b-form>
                 </b-collapse>
                 <!-- Contact -->
-                <b-list-group-item button v-b-toggle.contact :disabled='toContact' class="d-flex p-4">
-                    <div class="d-inline-block icon mr-4"><i class="far fa-address-card fa-2x ml-1"></i></div>
-                    <div class="w-75 d-inline-block"><span>Контакт</span></div>
+                <b-list-group-item button v-b-toggle.contact class="d-flex p-4">
+                    <div class="d-inline-block align-self-center text-info icon mr-4"><i class="far fa-address-card fa-2x ml-1"></i></div>
+                    <div class="d-grid w-75 mr-2">
+                        <div class="text-dark"><span>Контакт</span></div>
+                        <div v-if="contact.firstName && contact.lastName && contact.number">{{contact.firstName}} {{contact.lastName}}, {{contact.number}}</div>
+                    </div>
+                    <div v-if="contact.firstName && contact.lastName && contact.number" class="d-inline-block align-self-center ml-auto"><i class="fas fa-check-circle fa-2x text-success"></i></div>
                 </b-list-group-item>
-                <b-collapse id="contact">
-                    <div class="collapse_content">
+                <b-collapse id="contact" accordion="order_form" >
+                    <b-form class="collapse_content" @submit.prevent="validateContact">
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <label style="color:#5AA240">Име </label>
-                                <b-form-input  @change="contactValidation" v-model="contact.firstName" type='text' required></b-form-input>
+                                <b-form-input v-model="contact.firstName" type='text' required></b-form-input>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <label style="color:#5AA240">Фамилия</label>
-                                <b-form-input  @change="contactValidation" v-model="contact.lastName" type='text' required></b-form-input>
+                                <b-form-input v-model="contact.lastName" type='text' required></b-form-input>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <label style="color:#5AA240">Телефон</label>
-                                <b-form-input  @change="contactValidation" v-model="contact.number" type='tel' required></b-form-input>
+                                <b-form-input v-model="contact.number" minlength="10" maxlength='10' type='tel' required></b-form-input>
                             </div>
                         </div>
-                    </div>
+                        <b-button type='submit'>Запази</b-button>
+                    </b-form>
                 </b-collapse>
                 <!-- Additional info -->
-                <b-list-group-item button v-b-toggle.additional_info :disabled='toAdditionalInfo' class="d-flex p-4">
-                    <div class="d-inline-block icon mr-4"><i class="fas fa-info fa-2x ml-3"></i></div>
-                    <div class="w-75 d-inline-block"><span>Допълнителна информация</span></div>
+                <b-list-group-item button v-b-toggle.additional_info class="d-flex p-4">
+                    <div class="d-inline-block align-self-center text-info icon mr-4"><i class="fas fa-info fa-2x ml-3"></i></div>
+                    <div class="d-grid w-75 mr-2">
+                        <div class="text-dark"><span>Допълнителна информация</span></div>
+                        <div v-if="additionalInfo.accept">Приемам общите условия</div>
+                    </div>
+                    <div v-if="additionalInfo.accept" class="d-inline-block align-self-center ml-auto"><i class="fas fa-check-circle fa-2x text-success"></i></div>
                 </b-list-group-item>
-                <b-collapse id="additional_info" >
-                    <div class="collapse_content">
+                <b-collapse id="additional_info" accordion="order_form" >
+                    <b-form @submit.prevent="validateAdditionalInfo" class="collapse_content">
                         <div class="row">
                             <div class="col">
                                 <label>Допълнителна информация към доставчик</label>
-                                <b-form-input  @change="contactValidation" v-model="additionalInfo.text" type='text' required></b-form-input>
+                                <b-form-input v-model="additionalInfo.text" type='text'></b-form-input>
+                                <b-form-checkbox
+                                    id="checkbox"
+                                    v-model="additionalInfo.accept"
+                                    required
+                                    size='lg'
+                                > 
+                                <h6>
+                                    <small style="vertical-align: sub;">
+                                        Съгласен съм с Общите Условия и Политика за поверителност и ги приемам
+                                    </small>
+                                </h6>
+                                </b-form-checkbox>
                             </div>
                         </div>
-                    </div>
+                        <b-button type='submit'>Запази</b-button>
+                    </b-form>
                 </b-collapse>
-                <!-- Order Timespan :disabled='toOrderTimespan' -->
-                <b-list-group-item button v-b-toggle.order_timespan  class="d-flex p-4">
-                    <div class="d-inline-block icon mr-4"><i class="far fa-clock fa-2x ml-1"></i></div>
-                    <div class="w-75 d-inline-block"><span>Ден и час за доставка</span></div>
+                <!-- Order Timetimeframe -->
+                <b-list-group-item button v-b-toggle.order_timeframe class="d-flex p-4">
+                    <div class="d-inline-block align-self-center text-info icon mr-4"><i class="far fa-clock fa-2x ml-1"></i></div>
+                    <div class="d-grid w-75 mr-2">
+                        <div class="text-dark"><span>Ден и час за доставка</span></div>
+                        <div v-if="orderTimeframe.timeframe">{{orderTimeframe.date.replace(/-/g,'.')}}, между {{orderTimeframe.timeframe}} и {{$moment(orderTimeframe.timeframe,'HH:mm').add(1,'h').format('HH:mm')}}</div>
+                    </div>
+                    <div v-if="orderTimeframe.timeframe" class="d-inline-block align-self-center ml-auto"><i class="fas fa-check-circle fa-2x text-success"></i></div>
                 </b-list-group-item>
-                <b-collapse id="order_timespan" style="overflow-x: auto" >
-                    <div class="collapse_content p-0 mx-sm-auto my-5" style="width: max-content;">
+                <b-collapse id="order_timeframe" accordion="order_form"  >
+                    <b-form class='my-5' @submit.prevent="validateTimeframe" >
+                        <div style="overflow-x: auto;">
+                            <div class="collapse_content p-0 mx-sm-auto mb-2" style="width: max-content;">
                             <b-tabs 
-                                class="m-0" 
-                                active-nav-item-class="btn-outline-success"
-                                pills 
-                                vertical 
-                                content-class="p-0 border rounded bg-light"
+                            vertical 
+                            pills 
+                            success
                             >
-                                <!-- Day 1 -->
-                                <b-tab title="Днес">
-                                    <div class="d-grid" style='height: 278px;overflow: auto;width: 327px;'>
-                                        <h6 class="text-center">{{orderTimeframe.day1.format('Do MMMM')}}</h6>
-                                        <div v-for="timeframe in orderDateTimes[0].timeframe" :key="timeframe.from">
-                                            <div class='d-flex mb-1' v-if="$moment(timeframe.from,'HH:mm').isAfter($moment().add(2,'hours'))">
-                                                <div class="px-2 align-self-center">{{timeframe.from}}</div>
-                                                <b-button 
-                                                @click="onDay1Chosen(timeframe.from)" 
-                                                class="border rounded p-2 bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders == timeframe.max'
-                                                >
-                                                Доставка между 
-                                                <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                и 
-                                                <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                </b-button>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </b-tab>
-                                <!-- Day 2 -->
-                                <b-tab title="Утре">
-                                    <div style='height: 278px;overflow: auto;'>
-                                        <h6 class="text-center">{{orderTimeframe.day2.format('Do MMMM')}}</h6>
-                                        <div class="" v-for="timeframe in orderDateTimes[1].timeframe" :key="timeframe.from">
-                                            <div class='d-flex mb-3'>
-                                                <div class="px-2 align-self-center">{{timeframe.from}}</div>
-                                                <b-button 
-                                                @click="onDay2Chosen(timeframe.from)" 
-                                                class="border rounded p-2 bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders == timeframe.max'
-                                                >
-                                                Доставка между 
-                                                <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                и 
-                                                <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                </b-button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </b-tab>
-                                <!-- Day 3 -->
-                                <b-tab :title="orderTimeframe.day3.format('dddd').charAt(0).toUpperCase() + orderTimeframe.day3.format('dddd').slice(1)">
-                                    <div style='height: 278px;overflow: auto;'>
-                                        <h6 class="text-center">{{orderTimeframe.day3.format('Do MMMM')}}</h6>
-                                        <div class="" v-for="timeframe in orderDateTimes[2].timeframe" :key="timeframe.from">
-                                            <div class='d-flex mb-3'>
+                                <b-tab v-for="(dateTime,index) in orderDate7" :key="'dyn-tab-' + index">
+                                    <template v-slot:title>
+                                        <span class="text-dark" v-if="$moment(dateTime.date).isSame($moment().format('DD-MM-YYYY'))">Днес</span>
+                                        <span class="text-dark" v-else-if="$moment(dateTime.date).isSame($moment().add(1,'d').format('DD-MM-YYYY'))">Утре</span>
+                                        <span v-else class="text-capitalize text-dark">{{$moment(dateTime.date, 'DD-MM-YYYY').format('dddd')}}</span>
+                                    </template>
+                                        <div style='height: 278px; overflow: auto;'>
+                                        <h6 class="text-center">{{$moment(dateTime.date, 'DD-MM-YYYY').format('Do MMMM')}}</h6>
+                                        <div v-for="timeframe in dateTime.timeframe" :key="timeframe.from">
+                                            <div class='d-flex mb-3' 
+                                            v-if="$moment(dateTime.date).isSame($moment().format('DD-MM-YYYY'))"
+                                            >
+                                            <span v-if="$moment(timeframe.from,'HH:mm').isAfter($moment().add(2,'h'))">
                                                 <div class="px-2 align-self-center">
                                                     {{timeframe.from}}
                                                 </div>
                                                 <b-button 
-                                                @click="onDay3Chosen(timeframe.from)" 
-                                                class="border rounded p-2 bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders == timeframe.max'
+                                                @click="onDayChosen(timeframe.from, dateTime.date)" 
+                                                class="border rounded bg-white text-dark mr-4" 
+                                                :disabled='timeframe.orders >= timeframe.max'
                                                 >
-                                                Доставка между 
-                                                <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                и <span class="font-weight-bold">{{timeframe.to}}</span>
+                                                <h6>
+                                                    <small>
+                                                        Доставка между 
+                                                        <span class="font-weight-bold">{{timeframe.from}}</span> 
+                                                        и 
+                                                        <span class="font-weight-bold">{{timeframe.to}}</span>
+                                                        <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
+                                                    </small>
+                                                </h6>
+                                                </b-button>
+                                            </span>
+                                                 
+                                            </div> 
+                                            <div class='d-flex mb-3' 
+                                            v-else
+                                            >
+                                                <div class="px-2 align-self-center">
+                                                    {{timeframe.from}}
+                                                </div>
+                                                <b-button 
+                                                @click="onDayChosen(timeframe.from, dateTime.date)" 
+                                                class="border rounded bg-white text-dark mr-4" 
+                                                :disabled='timeframe.orders >= timeframe.max'
+                                                >
+                                                <h6>
+                                                    <small>
+                                                        Доставка между 
+                                                        <span class="font-weight-bold">{{timeframe.from}}</span> 
+                                                        и 
+                                                        <span class="font-weight-bold">{{timeframe.to}}</span>
+                                                        <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
+                                                    </small>
+                                                </h6>
                                                 </b-button> 
                                             </div>       
                                         </div>
                                     </div>
                                 </b-tab>
-                                <!-- Day 4 -->
-                                <b-tab :title="orderTimeframe.day4.format('dddd').charAt(0).toUpperCase() + orderTimeframe.day4.format('dddd').slice(1)">
-                                    <div style='height: 278px;overflow: auto;'>
-                                        <h6 class="text-center">{{orderTimeframe.day4.format('Do MMMM')}}</h6>
-                                        <div class="" v-for="timeframe in orderDateTimes[3].timeframe" :key="timeframe.from">
-                                            <div class='d-flex mb-3'>
-                                                <div class="px-2 align-self-center">{{timeframe.from}}</div>
-                                                <b-button 
-                                                @click="onDay4Chosen(timeframe.from)" 
-                                                class="border rounded p-2 bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders == timeframe.max'
-                                                >
-                                                Доставка между 
-                                                <span class="font-weight-bold">{{timeframe.from}}</span>
-                                                и 
-                                                <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                </b-button>  
-                                            </div>
-                                        </div>
-                                    </div>
-                                </b-tab>
-                                <!-- Day 5 -->
-                                <b-tab :title="orderTimeframe.day5.format('dddd').charAt(0).toUpperCase() + orderTimeframe.day5.format('dddd').slice(1)">
-                                    <div style='height: 278px; overflow: auto;'>
-                                        <h6 class="text-center">{{orderTimeframe.day5.format('Do MMMM')}}</h6>
-                                        <div class="" v-for="timeframe in orderDateTimes[4].timeframe" :key="timeframe.from">
-                                            <div class='d-flex mb-3'>
-                                                <div class="px-2 align-self-center">{{timeframe.from}}</div>
-                                                <b-button 
-                                                @click="onDay5Chosen(timeframe.from)" 
-                                                class="border rounded p-2 bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders == timeframe.max'
-                                                >
-                                                Доставка между 
-                                                <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                и 
-                                                <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                </b-button>  
-                                            </div>
-                                        </div>
-                                    </div>
-                                </b-tab>
-                                <!-- Day 6 -->
-                                <b-tab :title="orderTimeframe.day6.format('dddd').charAt(0).toUpperCase() + orderTimeframe.day6.format('dddd').slice(1)">
-                                    <div style='height: 278px;overflow: auto;'>
-                                        <h6 class="text-center">{{orderTimeframe.day6.format('Do MMMM')}}</h6>
-                                        <div class="" v-for="timeframe in orderDateTimes[5].timeframe" :key="timeframe.from">
-                                            <div class='d-flex mb-3'>
-                                                <div class="px-2 align-self-center">{{timeframe.from}}</div>
-                                                <b-button 
-                                                @click="onDay6Chosen(timeframe.from)" 
-                                                class="border rounded p-2 bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders == timeframe.max'
-                                                >
-                                                Доставка между 
-                                                <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                и 
-                                                <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                </b-button>  
-                                            </div>
-                                        </div>
-                                    </div>
-                                </b-tab>
-                                <!-- Day 7 -->
-                                <b-tab :title="orderTimeframe.day7.format('dddd').charAt(0).toUpperCase() + orderTimeframe.day7.format('dddd').slice(1)">
-                                    <div style='height: 278px;overflow: auto;'>
-                                        <h6 class="text-center">{{orderTimeframe.day7.format('Do MMMM')}}</h6>
-                                        <div class="" v-for="timeframe in orderDateTimes[6].timeframe" :key="timeframe.from">
-                                            <div class='d-flex mb-3'>
-                                                <div class="px-2 align-self-center">{{timeframe.from}}</div>
-                                                <b-button 
-                                                @click="onDay7Chosen(timeframe.from)" 
-                                                class="border rounded p-2 bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders == timeframe.max'
-                                                >
-                                                Доставка между 
-                                                <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                и 
-                                                <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                </b-button>  
-                                            </div>
-                                        </div>
-                                    </div>
-                                </b-tab> 
-                            </b-tabs>
-                    </div>
-                    <div v-if='orderTimeframe.date' class="mb-4 mx-sm-auto pl-3" style="width:460px">
-                        Вашата поръчка ще бъде доставена на 
-                        {{orderTimeframe.date.replace(/-/g,'.')}} 
-                        между 
-                        <span class="d-block text-center">
-                        {{orderTimeframe.timeframe}} 
-                        и 
-                        {{$moment(orderTimeframe.timeframe,'HH-mm').add(1,'hour').format('HH:mm')}}
-                        часа
-                        </span>
-                    </div>
-                    <div v-if="validationMessage">{{validationMessage}}</div>
-                    <div class="mb-4 mx-sm-auto pl-3" style="width:460px"><b-button @click="timeframeValidation" class="w-100">Продължи</b-button></div>
+                            </b-tabs>       
+                        </div>
+                        </div>
+                        <div v-if='orderTimeframe.date' class="mb-4 mx-sm-auto pl-3" style="width:300px">
+                            Вашата поръчка ще бъде доставена на 
+                            {{orderTimeframe.date.replace(/-/g,'.')}} 
+                            между 
+                            <span class="d-block text-center">
+                            {{orderTimeframe.timeframe}} 
+                            и 
+                            {{$moment(orderTimeframe.timeframe,'HH-mm').add(1,'hour').format('HH:mm')}}
+                            часа
+                            </span>
+                        </div>
+                        <div class="mb-4 mx-sm-auto w-100"><b-button type='submit' class="w-100">Запази</b-button></div>
+                    </b-form>
                 </b-collapse>
                 <!-- Payment method -->
-                <b-list-group-item button v-b-toggle.payment_method :disabled='toPaymentMethod' class="d-flex p-4">
-                    <div class="d-inline-block icon mr-4"><i class="far fa-credit-card fa-2x ml-1"></i></div>
-                    <div class="w-75 d-inline-block"><span>Начин на плащане</span></div>
+                <b-list-group-item button v-b-toggle.payment_method class="d-flex p-4">
+                    <div class="d-inline-block text-info icon mr-4"><i class="far fa-credit-card fa-2x ml-1"></i></div>
+                    <div class="w-75 d-inline-block mr-2"><span>Начин на плащане</span></div>
                 </b-list-group-item>
-                <b-collapse id="payment_method">
+                <b-collapse id="payment_method" accordion="order_form">
                     <div class="collapse_content">
                         <b-form-group>
                             <b-form-radio v-model="paymentMethod.select"  value="на място">На място</b-form-radio>
@@ -295,9 +237,17 @@
                 </b-collapse>
             </b-list-group>
         </div>
+        <!-- Modal -->
+        <b-modal id="validationModal" content-class="shadow" title="Внимание!">
+            <p class="my-2">
+                {{validationMessage}}
+            </p>
+        </b-modal>
+        <!-- ENd Modal -->
     </main>
 </template>
 <style scoped>
+
     p{
         font-size: 1.2rem;
         font-weight: 700;
@@ -372,27 +322,28 @@
     }
 </style>
 <script>
+import {mapActions} from 'vuex';
 import {mapGetters} from 'vuex';
 export default {
-    async asyncData({$axios}){
+    async created(){
         try {
-            const response = await $axios.$get("/api/orderDateTime");  
-            return{
-                orderDateTimes : response.orderDateTime
-            } 
+            const response = await this.$axios.$get("/api/orderDateTime");
+            return this.orderDateTime = response.orderDateTime
         } catch (err) {
+
         }
     },
-    data({$moment}){
+    data({$moment,$store}){
         return{
+            orderDateTime:[],
             //Address
             address:{
                 city: null,
                 housingArea: null,
-                street:null,
+                street: null,
                 outsideDoor:null,
-                floor:null,
-                apartment:null,
+                floor: null,
+                apartment: null,
             },
             //contact
             contact:{
@@ -403,27 +354,16 @@ export default {
             //additional Info
             additionalInfo:{
                 text:null,
+                accept:null,
             },
             //Order Timespan
             orderTimeframe:{
-                day1:$moment(),
-                day2:$moment().add(1,'d'),
-                day3:$moment().add(2,'d'),
-                day4:$moment().add(3,'d'),
-                day5:$moment().add(4,'d'),
-                day6:$moment().add(5,'d'),
-                day7:$moment().add(6,'d'),
                 date: null,
                 timeframe:null,
             },
             paymentMethod:{
                 select:'',
             },
-            //Disabling booleans 
-            toContact:true,
-            toAdditionalInfo:true,
-            toOrderTimespan:true,
-            toPaymentMethod:true,
             cityOptions: [
                 { value: null, text: 'Моля изберете град' },
                 { value: 'Слънчев бряг', text: 'Слънчев бряг' },
@@ -433,10 +373,43 @@ export default {
             ],
             //Validation message
             validationMessage:'',
-            validationMessage2:'',
+            visibleID: '',
         }
     },
+    mounted(){
+             try {
+        // if user AUTH set the values else check vuexLocal
+                if(localStorage){
+                    const loc = localStorage;
+                    if (loc.address) {
+                        this.address = JSON.parse(loc.address);
+                        this.visibleID = 'contact' 
+                    }
+                    if (loc.contact) {
+                        this.contact = JSON.parse(loc.contact);
+                        this.visibleID = 'additionalInfo'
+                    }
+                    if (loc.additionalInfo) {
+                        this.additionalInfo = JSON.parse(loc.additionalInfo);
+                        this.visibleID = 'order_timeframe'
+                    }
+                    if (loc.orderTimeframe) {
+                        this.orderTimeframe = JSON.parse(loc.orderTimeframe);
+                        this.visibleID = 'payment_method'
+                    }
+                    this.$root.$emit('bv::toggle::collapse', this.visibleID);
+                } else {
+                    this.$root.$emit('bv::toggle::collapse', 'address');
+                }
+
+            } catch (err) {
+                console.log(err)
+            }
+    },
+        
     methods:{
+        ...mapActions(['addAddress','addContact','addAdditionalInfo','addTimeframe']),
+        
         async onOrder(){
             if(
                 this.address.city && 
@@ -444,92 +417,105 @@ export default {
                 this.contact.lastName && 
                 this.contact.number && 
                 this.orderTimeframe.date &&
-                this.orderTimeframe.timeframe )
+                this.orderTimeframe.timeframe &&
+                this.additionalInfo.accept 
+            )  
                 {
+                    const data = {
+                        address: this.address,
+                        contact: this.contact,
+                        additionalInfo: this.additionalInfo,
+                        orderDateTime: this.orderTimeframe,
+                        paymentMethod: this.paymentMethod,
+                        cart: this.getCart
+                    } 
                     const response = await this.$axios.$get("/api/orderDateTime/"+ this.orderTimeframe.date +"/"+ this.orderTimeframe.timeframe);
                     if(response.timeframe.orders < response.timeframe.max){
-                        if( this.$moment(this.orderTimeframe.date).isSame(this.$moment('DD-MM-YYYY')) && this.$moment(this.orderTimeframe.timeframe,'HH:mm').isAfter(this.$moment().add(2,'hours'))){
-                            return alert('Поръчката е за днес, има свободни места и е два часа преди уговорения час за поръчка');
-                            
-                        } else {
-                            return alert('Поръчката не е за днес и има свободни места');
-                        }
+                        if( this.$moment(this.orderTimeframe.date).isSame(this.$moment().format('DD-MM-YYYY'))){
+                            if(this.$moment(this.orderTimeframe.timeframe,'HH:mm').isAfter(this.$moment().add(2,'h'))){    
+                                await this.$axios.$post('api/order', data)
+                                if(response.success == true){
+                                    // this.$router.go('/successOrder');
+                                }  else {
+                                    // this.$router.go('/failureOrder');
+                                }
+                            } else {
+                                this.validationMessage = 'Часът за доставка, който сте избрали вече не свободен, моля изберете друг!';
+                                this.$root.$emit('bv::show::modal', 'validationModal')
+                                return  
+                            }
+                        } else {    
+                                const response = await this.$axios.$post('api/order', data);
+                                if(response.success == true){
+                                    // this.$router.go('/successOrder');
+                                }  else {
+                                    // this.$router.go('/failureOrder');
+                                }   
+                            }
                     } else {
-                        return alert('Няма свободни места')
-                    }
+                            this.validationMessage = 'Часът за доставка, който сте избрали е достигнал своя лимит в последния момент. Извиняваме се!';
+                            this.$root.$emit('bv::show::modal', 'validationModal')
+                            return
+                        }
                 } else {
-                    this.validationMessage2 = 'Някои от задължителните полета не са попълнени'
+                    this.validationMessage = 'Не сте въвели всички необходими данни';
+                    this.$root.$emit('bv::show::modal', 'validationModal')
+                    return
                 }
-
-                // const data = {
-                //     address: this.address,
-                //     contact: this.contact,
-                //     additionalInfo: this.additionalInfo,
-                //     orderDateTime: {
-                //         date: this.orderTimeframe.date,
-                //         from: this.orderTimeframe.from
-                //     },
-                //     paymentMethod: this.paymentMethod
-                // }
+                    
         },
-        addressValidation(){
+        validateAddress(){
             if(this.address.city && this.address.street){
-                this.toContact = false;
-            }
-        },
-        contactValidation(){
-                if(this.contact.firstName && this.contact.lastName && this.contact.number){  
-                    this.toAdditionalInfo = false;
-                    this.toOrderTimespan = false;
-            }
-        },
-        timeframeValidation(){
-            if(this.orderTimeframe.date && this.orderTimeframe.timeframe){
-                this.toPaymentMethod = false;
+                this.$root.$emit('bv::toggle::collapse', 'contact');
+                this.visibleID = 'contact'
+                localStorage.setItem("address", JSON.stringify(this.address));
             } else {
-                this.validationMessage = 'Възникна грешка при избора моля опитайте пак'
+                this.validationMessage = 'Не сте въвели всички необходими данни';
+                this.$root.$emit('bv::show::modal', 'validationModal');
+            }
+            
+        },
+        validateContact(){
+            if(this.contact.firstName && this.contact.lastName && this.contact.number){  
+                this.$root.$emit('bv::toggle::collapse', 'additional_info');
+                this.visibleID = 'additional_info'
+                localStorage.setItem("contact", JSON.stringify(this.contact));
+            } else {
+                this.validationMessage = 'Не сте въвели всички необходими данни';
+                this.$root.$emit('bv::show::modal', 'validationModal');
+            }
+        },
+        validateAdditionalInfo(){
+            if(this.additionalInfo.accept){
+                this.$root.$emit('bv::toggle::collapse', 'order_timeframe');
+                this.visibleID = 'order_timeframe'
+                localStorage.setItem("additionalInfo", JSON.stringify(this.additionalInfo));
+            } else {
+                this.validationMessage = 'Mоля приемете общите условия';
+                this.$root.$emit('bv::show::modal', 'validationModal');
+            }
+        },
+        validateTimeframe(){
+            if(this.orderTimeframe.date && this.orderTimeframe.timeframe){
+                this.$root.$emit('bv::toggle::collapse', 'payment_method');
+                this.visibleID = 'payment_method'
+                localStorage.setItem("orderTimeframe", JSON.stringify(this.orderTimeframe));
+            } else {
+                this.validationMessage = 'Възникна грешка при избора моля опитайте пак';
+                this.$root.$emit('bv::show::modal', 'validationModal');
             }
         },
         // DAYS CHOOSE FUNCTIONS 
-        onDay1Chosen(timeframe){
-            this.validationMessage = '';
+        onDayChosen(timeframe, day){
             this.orderTimeframe.timeframe = timeframe; 
-            this.orderTimeframe.date = this.orderTimeframe.day1.format('DD-MM-YYYY');
+            this.orderTimeframe.date = day
         },
-        onDay2Chosen(timeframe){
-            this.validationMessage = '';
-            this.orderTimeframe.timeframe = timeframe; 
-            this.orderTimeframe.date = this.orderTimeframe.day2.format('DD-MM-YYYY');
-        },
-        onDay3Chosen(timeframe){
-            this.validationMessage = '';
-            this.orderTimeframe.timeframe = timeframe;
-            this.orderTimeframe.date = this.orderTimeframe.day3.format('DD-MM-YYYY');
-        },
-        onDay4Chosen(timeframe){
-            this.validationMessage = '';
-            this.orderTimeframe.timeframe = timeframe; 
-            this.orderTimeframe.date = this.orderTimeframe.day4.format('DD-MM-YYYY');
-        },
-        onDay5Chosen(timeframe){
-            this.validationMessage = '';
-            this.orderTimeframe.timeframe = timeframe;  
-            this.orderTimeframe.date = this.orderTimeframe.day5.format('DD-MM-YYYY');
-        },
-        onDay6Chosen(timeframe){
-            this.validationMessage = '';
-            this.orderTimeframe.timeframe = timeframe;  
-            this.orderTimeframe.date = this.orderTimeframe.day6.format('DD-MM-YYYY');
-        },
-        onDay7Chosen(timeframe){
-            this.validationMessage = '';
-            this.orderTimeframe.timeframe = timeframe;  
-            this.orderTimeframe.date = this.orderTimeframe.day7.format('DD-MM-YYYY');
-        }
     },
     computed:{
-        ...mapGetters(['getTotalPrice']),
-        ...mapGetters(['getCart']), 
-    },
+        ...mapGetters(['getTotalPrice','getCart']),
+        orderDate7(){
+            return this.orderDateTime.slice(0,7);
+        }
+    }
 }
 </script>

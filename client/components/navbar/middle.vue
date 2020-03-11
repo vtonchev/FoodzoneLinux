@@ -7,64 +7,89 @@
             <!-- middle menu    -->
             <div class="row m-0" id="middle-menu">
 
-                <!-- brandlogo -->
-              <div class="col-sm-auto mx-auto p-0 mb-3 mb-sm-0 ">
-                <img class= "brandLogo d-block mx-auto d-inline-block align-top" src="/img/brandlogo.png" alt="brand logo">
+              <!-- LOGO -->
+              <b-col sm='auto' class="mx-auto p-0 mb-3 mb-sm-0">
+                <div class="d-flex mx-auto" style="width:fit-content;">
+                  <b-img class= "brandLogo mr-3" src="/img/brandlogo.png" alt="brand logo"/>
+                  <div class="text-uppercase align-self-center" style="font-size:12px">
+                    <span>Първи свободен час</span>
+                    <span class="font-weight-bold d-block">Днес 21:00-22:00</span>
+                  </div>
+                </div>
+              </b-col>
+
+              <!-- SEARCH -->
+              <div class="col-5 order-3 order-sm-2 col-sm p-0 ml-sm-2 mr-sm-2 d-flex">
+                
+                  <div class="d-none d-md-block h-100 position-relative ml-auto mr-2">
+                    <b-form-input class="h-100 ml-auto border" type="search" style="max-width:200px" placeholder="Потърси продукт..." />
+                    <b-button class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
+                  </div>
+                
+                  <b-button v-b-modal.searchModal class="d-block d-md-none border-0 bg-transparent mr-auto mr-sm-0 ml-sm-auto h-100">
+                    <i  class="fas fa-search text-dark "></i>
+                  </b-button>
+                  <b-modal id="searchModal" hide-footer hide-header body-class="p-0">
+                    <b-form-input class="form-control mr-sm-2 h-100" type="search" placeholder="Потърси продукт..." />
+                    <b-button class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
+                  </b-modal>
+                  <div class="align-self-center d-flex" style="align-items: flex-end;">
+                    <div v-if='$auth.$state.loggedIn' style="display:grid" class="mr-3">
+                      <b-button class="bg-transparent text-dark border-0 p-0" ><i class="fas fa-user"></i></b-button>
+                      <a href="#" @click="onLogout" class="text-dark" style="margin-top: -5px;">изход</a>                            
+                    </div>
+                    <template v-else>
+                        <LoginPanel />
+                    </template>
+                    
+                  </div>
+                
               </div>
 
-                <!-- search bar -->
-                <div class="col-6 order-3 order-sm-2 col-sm p-0 ml-sm-2 mr-sm-2">
-                <!-- search bar on small to large screens -->
-                  <form class="search-bar d-none d-sm-block">
-                      <input class="form-control mr-sm-2" type="search" placeholder="Потърсете продукта тук ..." aria-label="Search">
-                      <button type="button" class="btn btn-light btn-outline-light search-button-any "><i class="fas fa-search"></i></button>
-                  </form>
-                <!-- search btn on xs screens -->
-                  <button type="button" class="btn btn-light btn-outline-light d-block d-sm-none mx-auto search-button-onphone" data-toggle="modal" data-target="#exampleModalLong"><i class="fas fa-search"></i></button>
-                <!-- search panel which appears when search btn on xs screeen is triggered-->
-                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                      <div class="modal-content">
-                          <form class="search-bar">
-                              <input class="form-control mr-sm-2" type="search" placeholder="Потърсете продукта тук ..." aria-label="Search">
-                              <button type="button" class="btn btn-light btn-outline-light search-button-any "><i class="fas fa-search"></i></button>
-                          </form>
-                      </div>
-                    </div>
-                </div>
-
-                </div>
-
                 <!-- CART -->
-                <div class="col-6 order-2 order-sm-3 col-sm-auto p-0" id="cart" >
-                  <span 
-                  @mouseover="visible = true"
-                  @mouseleave="visible = false"
+              <div class="col-6 order-2 order-sm-3 col-sm-auto p-0" id="cart" >
+                <span 
+                
+                @mouseover="visible = true"
+                @mouseleave="visible = false"
+                >
+                  <b-button class="shopping-cart-div-out p-0" 
+                  :class="visible ? null : 'collapsed'"
+                  :aria-expanded="visible ? 'true' : 'false'"
+                  aria-controls="collapse-4"
+                  @click="onCartClick"
                   >
-                    <b-button class="shopping-cart-div-out mx-auto p-0" 
-                    :class="visible ? null : 'collapsed'"
-                    :aria-expanded="visible ? 'true' : 'false'"
-                    aria-controls="collapse-4"
-                    @click="onCartClick"
-                    >
-                      <span class="fas fa-shopping-cart fa-1x"></span>
-                      <span id="price">{{getTotalPrice}} лв</span>           
-                    </b-button>
-                    <b-collapse id="collapse-4" v-model="visible" class="mt-2 cart_products" >
-                      <b-card class='d-none d-lg-block'>
-                        <div v-if="getCart == 0">Няма продукти в количката!</div>
-                        <div style="display: flow-root; margin-bottom:1.25rem;" v-for="product in getCart" :key="product._id">
-                          <img width="60" height="60" :src="product.photo.url" alt="" class="mr-3" style="float: left;">
-                          <span style="vertical-align: top; color:#2E2E2E; display: inline-block; font-size:16px; font-weight:700;">{{product.title}}</span>
-                          <button @click="$store.commit('removeProduct', product)" style="display:contents; margin:0 5px; display:contents"><span style="display: inline-table; font-weight:700; margin-left:20px">&times;</span></button>
-                          <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400;">{{product.quantity}} </span>
-                          <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400; padding:0 5px; ">&times;</span>
-                          <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400;"> {{product.price.$numberDecimal}}лв</span>
-                        </div> 
-                      </b-card>
-                    </b-collapse>
-                  </span>
+                    <span class="fas fa-shopping-cart fa-1x"></span>
+                    <span id="price">{{getTotalPrice}} лв</span>           
+                  </b-button>
+                  <b-collapse id="collapse-4" v-model="visible" class="mt-2 cart_products" >
+                    <b-card class='d-none d-lg-block'>
+                      <div v-if="getCart == 0">Няма продукти в количката!</div>
+                      <div style="display: flow-root; margin-bottom:1.25rem;" v-for="product in getCart" :key="product._id">
+                        <img width="60" height="60" :src="product.photo.url" alt="" class="mr-3" style="float: left;">
+                        <span style="vertical-align: top; color:#2E2E2E; display: inline-block; font-size:16px; font-weight:700;">{{product.title}}</span>
+                        <button @click="$store.commit('removeProduct', product)" style="display:contents; margin:0 5px; display:contents"><span style="display: inline-table; font-weight:700; margin-left:20px">&times;</span></button>
+                        <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400;">{{product.quantity}} </span>
+                        <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400; padding:0 5px; ">&times;</span>
+                        <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400;"> {{product.price.$numberDecimal}}лв</span>
+                      </div> 
+                    </b-card>
+                  </b-collapse>
+                </span>
+              </div>
+              <div class="col-auto ml-auto ml-sm-3 p-0 order-4">
+                <div style="display:grid"> 
+                  <span style="width: fit-content;margin-left: 1px;"><i class="fas fa-globe"></i></span>
+                  <b-form-select
+                  v-model="language"
+                  :options='languages'
+                  class="p-0 border-0"
+                  style="background: transparent; height:fit-content;"
+                  >
+                  </b-form-select>
                 </div>
+              </div>
+              
 
             </div>
 
@@ -80,36 +105,25 @@ a{
 }
 #outer_box_middle{
   width:100%;
-  padding:1rem 0;
+  padding:0.5rem 0;
   height:fit-content;
   background-color:white;
 }
-.brandLogo , .search-bar,.shopping-cart-div-out,.search-button-onphone{
+.brandLogo , .search-bar,.shopping-cart-div-out{
   height: 3rem;
 }
-.search-button-any,.search-button-onphone{
-  border:none;
-  color:black;
-  background-color: white;
-}
+
 .brandLogo{
   text-align: center;
 }
-.form-control{
-  height: inherit;
-}
-
-.search-bar{
-  position:relative;
-}
-.search-button-any{
+.search_button{
   position: absolute;
-  right:0.3%;
-  top:5%;
-  height:90%;
+  right:0;
+  top:0;
+  height:100%;
 }
  .shopping-cart-div-out{
-  background-color: #E52121;
+  background-color: #64c042;
   width:120px;
   border-radius: 4px;
   border: 0;
@@ -138,19 +152,35 @@ a{
   width: max-content;
 
 }
+@media screen and (max-width: 575px){
+    
+}
 </style>
 <script>
 import {mapGetters} from 'vuex';
+import LoginPanel from "~/components/navbar/loginPanel"
 export default {
+  components:{
+    LoginPanel
+  },
   computed:{
     ...mapGetters(['getTotalPrice', 'getCart']),
   },
   data(){
     return {
-        visible: false
+        visible: false,
+        language: 'BG',
+        languages: [
+          { value: 'BG', text: 'БГ' },
+          { value: 'RU', text: 'РУ' },
+          { value: 'EN', text: 'EN' },
+        ]
       }
   },
   methods:{
+    async onLogout(){
+      await this.$auth.logout();
+    },
     onCartClick(){
       if(this.$store.state.cart != 0){
         this.$router.push('/shop/cart');

@@ -80,7 +80,7 @@ exports.create_Timeframe = async( req, res) => {
 //add new Days and set 
 exports.update_Days = async (req, res) => {
     try {
-        const alldays = await OrderDateTime.find().sort({ _id: -1 });
+        const alldays = await OrderDateTime.find().sort({ _id: -1 }); // it is better to sort them by day
         const firstDay = await OrderDateTime.findOne();
         const lastDay = alldays[0];
 // ////////////////////--------------- ======>UPDATE<======-------------/////////////////////// //
@@ -169,6 +169,7 @@ exports.send_Date_Timeframes = async (req,res) =>{
         })
     }
 }
+//Check if timeframe is available before order
 exports.send_Specific_Timeframe = async (req, res) => {
     try {
         const timeframe = await OrderDateTime.find(
@@ -185,6 +186,15 @@ exports.send_Specific_Timeframe = async (req, res) => {
             success: false,
             message: err.message
         })
+    }
+}
+
+//Add order to a specific timeframe
+exports.add_Order_To_Timeframe = async (req,res) =>{
+    try {
+        
+    } catch (err) {
+        
     }
 }
 

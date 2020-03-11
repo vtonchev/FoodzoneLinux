@@ -1,33 +1,36 @@
 <template>
-  <div>
-    <Navbar />
-    <div class="container-fluid container_fluid_width">
-        <div class="row">
-            <div class="col-2 p-0">
-                
+    <div>
+        <div v-if="loaded == false"> 
+            <Loading/>
             </div>
-            <div class="col-10 p-0">
-                <select>
-                    <option>
-
-                    </option>
-                </select>
+        <div v-else>
+            <Navbar />
+            <div class="container-fluid container_fluid_width">
+                <b-row>
+                    <b-col cols="auto" class="p-0">
+                        <Sidebar/>
+                    </b-col>
+                    <b-col cols="10" class="p-0 ml-3">
+                        <b-col cols="12" class="p-0">
+                            <select>
+                                <option>
+                                </option>
+                            </select>
+                        </b-col>
+                    
+                        <b-col cols="12" class='p-0'>
+                            <nuxt />
+                        </b-col>
+                    </b-col>        
+                </b-row>
             </div>
+            <Footer />
         </div>
-        <div class="row">
-            <div class="col-2 p-0">
-                <Sidebar/>
-            </div>
-            <div class="col-10 p-0">
-                <nuxt />
-            </div>
-        </div>
-    </div>
-    <Footer />
   </div>
 </template>
 
 <script>
+import Loading from '~/components/loading.vue'
 import Navbar from "~/components/navbar/navbar"
 import Footer from "~/components/footer/footer"
 import Sidebar from "~/components/sidebar/sidebar"
@@ -35,7 +38,8 @@ export default {
     components:{
         Navbar,
         Footer,
-        Sidebar
+        Sidebar,
+        Loading
     }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <header>
-        <Top />
+        <!-- <Top /> -->
         <Middle />
         <Bottom />
     </header>
@@ -38,7 +38,7 @@ p, header{
 }
 header{
   position:sticky;
-  top:-52px;
+  top:0;
   width:100%
 }
 /* creates a grey shadow on click NOT DEFAULT BLUE */

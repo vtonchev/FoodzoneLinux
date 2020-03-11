@@ -9,8 +9,9 @@ exports.create_Category = async (req, res) => {
             newCategory.photo.url = req.file.location 
             newCategory.photo.key = req.file.key
             await newCategory.save();
+        } else {
+            await newCategory.save();
         }
-        
 
         res.json({
             success: true,

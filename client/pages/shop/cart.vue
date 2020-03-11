@@ -294,8 +294,7 @@ export default {
         window.removeEventListener('scroll', this.handleScroll);
     },
     computed:{
-        ...mapGetters(['getTotalPrice']),
-        ...mapGetters(['getCart']), 
+        ...mapGetters(['getTotalPrice','getCart']),
     },
     methods: {
         onChangeQuantity(event, product){
@@ -311,7 +310,7 @@ export default {
         onPlusClick(product){
             if(product.quantity < product.stockQuantity){
                 const qty = parseInt(product.quantity) + 1;
-                this.$store.commit("changeQty", {product, qty })
+                this.$store.commit("changeQty", {product, qty})
             }
         },
         onMinusClick(product){

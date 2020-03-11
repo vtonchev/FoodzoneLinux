@@ -52,9 +52,7 @@ export default {
         LoginPanel
     },
     methods:{
-        async onLogout(){
-           await this.$auth.logout();
-        }
+        
     }
 }
 </script>

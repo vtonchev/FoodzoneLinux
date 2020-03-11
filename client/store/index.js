@@ -1,23 +1,34 @@
+import axios from 'axios'
+
 export const state = () => ({
     //State
     cart: [],
-    totalPrice: 0 
+    totalPrice: 0,
+    categories:[]
 }) 
 
 export const actions = {
-    addProductToCart({ state, commit}, product){
+    addProductToCart({ state, commit}, product) {
         const cartProduct = state.cart.find(prod => prod._id === product._id);
-
         if(!cartProduct) {
             commit('pushProductToCart', product);
         } else {
             commit('incrementProductQty', cartProduct);
         }
         commit('incrementTotalPrice');
-    }
+    },
+    // async nuxtServerInit({commit}){
+    //     const response = await this.$axios.$get('/api/categories');
+    //     commit('setCategories',response.categories)
+    //     console.log(response)
+    // }
+    
 }
 
 export const mutations = {
+    setCategories(state, categories){
+        state.categories = categories;
+    },
     pushProductToCart(state,product){
         product.quantity = 1;
         state.cart.push(product)
@@ -64,7 +75,7 @@ export const mutations = {
                 state.totalPrice += product.price.$numberDecimal*product.quantity
             })
         }
-    }
+    },
 }
 
 export const getters = {
@@ -73,5 +84,8 @@ export const getters = {
     },
     getCart(state) {
         return state.cart
+    },
+    getCategories(state){
+        return state.categories
     }
 }
