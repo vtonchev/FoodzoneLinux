@@ -1,0 +1,92 @@
+.container_fluid_width{
+    width: 1200px
+}
+.filter, .route{
+    margin-left:28px;
+    margin-top: 2px;
+}
+.filter{
+    width:fit-content;
+    font-weight: 400;
+    font-size:14px;
+    align-self: center;
+    border-radius: 20px;
+    background-color:#EBEBEB;
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.route a{
+    color:#64C042;
+}
+.breadcrumb-item.active{
+    font-weight: 700;
+    color:#417F2C;
+}
+@media only screen and (max-width: 1199px) {
+    .container_fluid_width{
+        width:980px;
+    }
+    .sidebar_column{
+        width: 200px;
+    }
+    .filter, .route{
+        margin-left:28px;
+    }
+    }
+    @media screen and (max-width: 991px) and (min-width: 576px) {
+    .card_col:nth-child(3n) .card{
+        margin-left:auto;
+    }
+    .card_col:nth-child(3n - 1) .card{
+        margin:auto;
+    }
+}
+@media only screen and (max-width: 991px) {
+    .card {
+        width: 96%;
+        height: fit-content;
+    }
+    .card-img-top {
+        width: 100%;
+        height: auto;
+    }
+    .container_fluid_width{
+        width:auto;
+        margin:0 3rem;
+        }
+    .main_content{
+        width: calc(100% - 220px)
+    }
+    .route{
+        position: absolute;
+        width: 100%;
+        top: 0px;
+        margin:0;
+        padding: 6px;
+    }
+    .filter, .route{
+        margin-left:0;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .container_fluid_width{
+        margin:0 10px;
+    }
+    .filter{
+        margin-left:auto;
+        margin-right: auto;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .card_col:nth-child(2n) .card{
+        margin-left:auto;
+    }
+    .container_fluid_width{
+            width:auto;
+            height: fit-content;
+        }
+}
+/* Extra small devices (phones, 600px and down) */

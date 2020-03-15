@@ -23,7 +23,7 @@
             </div>
             <div v-if="getCart == 0" style="border:solid 1px #E1E1E1; background-color:#f6f6f6; margin-top:-20px; margin-bottom:20px; text-align:center;"> Няма продукти в количката !</div>
             <div ref="lastElement"></div>
-            <div ref="checkoutMenu" @scroll='handleScroll' class="stick_menu" v-bind:class="{ stick_to_bottom: isBottom }">
+            <div ref="checkoutMenu"  class="stick_menu" v-bind:class="{ stick_to_bottom: isBottom }">
                 <p class="totalPrice" style="font-size:1.3rem;">Общо: <span style="color: #5AA240;">{{getTotalPrice}}</span> лв</p>
                 <button class="checkout_button"><nuxt-link style="padding: 8px 0;" to='/shop/order'>Продължи</nuxt-link></button>
             </div>
@@ -325,7 +325,7 @@ export default {
             } 
             if(window.scrollY + window.innerHeight <= this.$refs["checkoutMenu"].offsetTop + this.$refs["checkoutMenu"].offsetHeight){
                 this.isBottom = false;
-            }
+            } 
             
         }
     }

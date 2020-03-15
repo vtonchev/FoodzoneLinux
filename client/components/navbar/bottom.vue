@@ -69,6 +69,7 @@ export default {
 #outer_box_bottom{
   width:100%;
   background-color: white;
+  margin-bottom:1rem;
 }
 #inner_box_bottom{
     background-color: #64c042;

@@ -25,11 +25,11 @@ export default {
   created(){
     
     this.loaded = false;
-    console.log(this.loaded)
+    
   },
   mounted(){
     this.loaded = true;
-    console.log(this.loaded)
+    
   },
   data(){
     return{

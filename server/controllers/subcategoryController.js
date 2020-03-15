@@ -4,17 +4,12 @@ exports.create_Subcategory = async (req, res) => {
     try{
         const newSubcategory = new Subcategory({
             category: req.body.categoryID,
-            title: req.body.title,
-            photo: {
-                url: req.file.location,
-                key: req.file.key
-            }
+            title: req.body.title
         })
         await newSubcategory.save();
-
         res.json({
             success: true,
-            message: "Успешно създадохте подкатегория в категория: " + category.title
+            message: "Успешно създадохте подкатегория"
         });
     } catch(err) {
         res.status(500).json({
@@ -26,7 +21,7 @@ exports.create_Subcategory = async (req, res) => {
 //GET a single Subcategory
 exports.get_A_Single_Subcategory = async (req, res) => {
     try{
-        const subcategory = await Subcategory.find({_id: req.params.id});
+        const subcategory = await Subcategory.findOne({_id: req.params.id}).populate('category').exec();
         res.json({
             success: true,
             subcategory: subcategory

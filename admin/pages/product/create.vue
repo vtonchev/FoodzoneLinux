@@ -108,23 +108,23 @@
                     </tbody>     
                 </table>
                 <div style="width:100%; height:2rem;"></div>
-                <table style="width:100%;">
-                    <tbody>
-                        <tr>
-                            <td class="w-50">Срок на годност:</td>
-                            <td><input type="date" v-model="properties.expirationDate"></td>
-                        </tr>
-                        <tr>
-                            <td class="w-50">Марка:</td>
-                            <td><input type="text" v-model="properties.brand"></td>
-                        </tr>
-                        <tr>
-                            <td class="w-50">Произход:</td>
-                            <td><input type="text" placeholder="страна" v-model="properties.origin"></td>
-                        </tr>
-                    </tbody>
-                    
-                </table>
+                    <table style="width:100%;">
+                        <tbody>
+                            <tr>
+                                <td class="w-50">Срок на годност:</td>
+                                <td><input type="date" v-model="properties.expirationDate"></td>
+                            </tr>
+                            <tr>
+                                <td class="w-50">Марка:</td>
+                                <td><input type="text" v-model="properties.brand"></td>
+                            </tr>
+                            <tr>
+                                <td class="w-50">Произход:</td>
+                                <td><input type="text" placeholder="страна" v-model="properties.origin"></td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
                 <div style="width:100%; height:2rem;"></div>
                 
             </div>
@@ -208,21 +208,7 @@ export default {
             data.append("stockQuantity", this.stockQuantity);    
             data.append("description", this.description);    
             data.append("photo", this.selectedFile);
-            // properties
-            let properties = {};
-            let propertyNames = [
-                'ingredients','storageConditions','consumtionWay','manufacture',
-                'calories','carbohydrates','sugars','fats','saturated','proteins',
-                'salt','fibers','expirationDate','brand','origin'
-            ]
-            propertyNames.forEach(propertyName => {
-                let name = propertyName
-                if(this.properties[name]){
-                    properties[name] = this.properties[name]
-                }
-            });
-            data.append("properties", JSON.stringify(properties));
-            // end of adding-properties function
+            data.append("properties", JSON.stringify(this.properties));
             let result = await this.$axios.$post("/api/products", data);
             console.log(result);
             if (result) {

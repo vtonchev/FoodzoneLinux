@@ -51,12 +51,24 @@ exports.get_All_Products = async (req, res) => {
 // GET products filtered by category
 exports.get_Products_By_Category = async (req, res) => {
     try{
-        const products = await Product.find({category: req.params.id}).populate("category subcategory").exec();
+        const page = req.query.page;
+        let sort = req.query.sort;
+        const offset = 10;
+        let products = undefined;
+        if(sort){
+            // SORT LOGIC HERE 
+        } else {
+            products = await Product.find({category: req.params.id}).skip((page-1)*offset).limit(offset).populate("category subcategory").exec();
+        }
+        // SORT LOGIC HERE
+        const all = await Product.countDocuments({category: req.params.id});
         res.json({
             success: true,
-            products: products
+            products: products,
+            count: all
         })
     } catch (err){
+        console.log(err)
         res.status(500).json({
             success: false,
             message: err.message
@@ -68,12 +80,16 @@ exports.get_Products_By_Category = async (req, res) => {
 
 exports.get_Products_By_Subcategory = async (req, res) =>{
     try {
-        const products = await Product.find({subcategory: req.params.id}).populate("category subcategory").exec();
+        const page = req.query.page;
+        const offset = 10;
+        const all = await Product.countDocuments({subcategory: req.params.id});
+        const products = await Product.find({subcategory: req.params.id}).skip((page-1)*offset).limit(offset).populate("category subcategory").exec();
         res.json({
             success: true,
-            products: products
+            products: products,
+            count: all
         }) 
-    } catch (error) {
+    } catch (err) {
         res.status(500).json({
             success: false,
             message: err.message

@@ -100,7 +100,6 @@
 
 <style>
 a{
-  color:white;
   text-decoration: none;
 }
 #outer_box_middle{
