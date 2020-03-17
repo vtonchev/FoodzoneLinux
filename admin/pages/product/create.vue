@@ -1,5 +1,5 @@
 <template>
-    <div id="page">
+    <b-form id="page" @submit.prevent='onAddProduct'>
             <b-alert v-if="message" :show="5" dismissible variant="success">
                 <p>{{message}}</p>
             </b-alert>
@@ -12,36 +12,42 @@
                 <div id="form">
                     <!-- Category ID selection -->
                     <label for="category">Категория</label>
-                    <select name="categoryID" id="category" v-model="categoryID" @change="onCategorySelected">
+                    <select name="categoryID" id="category" v-model="categoryID" @change="onCategorySelected" required>
                         <option v-for="category in categories" :value="category._id" :key="category._id" >{{category.title}}</option>
                     </select>
                     <!-- Subcategory ID selection -->
                     <label for="subcategory">Подкатегория</label>
-                    <select name="subcategoryID" id="subcategory" v-model="subcategoryID">
+                    <select name="subcategoryID" id="subcategory" v-model="subcategoryID" required>
                         <option v-for="subcategory in subcategories" :value="subcategory._id" :key="subcategory._id">{{subcategory.title}}</option>
                     </select>
                     <!-- Title -->
                     <label for="title">Име</label>
-                    <input class="width_100" id="title" type="text" name="title" v-model="title">
+                    <input class="width_100" id="title" type="text" name="title" v-model="title" required>
                     <!-- Price -->
                     <label for="price">Цена</label>
-                    <input id="price" type="number" step=".01" v-model="price"  placeholder="0">
+                    <input id="price" type="number" step=".01" v-model="price"  placeholder="0" required>
                     <!-- Weight -->
-                    <label for="weight">Количество на единица продукт <em>(в грамове)</em></label>
-                    <input id="weight" type="number" v-model="weight" placeholder="0">
+                    <label for="weight">Количество на единица продукт</label>
+                    <input id="weight" type="number" v-model="weight" placeholder="0" required>
+                    <b-form-group label="Избери мерна единица">
+                        <b-form-radio-group id="radio-group-2" v-model="unit">
+                            <b-form-radio value="мл">мл</b-form-radio>
+                            <b-form-radio value="л">л</b-form-radio>
+                            <b-form-radio value="кг">кг</b-form-radio>
+                            <b-form-radio value="г">г</b-form-radio>
+                            <b-form-radio value="бр">бр</b-form-radio>
+                        </b-form-radio-group>
+                    </b-form-group>
                     <!-- StockQuantity -->
                     <label for="stockQuantity">Наличност <em>(брой)</em></label>
-                    <input id="stockQuantity" type="number" v-model="stockQuantity"  placeholder="0">
+                    <input id="stockQuantity" type="number" v-model="stockQuantity"  placeholder="0" required>
                     <!-- Description -->
                     <label for="description">Описание</label>
                     <textarea id="description" rows="2" v-model="description"></textarea>
-                    <!-- On sale -->
-                    <label for='sale'>Промоция<em>(в проценти)</em></label>
-                    <input id='sale' type='number' v-model="sale">
                     <!-- Photo -->
                     <label for="photo">Изберете снимка</label>
                     <input id="photo" type="file"  @change="onFileSelected" />
-                    <button class="btn btn-success" @click="onAddProduct" >Добави</button>
+                    <button class="btn btn-success" type="submit">Добави</button>
                 </div>
             </div>
 
@@ -54,10 +60,10 @@
                 <div style="display:grid">
                     <label for="ingredients">Съставки</label>
                     <textarea id="ingriedients" rows="1" v-model="properties.ingriedients"></textarea>
-                    <label for="storage_conditions">Условия за съхранение</label>
+                    <!-- <label for="storage_conditions">Условия за съхранение</label>
                     <textarea id="storage_conditions" rows="1" v-model="properties.storageConditions"></textarea>
                     <label for="consumation">Начин на употреба</label>
-                    <textarea id="consumation" rows="1" v-model="properties.consumtionWay"></textarea>
+                    <textarea id="consumation" rows="1" v-model="properties.consumtionWay"></textarea> -->
                     <label for="manufacturer">Производител</label>
                     <input id="manufacturer" type="text" v-model="properties.manufacturer">
                 </div>
@@ -65,7 +71,7 @@
             
             <!-- Хранителна стойност -->
             <div class="w-30">
-                <table>
+                <table class="w-100">
                     <thead>
                         <tr>
                             <th>Хранителна стойност за:</th>
@@ -82,7 +88,7 @@
                             <td><input type="text" v-model="properties.carbohydrates"></td>
                         </tr>
                         <tr>
-                            <td>от които захари (г)</td>
+                            <td><span class="ml-2">-от които захари (г)</span></td>
                             <td><input type="text" v-model="properties.sugars"></td>
                         </tr>
                         <tr>
@@ -90,7 +96,7 @@
                             <td><input type="text" v-model="properties.fats"></td>
                         </tr>
                         <tr>
-                            <td>от които наситени (г)</td>
+                            <td><span class="ml-2">-от които наситени (г)</span></td>
                             <td><input type="text" v-model="properties.saturated"></td>
                         </tr>
                         <tr>
@@ -101,19 +107,19 @@
                             <td>Сол (г)</td>
                             <td><input type="text" v-model="properties.salt"></td>
                         </tr>   
-                        <tr>
+                        <!-- <tr>
                             <td>Фибри (г)</td>
                             <td><input type="text" v-model="properties.fibers"></td>
-                        </tr>     
+                        </tr>      -->
                     </tbody>     
                 </table>
                 <div style="width:100%; height:2rem;"></div>
                     <table style="width:100%;">
                         <tbody>
-                            <tr>
+                            <!-- <tr>
                                 <td class="w-50">Срок на годност:</td>
                                 <td><input type="date" v-model="properties.expirationDate"></td>
-                            </tr>
+                            </tr> -->
                             <tr>
                                 <td class="w-50">Марка:</td>
                                 <td><input type="text" v-model="properties.brand"></td>
@@ -129,7 +135,7 @@
                 
             </div>
         </div>
-    </div>    
+    </b-form>    
 </template>
 
 <style scoped>
@@ -142,6 +148,7 @@
 </style>
 
 <script>
+
 export default {
     async asyncData({ $axios }){
         try {
@@ -153,6 +160,7 @@ export default {
             console.log(err)
         }
     },
+    
     data(){
         return {
             subcategories: [],
@@ -162,16 +170,18 @@ export default {
             price: null,
             description: null,
             weight: null,
+            unit: null,
             stockQuantity: null,
             selectedFile: null,
             sale: null,
+            oldPrice: null,
             imageUrl: null,
             message: null,
             err: null,
             properties:{
                 ingredients: null,
-                storageConditions: null,
-                consumtionWay: null,
+                // storageConditions: null,
+                // consumtionWay: null,
                 manufacturer: null,
                 calories: null,
                 carbohydrates: null,
@@ -180,8 +190,8 @@ export default {
                 saturated: null,
                 proteins: null,
                 salt: null,
-                fibers: null,
-                expirationDate: null,
+                // fibers: null,
+                // expirationDate: null,
                 brand: null,
                 origin: null
             }
@@ -202,15 +212,17 @@ export default {
             let data = new FormData();
             data.append("categoryID", this.categoryID);
             data.append("subcategoryID", this.subcategoryID);
-            data.append("title", this.title);    
+            data.append("title", this.title);
+            data.append("sale", this.sale); 
+            data.append("oldPrice", this.oldPrice);   
             data.append("price", this.price);    
-            data.append("weight", this.weight);    
+            data.append("weight", this.weight);
+            data.append('unit',this.unit);    
             data.append("stockQuantity", this.stockQuantity);    
             data.append("description", this.description);    
             data.append("photo", this.selectedFile);
             data.append("properties", JSON.stringify(this.properties));
             let result = await this.$axios.$post("/api/products", data);
-            console.log(result);
             if (result) {
                 this.message = "Успешно създадохте продукт"
             } else {

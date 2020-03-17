@@ -9,10 +9,10 @@
                 <b-breadcrumb-item active :to="{name: 'shop-category', params: { category: $route.params.category} }">{{$store.state.categories[$route.params.category]}} ({{count}})</b-breadcrumb-item>
             </b-breadcrumb>
             <b-form-group class="filter">
-                <b-form-radio-group v-model="sort" id="radio-group-2" name="radio-sub-component">
+                <b-form-radio-group v-model="sort">
                     <b-form-radio value="1"> Цена (ниска)</b-form-radio>
-                    <b-form-radio value="1">Цена (висока)</b-form-radio>
-                    <b-form-radio value="name:1">Име</b-form-radio>
+                    <b-form-radio value="2">Цена (висока)</b-form-radio>
+                    <b-form-radio value="3">Име</b-form-radio>
                 </b-form-radio-group>
             </b-form-group>
         </b-col>
@@ -20,9 +20,15 @@
             <b-row class="m-0">
                 <b-col cols='6' sm='4' md='4' lg='3' class="p-0 mb-3 card_col" v-for='product in products' :key='product._id'>
                     <Card 
+                    v-if="product.sale == null || product.sale == 0"
                     :product='product'
                     >
                     </Card> 
+                    <CardSale
+                    v-else
+                    :product='product'
+                    >
+                    </CardSale>
                 </b-col>
             </b-row>
             <Spinner class="position-fixed mx-auto my-5" style="bottom:0; left:50%;" v-if='bottom && (count/10) > page'/>
@@ -31,12 +37,14 @@
     </b-col>
 </template>
 <script>
-import Card from "~/components/product/card"
+import Card from "~/components/product/Card"
+import CardSale from "~/components/product/CardSale"
 import Spinner from "~/components/spinner"
 export default {
     layout: 'sidebar',
     components:{
         Card,
+        CardSale,
         Spinner
     },
     async asyncData({$axios, params, store}){
@@ -58,6 +66,7 @@ export default {
             count:null,
             products:[],
             sort:'',
+            sortTag:[]
         }
     },
     created() {
@@ -114,4 +123,5 @@ export default {
 </script>
 
 <style scoped src="~/assets/products_page.css">
+
 </style>

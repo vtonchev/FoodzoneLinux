@@ -10,10 +10,10 @@
                 <b-breadcrumb-item active>{{$store.state.subcategories[$route.params.category].find(({id}) => id === $route.params.subcategory).title}}({{count}})</b-breadcrumb-item>
             </b-breadcrumb>
             <b-form-group class="filter">
-                <b-form-radio-group id="radio-group-2" style='' name="radio-sub-component">
-                    <b-form-radio value="first"> Цена (ниска)</b-form-radio>
-                    <b-form-radio value="second">Цена (висока)</b-form-radio>
-                    <b-form-radio value="third">Име</b-form-radio>
+                <b-form-radio-group v-model="sort">
+                    <b-form-radio value="1"> Цена (ниска)</b-form-radio>
+                    <b-form-radio value="2">Цена (висока)</b-form-radio>
+                    <b-form-radio value="3">Име</b-form-radio>
                 </b-form-radio-group>
             </b-form-group>
         </b-col>
@@ -21,9 +21,15 @@
             <b-row class="m-0">
                 <b-col cols='6' sm='4' md='4' lg='3' class="p-0 mb-3 card_col" v-for='product in products' :key='product._id'>
                     <Card 
+                    v-if="product.sale == null || product.sale == 0"
                     :product='product'
                     >
                     </Card> 
+                    <CardSale
+                    v-else
+                    :product='product'
+                    >
+                    </CardSale>
                 </b-col>
             </b-row>
             <Spinner class="position-fixed mx-auto my-5" style="bottom:0; left:50%;" v-if='bottom && (count/10) > page'/>
@@ -32,12 +38,14 @@
     </b-col>
 </template>
 <script>
-import Card from "~/components/product/card"
+import Card from "~/components/product/Card"
+import CardSale from "~/components/product/CardSale"
 import Spinner from "~/components/spinner"
 export default {
     layout: 'sidebar',
     components:{
         Card, 
+        CardSale,
         Spinner
     },
     async asyncData({$axios, params, store}){
@@ -56,7 +64,9 @@ export default {
             page: 1,
             bottom: false,
             count:null,
-            products:[]
+            products:[],
+            sort:'',
+            sortTag:[]
         }
     },
     created() {
@@ -68,6 +78,11 @@ export default {
         bottom(bottom) {
             if (bottom) {
                 this.addProducts()
+            }
+        },
+        sort(sort){
+            if(sort) {
+                this.sortBy();
             }
         }
     },
@@ -88,11 +103,19 @@ export default {
                     this.addProducts()
                 }
             }
-        }, 
+        },
+        sortBy(){
+            this.page = 1;
+            console.log(this.sort);
+            this.$axios.$get('/api/products/subcategories/'+ this.$route.params.subcategory + '?page=' + this.page + '&sort=' + this.sort).then((response)=>{
+                this.products = response.products;
+            })
+        } 
     }
     
 }
 </script>
 
 <style scoped src="~/assets/products_page.css">
+
 </style>

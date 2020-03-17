@@ -23,6 +23,7 @@
     font-weight: 700;
     color:#417F2C;
 }
+
 @media only screen and (max-width: 1199px) {
     .container_fluid_width{
         width:980px;

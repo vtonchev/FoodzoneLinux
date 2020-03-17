@@ -1,4 +1,4 @@
-import axios from 'axios'
+
 
 export const state = () => ({
     //State
@@ -61,10 +61,13 @@ export const actions = {
         }
         commit('incrementTotalPrice');
     },
-    // async nuxtServerInit({commit}){
-    //     const response = await this.$axios.$get('/api/categories');
-    //     commit('setCategories',response.categories)
-    //     console.log(response)
+    // changeQuantity({state, commit}, product, action){
+    //     if(action == 1){
+    //         commit('incrementProductQty', product);
+    //     } else {
+    //         if()
+    //         commit('decrementProductQty', product)
+    //     }
     // }
     
 }
@@ -77,14 +80,58 @@ export const mutations = {
         state.subcategories = subcategories
     },
     pushProductToCart(state,product){
-        product.quantity = 1;
-        state.cart.push(product)
+        let newProd = {
+            quantity: 1,
+            _id: product._id,
+            title: product.title,
+            photo:{
+                url: product.photo.url
+            },
+            price:product.price,
+            stockQuantity: product.stockQuantity
+        }
+        // product.quantity = 1;
+        state.cart.push(newProd);
     },
 
-    incrementProductQty(state,product){
-        product.quantity++;
-        let indexOfProduct = state.cart.indexOf(product);
-        state.cart.splice(indexOfProduct, 1, product);
+    incrementProductQty(state, product){
+        let cartProduct = state.cart.find(prod => prod._id === product._id)
+        if(cartProduct.quantity < product.stockQuantity){
+            cartProduct.quantity++;
+            state.totalPrice = 0;
+            if (state.cart.length > 0) {
+                state.cart.map(product => {
+                    state.totalPrice += product.price.$numberDecimal*product.quantity
+                })
+            }
+            let indexOfProduct = state.cart.indexOf(cartProduct);
+            state.cart.splice(indexOfProduct, 1, cartProduct);
+        }
+        
+    },
+    decrementProductQty(state, product){
+        let cartProduct = state.cart.find(prod => prod._id === product._id)
+        if(cartProduct.quantity > 1){
+            cartProduct.quantity--;
+            state.totalPrice = 0;
+            if (state.cart.length > 0) {
+                state.cart.map(product => {
+                    state.totalPrice += product.price.$numberDecimal*product.quantity
+                })
+            }
+            let indexOfProduct = state.cart.indexOf(cartProduct);
+            state.cart.splice(indexOfProduct, 1, cartProduct);
+        }  else {
+            // Delete the product (else === quantity <= 1)
+            let indexOfProduct = state.cart.indexOf(cartProduct);
+            state.cart.splice(indexOfProduct, 1);
+            state.totalPrice = 0;
+            if (state.cart.length > 0) {
+                state.cart.map(product => {
+                    state.totalPrice += product.price.$numberDecimal*product.quantity
+                })
+            }
+        }
     },
 
     incrementTotalPrice(state){
@@ -98,14 +145,12 @@ export const mutations = {
     changeQty( state, {product, qty} ){
         let cartProduct = state.cart.find(prod => prod._id === product._id)
         cartProduct.quantity = qty;
-
         state.totalPrice = 0;
         if (state.cart.length > 0) {
             state.cart.map(product => {
                 state.totalPrice += product.price.$numberDecimal*product.quantity
             })
         }
-
         let indexOfProduct = state.cart.indexOf(cartProduct);
         state.cart.splice(indexOfProduct, 1, cartProduct);
     },

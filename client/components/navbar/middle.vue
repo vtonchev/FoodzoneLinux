@@ -21,11 +21,15 @@
               <!-- SEARCH -->
               <div class="col-5 order-3 order-sm-2 col-sm p-0 ml-sm-2 mr-sm-2 d-flex">
                 
-                  <div class="d-none d-md-block h-100 position-relative ml-auto mr-2">
-                    <b-form-input class="h-100 ml-auto border" type="search" style="max-width:200px" placeholder="Потърси продукт..." />
+                  <div class="d-none d-md-block h-100 position-relative ml-auto mr-2" style="width: inherit;">
+                    <b-form-input class="h-100 ml-auto border search" type="search" v-model="searchText" placeholder="Потърси продукт..." />
                     <b-button class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
                   </div>
-                
+                  <b-collapse id="search_results">
+                    <div>
+                      <span>aaaaaaaaaaa</span>
+                    </div>
+                  </b-collapse>
                   <b-button v-b-modal.searchModal class="d-block d-md-none border-0 bg-transparent mr-auto mr-sm-0 ml-sm-auto h-100">
                     <i  class="fas fa-search text-dark "></i>
                   </b-button>
@@ -151,6 +155,14 @@ a{
   width: max-content;
 
 }
+.search{
+  max-width:200px;
+  transition: max-width 0.3s;
+}
+.search:focus{
+  max-width:100%;
+  
+}
 @media screen and (max-width: 575px){
     
 }
@@ -162,8 +174,9 @@ export default {
   components:{
     LoginPanel
   },
-  computed:{
-    ...mapGetters(['getTotalPrice', 'getCart']),
+  mounted(){
+    
+    
   },
   data(){
     return {
@@ -173,8 +186,19 @@ export default {
           { value: 'BG', text: 'БГ' },
           { value: 'RU', text: 'РУ' },
           { value: 'EN', text: 'EN' },
-        ]
+        ],
+        searchText:'',
+        searchProducts:[]
       }
+  },
+  watch: {
+    searchText(searchText) {
+      if (searchText) {
+          this.Search();
+      } else {
+        this.searchProducts = []
+      }
+    }
   },
   methods:{
     async onLogout(){
@@ -184,7 +208,26 @@ export default {
       if(this.$store.state.cart != 0){
         this.$router.push('/shop/cart');
       }
+    },
+    async Search(){
+      this.$root.$emit('show', 'search_results')
+      const response = await this.$axios.$get('/api/products/search/' + this.searchText);
+      return this.searchProducts = response.products
+    },
+    searchCollapse(){
+      if(this.searchText){
+        if(false){
+          this.$root.$emit('show', 'search_results')
+        }
+      } else {
+        if(this.$root.$on('bv::collapse::state', 'search_results') == true){
+          this.$root.$emit('bv::toggle::collapse', 'search_results')
+        }
+      }
     }
-  }
+  },
+  computed:{
+    ...mapGetters(['getTotalPrice', 'getCart']),
+  },
 }
 </script>

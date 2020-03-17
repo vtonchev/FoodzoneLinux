@@ -18,17 +18,36 @@
                     <label for="title">Име</label>
                     <input class="width_100" id="title" type="text" v-model="title"  :placeholder="product[0].title">
                     <!-- Price -->
-                    <label for="price">Цена</label>
+                    <label for="price">Цена (с отстъпка)</label>
                     <input id="price" type="number"  v-model="price" :placeholder="product[0].price.$numberDecimal"  step=".01">
+                    <!-- On sale -->
+                    <label for='sale'>Промоция<em>(в проценти)</em></label>
+                    <input id='sale' type='number' v-model="sale" :placeholder="product[0].sale">
+                    <span style="display:grid" v-if="sale || product[0].sale">
+                        <span><small>Нова цена с отстъпка(информативно): {{(product[0].price.$numberDecimal/100)*(100 - sale)}} лв</small></span>
+                        <label>Стара цена</label>
+                        <input type="number" step=".01" v-model="oldPrice"  :placeholder="product[0].oldPrice">
+                    </span>
                     <!-- Weight -->
-                    <label for="weight">Количество на единица продукт <em>(в грамове)</em></label>
+                    <label for="weight">Количество на единица продукт</label>
                     <input id="weight" type="number" v-model="weight" :placeholder="product[0].weight.$numberDecimal">
+                    <!-- Unit -->
+                    <b-form-group label="Избери мерна единица">
+                        <b-form-radio-group id="radio-group-2" v-model="unit">
+                            <b-form-radio value="мл">мл</b-form-radio>
+                            <b-form-radio value="л">л</b-form-radio>
+                            <b-form-radio value="кг">кг</b-form-radio>
+                            <b-form-radio value="г">г</b-form-radio>
+                            <b-form-radio value="бр">бр</b-form-radio>
+                        </b-form-radio-group>
+                    </b-form-group>
                     <!-- StockQuantity -->
                     <label for="stockQuantity">Наличност <em>(брой)</em></label>
                     <input id="stockQuantity" type="number" v-model="stockQuantity" :placeholder="product[0].stockQuantity">
                     <!-- Description -->
                     <label for="description">Описание</label>
                     <textarea id="description" cols="30" rows="10" v-model="description" :placeholder="product[0].description"></textarea>
+                    
                     <!-- Photo -->
                     <label for="photo">Изберете снимка</label>
                     <input id="photo" type="file"  @change="onFileSelected" />
@@ -42,10 +61,10 @@
                 <div style="display:grid">
                     <label for="ingredients">Съставки</label>
                     <textarea id="ingredients" rows="1" v-model="properties.ingredients" ></textarea>
-                    <label for="storage_conditions">Условия за съхранение</label>
+                    <!-- <label for="storage_conditions">Условия за съхранение</label>
                     <textarea id="storage_conditions" rows="1" v-model="properties.storageConditions"></textarea>
                     <label for="consumation">Начин на употреба</label>
-                    <textarea id="consumation" rows="1" v-model="properties.consumtionWay"></textarea>
+                    <textarea id="consumation" rows="1" v-model="properties.consumtionWay"></textarea> -->
                     <label for="manufacturer">Производител</label>
                     <input id="manufacturer" type="text" v-model="properties.manufacturer">
                 </div>
@@ -69,7 +88,7 @@
                             <td><input type="text" v-model="properties.carbohydrates"></td>
                         </tr>
                         <tr>
-                            <td>от които захари (г)</td>
+                            <td><span class="ml-2">-от които захари (г)</span></td>
                             <td><input type="text" v-model="properties.sugars"></td>
                         </tr>
                         <tr>
@@ -77,7 +96,7 @@
                             <td><input type="text" v-model="properties.fats"></td>
                         </tr>
                         <tr>
-                            <td>от които наситени (г)</td>
+                            <td><span class="ml-2">-от които наситени (г)</span></td>
                             <td><input type="text" v-model="properties.saturated"></td>
                         </tr>
                         <tr>
@@ -88,19 +107,19 @@
                             <td>Сол (г)</td>
                             <td><input type="text" v-model="properties.salt"></td>
                         </tr>   
-                        <tr>
+                        <!-- <tr>
                             <td>Фибри (г)</td>
                             <td><input type="text" v-model="properties.fibers"></td>
-                        </tr>   
+                        </tr>    -->
                     </tbody>      
                 </table>
                 <div style="width:100%; height:2rem;"></div>
                 <table style="width:100%;">
                     <tbody>
-                        <tr>
+                        <!-- <tr>
                             <td class="w-50">Срок на годност:</td>
                             <td><input type="date"  v-model="properties.expirationDate"></td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td class="w-50">Марка:</td>
                             <td><input type="text" v-model="properties.brand"></td>
@@ -150,7 +169,7 @@ export default {
         //CHECK IF PROPERTIES EXISTS and then checks every single one of them 
         if(this.product[0].properties){
             let propertyNames = [
-                'ingredients','storageConditions','consumtionWay','manufacture',
+                'ingredients','storageConditions','consumtionWay','manufacturer',
                 'calories','carbohydrates','sugars','fats','saturated','proteins',
                 'salt','fibers','brand','origin'
             ]
@@ -160,11 +179,14 @@ export default {
                     this.properties[name] = this.product[0].properties[name]
                 }
             });
-            if(this.product[0].properties.expirationDate){
-                var expirationDate = new Date(this.product[0].properties.expirationDate).toISOString().slice(0,10)
-            }
-            this.properties.expirationDate = expirationDate;
-        }                                                                                               
+            // if(this.product[0].properties.expirationDate){
+            //     var expirationDate = new Date(this.product[0].properties.expirationDate).toISOString().slice(0,10)
+            // }
+            // this.properties.expirationDate = expirationDate;
+        } 
+        this.unit = this.product[0].unit;  
+        // this.oldPrice = this.product[0].oldPrice;
+        // this.sale = this.product[0].sale                                                                                            
     },
     data(){
         return{
@@ -174,15 +196,18 @@ export default {
             selected:'',
             title: null,
             price: null,
+            oldPrice: null,
             description: null,
             weight: null,
+            unit: null,
             stockQuantity: null,
+            sale: null,
             selectedFile: null,
             imageUrl: '',      
             properties:{
                 ingredients:'',
-                storageConditions:'',
-                consumtionWay:'',
+                // storageConditions:'',
+                // consumtionWay:'',
                 manufacturer:'',
                 calories: '',
                 carbohydrates: '',
@@ -191,7 +216,7 @@ export default {
                 saturated: '',
                 proteins: '',
                 salt: '',
-                fibers: '',
+                // fibers: '',
                 expirationDate: '',
                 brand: '',
                 origin: ''
@@ -211,7 +236,7 @@ export default {
         },
         async onUpdateProduct({ params, $router }){
             const data = new FormData();
-            const productValues = ['title','price','weight','stockQuantity','description']
+            const productValues = ['title','price','weight','stockQuantity','description','unit', 'sale', 'oldPrice'];
             productValues.forEach(value => {
                 if(this[value]){
                     data.append(value,this[value]);
@@ -228,7 +253,7 @@ export default {
             }   
             let properties = {};
             let propertyNames = [
-                'ingredients','storageConditions','consumtionWay','manufacture',
+                'ingredients','storageConditions','consumtionWay','manufacturer',
                 'calories','carbohydrates','sugars','fats','saturated','proteins',
                 'salt','fibers','expirationDate','brand','origin'
             ]
