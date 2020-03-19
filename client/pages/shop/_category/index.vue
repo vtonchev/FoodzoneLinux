@@ -91,8 +91,8 @@ export default {
             const scrollY = window.scrollY
             const visible = document.documentElement.clientHeight
             const pageHeight = document.documentElement.scrollHeight;
-            const bottomOfPage = visible + scrollY >= (pageHeight/2)
-            return bottomOfPage || (pageHeight/2) < visible
+            const bottomOfPage = visible + scrollY >= (pageHeight - 300)
+            return bottomOfPage || (pageHeight - 300) < visible
         },
         async addProducts(){
             if((this.count/10) > this.page ){

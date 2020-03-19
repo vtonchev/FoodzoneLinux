@@ -144,7 +144,7 @@ exports.get_Single_Product =  async (req, res) => {
 exports.get_Search_Products = async (req, res) => {
     try {
         const search = decodeURIComponent(req.params.search);
-        const products = await Product.find( { title: { $regex: '^'+search , $options:'i'} }).limit(10);
+        const products = await Product.find( { title: { $regex: '^'+search , $options:'i'} }).limit(5);
         res.json({
             success: true,
             products: products

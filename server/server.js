@@ -4,7 +4,10 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv"); 
 const cors = require('cors');
+// FAKER //
 
+
+// FAKER //
 const app = express();
 dotenv.config();
 
@@ -41,7 +44,45 @@ const subcategoryRoutes = require("./routes/subcategory");
 const authRoutes = require('./routes/auth');
 const orderDateTimeRoutes = require('./routes/orderDateTime');
 const orderRoutes = require('./routes/order')
-
+//----------------------------------------------------------- SIMULATE LOT OF PROD
+// const Product = require("./models/product");
+// const faker = require('faker');
+// var i = 1
+// while(i < 5000){
+//     const newProduct = new Product({
+//         category: "5e53ed71b4a1883840b9a7a0",
+//         subcategory: "5e53ed83b4a1883840b9a7a1",
+//         title: faker.commerce.productName(),
+//         description: 'одуц бдцбсдбк фкжбфдкйжд жнкдфйжнфджйндф н кдф жк дфкж скй цсц  е0цхосжх о осфжу осфхж ос8ж сожсофжх сожх осжхадфиужх аиеферуи яиур яееруихереир ж',
+//         photo: {
+//             url: 'https://picsum.photos/id/1/800',
+//             key: 'name.jpeg'
+//         },
+//         sale: null,
+//         oldPrice: null,
+//         price: 3.20,
+//         weight: 1,
+//         unit: 'л',
+//         stockQuantity: 25,
+//         properties: {
+//             ingredients : "Е430,Е320, Мляко единахсабхасд дуисуижф фджухдффж дф жфд",
+//             manufacturer : "Мегле АД",
+//             calories : "122/344",
+//             carbohydrates : "12",
+//             sugars : "0.8",
+//             fats : "12",
+//             saturated : "23",
+//             proteins : "56",
+//             brand : "Мегле",
+//             origin : "Германия"
+            
+//         }, 
+//     })
+//     newProduct.save()
+//     i++
+// }
+// console.log(i);
+//---------------------------------------------- END OF SIMULATION
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", subcategoryRoutes);

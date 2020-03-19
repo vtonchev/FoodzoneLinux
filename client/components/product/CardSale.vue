@@ -6,6 +6,7 @@
         <div class="card-body" :class="{ addedProduct: isInCart }">
             <b-button @click="$bvModal.show(product._id)" class="card-title bg-transparent border-0 p-0 w-100 mb-1">{{product.title}}</b-button>
                 <FullInfo 
+                :id="product._id"
                 :product='product'
                 :isInCart='isInCart'
                 :qty='qty'

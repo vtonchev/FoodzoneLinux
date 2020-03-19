@@ -15,7 +15,6 @@ exports.create_Order = async (req, res) => {
             newOrder.products.push({
                 productId: product._id,
                 quantity:parseInt(product.quantity),
-                price: product.price.$numberDecimal
             })
         })
         await newOrder.save();

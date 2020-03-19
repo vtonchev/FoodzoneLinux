@@ -61,15 +61,6 @@ export const actions = {
         }
         commit('incrementTotalPrice');
     },
-    // changeQuantity({state, commit}, product, action){
-    //     if(action == 1){
-    //         commit('incrementProductQty', product);
-    //     } else {
-    //         if()
-    //         commit('decrementProductQty', product)
-    //     }
-    // }
-    
 }
 
 export const mutations = {

@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div id="order_page">
+        <b-form @submit.prevent="onOrder" id="order_page">
             <p class="mt-4">Финализиране на поръчката</p>
             <hr class="mt-0 ml-0">
             <!-- CART -->
@@ -138,72 +138,78 @@
                     <b-form class='my-5' @submit.prevent="validateTimeframe" >
                         <div style="overflow-x: auto;">
                             <div class="collapse_content p-0 mx-sm-auto mb-2" style="width: max-content;">
-                            <b-tabs 
-                            vertical 
-                            pills 
-                            success
-                            >
-                                <b-tab v-for="(dateTime,index) in orderDate7" :key="'dyn-tab-' + index">
-                                    <template v-slot:title>
-                                        <span class="text-dark" v-if="$moment(dateTime.date).isSame($moment().format('DD-MM-YYYY'))">Днес</span>
-                                        <span class="text-dark" v-else-if="$moment(dateTime.date).isSame($moment().add(1,'d').format('DD-MM-YYYY'))">Утре</span>
-                                        <span v-else class="text-capitalize text-dark">{{$moment(dateTime.date, 'DD-MM-YYYY').format('dddd')}}</span>
-                                    </template>
-                                        <div style='height: 278px; overflow: auto;'>
-                                        <h6 class="text-center">{{$moment(dateTime.date, 'DD-MM-YYYY').format('Do MMMM')}}</h6>
-                                        <div v-for="timeframe in dateTime.timeframe" :key="timeframe.from">
-                                            <div class='d-flex mb-3' 
-                                            v-if="$moment(dateTime.date).isSame($moment().format('DD-MM-YYYY'))"
-                                            >
-                                            <span v-if="$moment(timeframe.from,'HH:mm').isAfter($moment().add(2,'h'))">
-                                                <div class="px-2 align-self-center">
-                                                    {{timeframe.from}}
-                                                </div>
-                                                <b-button 
-                                                @click="onDayChosen(timeframe.from, dateTime.date)" 
-                                                class="border rounded bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders >= timeframe.max'
+                                <b-card no-body header-text-variant='success'>
+                                    <b-tabs 
+                                    vertical 
+                                    pills 
+                                    card
+                                    nav-class='text-success'
+                                    nav-wrapper-class='text-success'
+                                    id="timeframe_tabs"
+                                    active-nav-item-class='font-weight-bold bg-success  text-white'
+                                    >
+                                        <b-tab v-for="(dateTime,index) in orderDate7" :key="'dyn-tab-' + index" >
+                                            <template v-slot:title >
+                                                <span class="" v-if="$moment(dateTime.date,'DD-MM-YYYY').format('DD-MM-YYYY') == $moment().format('DD-MM-YYYY')">Днес</span>
+                                                <span class="" v-else-if=" $moment(dateTime.date,'DD-MM-YYYY').format('DD-MM-YYYY') == $moment().add(1,'d').format('DD-MM-YYYY')">Утре</span>
+                                                <span v-else class="text-capitalize">{{$moment(dateTime.date, 'DD-MM-YYYY').format('dddd')}}</span>
+                                            </template>
+                                                <div style='height: 278px; overflow: auto;'>
+                                                <h6 class="text-center">{{$moment(dateTime.date, 'DD-MM-YYYY').format('Do MMMM')}}</h6>
+                                                <div 
+                                                v-for="timeframe in dateTime.timeframe" :key="timeframe.from" 
                                                 >
-                                                <h6>
-                                                    <small>
-                                                        Доставка между 
-                                                        <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                        и 
-                                                        <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                        <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
-                                                    </small>
-                                                </h6>
-                                                </b-button>
-                                            </span>
-                                                 
-                                            </div> 
-                                            <div class='d-flex mb-3' 
-                                            v-else
-                                            >
-                                                <div class="px-2 align-self-center">
-                                                    {{timeframe.from}}
+                                                    <div
+                                                    v-if="$moment(dateTime.date,'DD-MM-YYYY').format('DD-MM-YYYY') == $moment().format('DD-MM-YYYY')"
+                                                    >
+                                                        <span v-if="$moment(timeframe.from,'HH:mm').isAfter($moment().add(2,'h'))" class="mb-3 d-flex">
+                                                            <div class="px-2 align-self-center">
+                                                                {{timeframe.from}}
+                                                            </div>
+                                                            <b-button 
+                                                            @click="onDayChosen(timeframe.from, dateTime.date)" 
+                                                            class="border rounded bg-white text-dark mr-4" 
+                                                            :disabled='timeframe.orders >= timeframe.max'
+                                                            >
+                                                            <h6>
+                                                                <small>
+                                                                    Доставка между 
+                                                                    <span class="font-weight-bold">{{timeframe.from}}</span> 
+                                                                    и 
+                                                                    <span class="font-weight-bold">{{timeframe.to}}</span>
+                                                                    <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
+                                                                </small>
+                                                            </h6>
+                                                            </b-button>
+                                                        </span>    
+                                                        
+                                                    </div> 
+                                                    <div class='d-flex mb-3' v-else>
+                                                        <div class="px-2 align-self-center">
+                                                            {{timeframe.from}}
+                                                        </div>
+                                                        <b-button 
+                                                        @click="onDayChosen(timeframe.from, dateTime.date)" 
+                                                        class="border rounded bg-white text-dark mr-4" 
+                                                        :disabled='timeframe.orders >= timeframe.max'
+                                                        >
+                                                        <h6>
+                                                            <small>
+                                                                Доставка между 
+                                                                <span class="font-weight-bold">{{timeframe.from}}</span> 
+                                                                и 
+                                                                <span class="font-weight-bold">{{timeframe.to}}</span>
+                                                                <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
+                                                            </small>
+                                                        </h6>
+                                                        </b-button> 
+                                                    </div>       
                                                 </div>
-                                                <b-button 
-                                                @click="onDayChosen(timeframe.from, dateTime.date)" 
-                                                class="border rounded bg-white text-dark mr-4" 
-                                                :disabled='timeframe.orders >= timeframe.max'
-                                                >
-                                                <h6>
-                                                    <small>
-                                                        Доставка между 
-                                                        <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                        и 
-                                                        <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                        <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
-                                                    </small>
-                                                </h6>
-                                                </b-button> 
-                                            </div>       
-                                        </div>
-                                    </div>
-                                </b-tab>
-                            </b-tabs>       
-                        </div>
+                                            </div>
+                                        </b-tab>
+                                    </b-tabs>  
+                                </b-card>     
+                            </div>
                         </div>
                         <div v-if='orderTimeframe.date' class="mb-4 mx-sm-auto pl-3" style="width:300px">
                             Вашата поръчка ще бъде доставена на 
@@ -226,17 +232,17 @@
                 </b-list-group-item>
                 <b-collapse id="payment_method" accordion="order_form">
                     <div class="collapse_content">
-                        <b-form-group>
+                        <b-form-group required>
                             <b-form-radio v-model="paymentMethod.select"  value="на място">На място</b-form-radio>
                             <b-form-radio v-model="paymentMethod.select"  value="виза">Виза</b-form-radio>
                         </b-form-group>
-                        <b-button @click="onOrder" style="background-color:#E52121">
+                        <b-button type='submit' style="background-color:#E52121">
                             ПОРЪЧАЙ
                         </b-button>
                     </div>
                 </b-collapse>
             </b-list-group>
-        </div>
+        </b-form>
         <!-- Modal -->
         <b-modal id="validationModal" content-class="shadow" title="Внимание!">
             <p class="my-2">
@@ -269,8 +275,9 @@
     .cart_img{
         align-self: center;
     }
-    a{
+    #order_page a{
         align-self: center;
+        color: white;
     }
     a:hover{
         color: white;
@@ -296,6 +303,7 @@
         border:initial;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
+    
     @media screen and (max-width: 1199px){
         #order_page{
             width:980px;
@@ -435,6 +443,7 @@ export default {
                             if(this.$moment(this.orderTimeframe.timeframe,'HH:mm').isAfter(this.$moment().add(2,'h'))){    
                                 await this.$axios.$post('api/order', data)
                                 if(response.success == true){
+                                    alert(response.message)
                                     // this.$router.go('/successOrder');
                                 }  else {
                                     // this.$router.go('/failureOrder');
@@ -447,6 +456,7 @@ export default {
                         } else {    
                                 const response = await this.$axios.$post('api/order', data);
                                 if(response.success == true){
+                                    alert(response.message)
                                     // this.$router.go('/successOrder');
                                 }  else {
                                     // this.$router.go('/failureOrder');

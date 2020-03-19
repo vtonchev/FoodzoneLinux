@@ -29,7 +29,7 @@
     border:none;
 }
 .custom_button:focus{
-    outline-color: green;
+    outline-color: #61BD42;
 }
 /* .card-body p:last-child{
     color: black;
@@ -87,15 +87,7 @@
 .promo_price{
     color: #E52121;
 }
-.buy_btn{
-    color:#61BD42; 
-    font-weight:600;
-    font-size: 22px;
-    background: transparent;
-    padding: 0;
-    border: none;
-    float: right;
-}
+
 .addedProduct{
     background-image: linear-gradient(0deg, #FDF5C6, transparent);
 }

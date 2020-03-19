@@ -9,7 +9,7 @@
 
               <!-- LOGO -->
               <b-col sm='auto' class="mx-auto p-0 mb-3 mb-sm-0">
-                <div class="d-flex mx-auto" style="width:fit-content;">
+                <div @click="$router.push('/')" class="d-flex mx-auto" style="width:fit-content;">
                   <b-img class= "brandLogo mr-3" src="/img/brandlogo.png" alt="brand logo"/>
                   <div class="text-uppercase align-self-center" style="font-size:12px">
                     <span>Първи свободен час</span>
@@ -19,23 +19,95 @@
               </b-col>
 
               <!-- SEARCH -->
-              <div class="col-5 order-3 order-sm-2 col-sm p-0 ml-sm-2 mr-sm-2 d-flex">
-                
+              <div class="col-5 order-3 order-sm-2 col-sm p-0 ml-sm-2 mr-sm-2 d-flex" >
+                  <!-- SEARCH RESULTS BOX -->
                   <div class="d-none d-md-block h-100 position-relative ml-auto mr-2" style="width: inherit;">
-                    <b-form-input class="h-100 ml-auto border search" type="search" v-model="searchText" placeholder="Потърси продукт..." />
-                    <b-button class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
+                    <span
+                     @mouseover="display = true" 
+                     @mouseleave="display = false"
+                    >
+                      <b-form-input  @input="searchCollapse" class="h-100 ml-auto border search" :class="{ search_focus: display}" v-model="searchText" placeholder="Потърси продукт..." />
+                      <b-button class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
+                      <div v-if="searchProducts" :class="{ displayProduct: display, 'd-none': !display }" >
+                        <div v-for="product in searchProducts" :key="product._id" class="position-relative">
+                            <div class="promotion_text" v-if="product.sale">ПРОМОЦИЯ</div>
+                            <div v-if="product.sale" class="promotion_sticker"><span class="m-auto">{{product.sale}}%</span></div>
+                          <div style="display:flex; align-items:center; width:90%; margin:auto; padding: 10px 0;">
+                            <!-- <div class="promotion_sticker" v-if="product.sale"><span class="m-auto">{{product.sale}}%</span></div> -->
+                            <img :src="product.photo.url" alt="" width="60" height="60">
+                            <button @click="$bvModal.show(product._id+'search_phone')" class="ml-auto result_title">
+                              {{product.title}}
+                            </button>
+                            <FullInfo 
+                                :id="product._id+'search_phone'"
+                                :product='product'
+                                :isInCart='isInCart(product)'
+                                :qty='qty(product)'
+                            />
+                            
+                            <b-badge class="ml-auto mb-0 mr-2">{{product.weight.$numberDecimal}} {{product.unit}}</b-badge>
+                            <div class="ml-auto font-weight-bold mr-2" style="color:#666666; flex-shrink: 0;">{{product.price.$numberDecimal}} лв</div>
+                            <div v-if="isInCart(product)" class="ml-auto mr-2">
+                              <!-- INCREASE/DECREASE QTY -->
+                              <QuantityController
+                              
+                              :product='product'
+                              :qty='qty(product)'
+                              />
+                            </div> 
+                            <b-button v-else @click='addProductToCart(product)' class="buy_btn ml-auto" style="height: fit-content; align-self: center; flex-shrink: 0;"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
+                            
+                          </div>
+                          <hr class="m-1">
+                        </div>
+                      </div>
+                    </span>
                   </div>
-                  <b-collapse id="search_results">
-                    <div>
-                      <span>aaaaaaaaaaa</span>
-                    </div>
-                  </b-collapse>
+                  <!-- PHONE SEARCH -->
                   <b-button v-b-modal.searchModal class="d-block d-md-none border-0 bg-transparent mr-auto mr-sm-0 ml-sm-auto h-100">
                     <i  class="fas fa-search text-dark "></i>
                   </b-button>
-                  <b-modal id="searchModal" hide-footer hide-header body-class="p-0">
-                    <b-form-input class="form-control mr-sm-2 h-100" type="search" placeholder="Потърси продукт..." />
+                  <b-modal id="searchModal" 
+                  hide-footer 
+                  hide-header 
+                  body-class="p-0"
+                  >
+                    <b-form-input @input="searchCollapse" v-model="searchText" class="form-control mr-sm-2 h-100" placeholder="Потърси продукт..." />
                     <b-button class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
+                     <div v-if="searchProducts" class='displayProduct' >
+                      <div v-for="product in searchProducts" :key="product._id" class="position-relative">
+                          <div class="promotion_text" v-if="product.sale">ПРОМОЦИЯ</div>
+                          <div v-if="product.sale" class="promotion_sticker"><span class="m-auto">{{product.sale}}%</span></div>
+                        <div style="display:flex; align-items:center; width:90%; margin:auto; padding: 10px 0;">
+                          <!-- <div class="promotion_sticker" v-if="product.sale"><span class="m-auto">{{product.sale}}%</span></div> -->
+                          <img :src="product.photo.url" alt="" width="100" height="100" class="float-left">
+                          <span>
+                            <button @click="$bvModal.show(product._id+'search')" class="ml-auto result_title">
+                              {{product.title}}
+                            </button>
+                            <FullInfo 
+                                :id="product._id+'search'"
+                                :product='product'
+                                :isInCart='isInCart(product)'
+                                :qty='qty(product)'
+                            />
+                            <b-badge class=" mb-0 mr-2 d-block" style="width:min-content">{{product.weight.$numberDecimal}} {{product.unit}}</b-badge>
+                          </span>
+                          <span class="ml-auto">
+                            <div class="ml-auto font-weight-bold mr-2" style="color:#666666; flex-shrink: 0;">{{product.price.$numberDecimal}} лв</div>
+                            <div v-if="isInCart(product)" class="ml-auto mr-2">
+                              <!-- INCREASE/DECREASE QTY -->
+                              <QuantityController
+                              :product='product'
+                              :qty='qty(product)'
+                              />
+                            </div> 
+                            <b-button v-else @click='addProductToCart(product)' class="buy_btn ml-auto" style="height: fit-content; align-self: center; flex-shrink: 0;width:max-content;"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
+                          </span>  
+                        </div>
+                        <hr class="m-1">
+                      </div>
+                    </div>
                   </b-modal>
                   <div class="align-self-center d-flex" style="align-items: flex-end;">
                     <div v-if='$auth.$state.loggedIn' style="display:grid" class="mr-3">
@@ -52,10 +124,9 @@
 
                 <!-- CART -->
               <div class="col-6 order-2 order-sm-3 col-sm-auto p-0" id="cart" >
-                <span 
-                
-                @mouseover="visible = true"
-                @mouseleave="visible = false"
+                <span
+                  @mouseover="visible = true" 
+                  @mouseleave="visible = false"
                 >
                   <b-button class="shopping-cart-div-out p-0" 
                   :class="visible ? null : 'collapsed'"
@@ -105,6 +176,7 @@
 <style>
 a{
   text-decoration: none;
+  
 }
 #outer_box_middle{
   width:100%;
@@ -159,24 +231,96 @@ a{
   max-width:200px;
   transition: max-width 0.3s;
 }
-.search:focus{
-  max-width:100%;
+.search_focus{
+  max-width:100%; 
+}
+.displayProduct{
+  display: block;
+  position:absolute;
+  font-size: 18px;
   
+  top:3rem;
+  right:-10%;
+  z-index:200;
+  background: white;
+  width: 120%;
 }
-@media screen and (max-width: 575px){
-    
+.result_title{
+  border: 0;
+  background: transparent;
+  font-weight: 700;
+  color: #28324B;
+  width: 250px;
+  overflow: auto;
+  text-align: left;
 }
+.promotion_text{
+    width: 100px;
+    background-color: #FBDE44;
+    text-align: center;
+    color:  #28324B;
+    font-size:12px; 
+    font-weight: 600;
+}
+.promotion_sticker{
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    background-color:#E52121;
+    color: white;
+    text-align: center;
+    vertical-align: center;
+    font-size: 14px;
+}
+@media screen and (max-width: 991px) {
+    .displayProduct{
+      width:200%;
+      left: -50%;
+      
+      font-weight: 700;
+      margin:auto
+    }
+    .result_title{
+      color: #28324B;
+      font-size: 14px;
+      width: 150 px;
+      overflow: auto;
+    }
+}
+@media screen and (max-width: 767px) {
+  .search_button{
+    position: absolute;
+    right:0;
+    top:0;
+    max-height: 30px;
+  }
+  .displayProduct{
+    width: 100%;
+    right:0;
+    left:0;
+  }
+  .result_title{
+    width: auto;
+  }
+}
+
 </style>
 <script>
 import {mapGetters} from 'vuex';
+import {mapActions} from 'vuex'
 import LoginPanel from "~/components/navbar/loginPanel"
+import FullInfo from '~/components/product/FullInfo'
+import QuantityController from "~/components/product/QuantityController"
 export default {
   components:{
-    LoginPanel
-  },
-  mounted(){
-    
-    
+    LoginPanel,
+    QuantityController,
+    FullInfo
   },
   data(){
     return {
@@ -188,19 +332,14 @@ export default {
           { value: 'EN', text: 'EN' },
         ],
         searchText:'',
-        searchProducts:[]
+        searchProducts:[],
+        isShown:false,
+        display:false,
       }
   },
-  watch: {
-    searchText(searchText) {
-      if (searchText) {
-          this.Search();
-      } else {
-        this.searchProducts = []
-      }
-    }
-  },
+  
   methods:{
+    ...mapActions(['addProductToCart']),
     async onLogout(){
       await this.$auth.logout();
     },
@@ -210,24 +349,34 @@ export default {
       }
     },
     async Search(){
-      this.$root.$emit('show', 'search_results')
       const response = await this.$axios.$get('/api/products/search/' + this.searchText);
-      return this.searchProducts = response.products
+      this.searchProducts = response.products
+      if (!this.searchText){
+        this.searchProducts = []
+      }
+    },
+    qty(prod){
+      const prodQ = this.getCart.find(product => product._id === prod._id)
+      if(prodQ){
+          return prodQ.quantity
+      } else {
+          return 0
+      } 
+    },
+    isInCart(product){
+      return this.getCart.some(prod => prod._id === product._id);
     },
     searchCollapse(){
-      if(this.searchText){
-        if(false){
-          this.$root.$emit('show', 'search_results')
-        }
+      if (this.searchText) {
+        this.Search();
       } else {
-        if(this.$root.$on('bv::collapse::state', 'search_results') == true){
-          this.$root.$emit('bv::toggle::collapse', 'search_results')
-        }
+        this.searchProducts = []
       }
     }
   },
   computed:{
     ...mapGetters(['getTotalPrice', 'getCart']),
+      
   },
 }
 </script>
