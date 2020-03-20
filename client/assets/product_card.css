@@ -31,18 +31,6 @@
 .custom_button:focus{
     outline-color: #61BD42;
 }
-/* .card-body p:last-child{
-    color: black;
-    font-size:20px;
-    font-weight: bold;
-    margin:0;
-}
-.card-body p:first-child{
-    color: #A0A0A9;
-    font-weight:400;
-    font-size:14px;
-    margin:0px;
-} */
 .sale_sticker{
     display: flex;
     position: absolute;
@@ -69,7 +57,7 @@
     font-size:14px; 
     font-weight: 600;
     width:50%; 
-}
+} 
 .price{
     color:#666666;
 }

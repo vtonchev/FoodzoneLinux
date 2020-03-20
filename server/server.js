@@ -48,7 +48,7 @@ const orderRoutes = require('./routes/order')
 // const Product = require("./models/product");
 // const faker = require('faker');
 // var i = 1
-// while(i < 5000){
+// while(i < 2000){
 //     const newProduct = new Product({
 //         category: "5e53ed71b4a1883840b9a7a0",
 //         subcategory: "5e53ed83b4a1883840b9a7a1",

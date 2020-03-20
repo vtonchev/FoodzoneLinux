@@ -1,5 +1,8 @@
+<style scoped src="~/assets/product_card.css">
+
+</style>
 <template>
-    <div class="card ml-lg-auto product_card" @mouseover='hover = true' @mouseleave='hover = false' >
+    <div class="card ml-lg-auto product_card" >
         
         <img :src = product.photo.url class="card-img-top" alt="...">
         
@@ -16,19 +19,19 @@
             </div>
             <span class="clearfix">
                 <span class="font-weight-bold float-left price">{{product.price.$numberDecimal}}<small>лв</small></span>
-                <div v-if="isInCart" class="float-right">
-                    <!-- INCREASE/DECREASE QTY -->
+                    <div v-if="!isInCart" >
+                        <b-button  @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
+                    </div>
                     <QuantityController
+                    v-else
                     :product='product'
                     :qty='qty'
+                    class="float-right"
                     />
-                </div> 
-                <b-button v-else @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
-            </span>
+                </span>
         </div>
     </div>      
 </template>
-
 <script>
 import {mapActions} from 'vuex'
 import {mapGetters} from 'vuex'
@@ -40,14 +43,10 @@ export default {
         QuantityController
     },
     props:['product'],
-    data(){
-        return{
-            hover: false,
-        }
-    },
     methods:{
         ...mapActions(['addProductToCart']),
     },
+    
     computed:{
         ...mapGetters(['getCart']),
         isInCart(){
@@ -69,6 +68,3 @@ export default {
 }
 </script>
 
-<style scoped src="~/assets/product_card.css">
-
-</style>

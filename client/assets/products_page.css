@@ -23,7 +23,24 @@
     font-weight: 700;
     color:#417F2C;
 }
-
+.next_page{
+    transition: 0.2s;
+    color: rgb(233,236,239,0.9);
+}
+.next_page:hover{
+    color: #64C042;
+    /* background-color: rgb(233,236,239,0.5)  */
+}
+@media only screen and (min-width: 1199px) and (max-width: 1335px){
+    .next_page{
+        display: none !important;
+    }
+}
+@media only screen and (min-width: 958px) and (max-width: 1090px){
+    .next_page{
+        display: none !important;
+    }
+}
 @media only screen and (max-width: 1199px) {
     .container_fluid_width{
         width:980px;

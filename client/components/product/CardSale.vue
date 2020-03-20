@@ -1,5 +1,8 @@
+<style scoped src="~/assets/product_card.css">
+
+</style>
 <template>
-    <div class="card ml-lg-auto product_card" @mouseover='hover = true' @mouseleave='hover = false' >
+    <div class="card ml-lg-auto product_card">
         <div class="sale_text">ПРОМОЦИЯ</div>
         <div class="sale_sticker"><span class="m-auto" style="font-size:20px">-{{product.sale}}%</span></div>
         <img :src = product.photo.url class="card-img-top" alt="...">
@@ -19,14 +22,15 @@
                     <p class="old_price">{{product.oldPrice}}<small>лв</small></p>
                     <p class="promo_price">{{product.price.$numberDecimal}}<small>лв</small></p>
                 </span>
-                <div v-if="isInCart" class="float-right">
-                    <!-- INCREASE/DECREASE QTY -->
-                    <QuantityController
-                    :product='product'
-                    :qty='qty'
-                    />
+                <div v-if="!isInCart" >
+                    <b-button  @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
                 </div>
-                <b-button v-else @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
+                <QuantityController
+                v-else
+                :product='product'
+                :qty='qty'
+                class="float-right"
+                />
             </span>
         </div>
     </div>      
@@ -45,7 +49,6 @@ export default {
     props:['product'],
     data(){
         return{
-            hover: false,
             quantity:1
         }
     },
@@ -73,6 +76,3 @@ export default {
 }
 </script>
 
-<style scoped src="~/assets/product_card.css">
-
-</style>
