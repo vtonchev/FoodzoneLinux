@@ -1,5 +1,8 @@
 <template>
     <b-col class="p-0 position-static">
+        <div @click="nextPage" class="position-fixed h-100 next_page d-md-flex d-none" style="right:0; top:0; z-index:10; width:5%" >
+            <i class="fas fa-arrow-circle-right align-self-center"></i>
+        </div>
         <b-col cols="12" class="p-0 position-static">
             <b-breadcrumb class="route">
                 <b-breadcrumb-item to='/'>
@@ -8,6 +11,7 @@
                 </b-breadcrumb-item>
                 <b-breadcrumb-item active :to="{name: 'shop-category', params: { category: $route.params.category} }">{{$store.state.categories[$route.params.category]}} ({{count}})</b-breadcrumb-item>
             </b-breadcrumb>
+            <div ref="scrollTo"></div>
             <b-form-group class="filter">
                 <b-form-radio-group v-model="sort">
                     <b-form-radio value="1"> Цена (ниска)</b-form-radio>
@@ -31,31 +35,46 @@
                     </CardSale>
                 </b-col>
             </b-row>
-            <Spinner class="position-fixed mx-auto my-5" style="bottom:0; left:50%;" v-if='bottom && (count/10) > page'/>
-            <div class="text-center my-5" style="font-size:30px; font-weight:700; color:#64C042" v-if="(count/10) < page">Няма повече продукти...</div>
         </b-col>
+        <b-pagination
+            v-model="currentPage"
+            :total-rows="count"
+            :per-page="perPage"
+            align="center"
+            last-class='text-success'
+        >
+        <template v-slot:page="{ page, active }" >
+            <span class="text-success" style="backgroud-color:red;">
+                <b v-if="active" class="text-white pagination_active">{{ page }}</b>
+                <i v-else>{{ page }}</i>
+            </span>
+            
+        </template>
+        </b-pagination>
     </b-col>    
 </template>
 <script>
 import Card from "~/components/product/Card"
 import CardSale from "~/components/product/CardSale"
-import smoothscroll from 'smoothscroll-polyfill';
+import smoothscroll from 'smoothscroll-polyfill'
 export default {
     layout: 'sidebar',
     components:{
         Card,
-        CardSale,
-        Spinner
+        CardSale, 
     },
     scrollToTop: false,
     beforeMount () {
         smoothscroll.polyfill();
         document.addEventListener('touchstart', this.handleTouchStart, false);        
         document.addEventListener('touchmove', this.handleTouchMove, false);
+        document.addEventListener('touchend', this.handleTouchEnd, false)
     },
     beforeDestroy() {
-        document.removeEventListener('touchstart', this.handleTouchStart, false);  
-        document.removeEventListener('touchmove', this.handleTouchMove, false);
+        document.removeEventListener('touchstart', this.handleTouchStart, false);
+        document.addEventListener('touchmove', this.handleTouchMove, false);  
+        document.removeEventListener('touchend', this.handleTouchEnd, false);
+
     },
     async asyncData({$axios, params, store, route}){
         try {
@@ -71,82 +90,66 @@ export default {
     },
     data(){
         return{
-            page: 1,
-            bottom: false,
-            count:null,
+            screenWidth: window.innerWidth,
             products:[],
             sort:'',
             sortTag:[],
             count:null,
             //pagination nav 
-            perPage: 36,
+            perPage: 26,
             currentPage: 1,
             // swipe events
             xDown: null,                                                        
             yDown: null,
+            swipe: '',
         }
     },
-    created() {
-        window.addEventListener('scroll', () => {
-            this.bottom = this.bottomVisible()
-        })
-    },
+    
+    // created() {
+    //     window.addEventListener('scroll', () => {
+    //         this.bottom = this.bottomVisible()
+    //     })
+    // },
     watch: {
-        async currentPage(currentPage) {
-            this.$axios.$get(`/api/products/categories/` + this.$route.params.category + '?page=' + this.currentPage + '&sort=' + this.sort)
-            .then((response)=>{
-                this.products = response.products;
-            });
-            if(this.currentPage >= 1){
-                if(this.screenWidth > 991){
-                    await window.scroll({
-                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
-                        behavior: 'smooth'
-                    })
-                } else {
-                    await window.scroll({
-                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
-                        behavior: 'smooth'
-                    }) 
-                    
-                }      
-            }
+        async currentPage(currentPage) { 
+                if(this.currentPage >= 1){
+                    if(this.screenWidth <= 991){
+                        await this.$axios.$get(`/api/products/categories/` + this.$route.params.category + '?page=' + this.currentPage + '&sort=' + this.sort)
+                            .then((response)=>{
+                                this.products = response.products;
+                            }
+                        )
+                        window.scroll({
+                            top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
+                            behavior: 'smooth'
+                        })
+                    } else {
+                        this.$axios.$get(`/api/products/categories/` + this.$route.params.category + '?page=' + this.currentPage + '&sort=' + this.sort)
+                            .then((response)=>{
+                                this.products = response.products;
+                            }
+                        )
+                        window.scroll({
+                            top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
+                            behavior: 'smooth'
+                        })
+                    }      
+                }
         },
         sort(sort){
-            if(sort) {
-                this.sortBy();
-            }
+            this.sortBy();
         }
     },
     methods:{
-        // bottomVisible() {
-        //     const scrollY = window.scrollY
-        //     const visible = document.documentElement.clientHeight
-        //     const pageHeight = document.documentElement.scrollHeight;
-        //     const bottomOfPage = visible + scrollY >= (pageHeight - 300)
-        //     return bottomOfPage || (pageHeight - 300) < visible
-        // },
-        // async addProducts(){
-        //     if((this.count/10) > this.page ){
-        //         this.page++;
-        //         let newProducts = null;
-        //         if( this.sort == true){
-        //             newProducts = await this.$axios.$get('/api/products/categories/'+ this.$route.params.category + '?page=' + this.page + '&sortBy=' + this.sort);
-        //         } else {
-        //             newProducts = await this.$axios.$get('/api/products/categories/'+ this.$route.params.category+ '?page=' + this.page);
-        //         }
-        //         this.products = this.products.concat(newProducts.products)
-            
-        //         if (this.bottomVisible()) {
-        //             this.addProducts()
-        //         }
-        //     }
-        // }, 
-        
+        nextPage(){
+            if(this.currentPage < this.count/this.perPage){
+                this.currentPage++ 
+            }
+        },
         sortBy(){
-            this.page = 1;
+            this.currentPage = 1;
             console.log(this.sort);
-            this.$axios.$get('/api/products/categories/'+ this.$route.params.category + '?page=' + this.page + '&sort=' + this.sort).then((response)=>{
+            this.$axios.$get('/api/products/categories/'+ this.$route.params.category + '?page=' + this.currentPage + '&sort=' + this.sort).then((response)=>{
                 this.products = response.products;
             })
         },
@@ -158,28 +161,38 @@ export default {
             this.xDown = firstTouch.clientX;                                      
             this.yDown = firstTouch.clientY;                                      
         },                                                
-
+        async handleTouchEnd(){
+            if(this.swipe == 'left'){
+                if(this.currentPage < this.count/this.perPage){
+                    this.swipe = '';    
+                    this.currentPage++  
+                }
+            }
+            else if (this.swipe == 'right'){
+                 if(this.currentPage > 1){
+                     this.swipe = ''; 
+                    this.currentPage--
+                }
+            }
+        },
         async handleTouchMove(evt) {
             if ( ! this.xDown || ! this.yDown ) {
                 return;
             }
-            var xUp = evt.touches[0].clientX;                                    
-            var yUp = evt.touches[0].clientY;
+            let xUp = evt.touches[0].clientX;                                    
+            let yUp = evt.touches[0].clientY;
 
-            var xDiff = this.xDown - xUp;
-            var yDiff = this.yDown - yUp;
+            let xDiff = this.xDown - xUp;
+            let yDiff = this.yDown - yUp;
 
             if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
                 if ( xDiff > 0 ) {
+                    return this.swipe = 'left'
                     // console.log('left swipe')
-                    if(this.currentPage < this.count/this.perPage){
-                        this.currentPage++ 
-                    }
+                    
                 } else {
+                    return this.swipe = 'right'
                     // console.log('right swipe') 
-                    if(this.currentPage > 1){
-                        this.currentPage--
-                    }
                 }                       
             }
             /* reset values */

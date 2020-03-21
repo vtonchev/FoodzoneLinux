@@ -71,18 +71,9 @@ export const mutations = {
         state.subcategories = subcategories
     },
     pushProductToCart(state,product){
-        let newProd = {
-            quantity: 1,
-            _id: product._id,
-            title: product.title,
-            photo:{
-                url: product.photo.url
-            },
-            price:product.price,
-            stockQuantity: product.stockQuantity
-        }
+        product.quantity = 1;
         // product.quantity = 1;
-        state.cart.push(newProd);
+        state.cart.push(product);
     },
 
     incrementProductQty(state, product){

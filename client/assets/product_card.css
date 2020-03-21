@@ -7,10 +7,8 @@
     width:min-content;
     transition: 0.5s;
 }
-.card:hover{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
 .card-title{
+    outline: none;
     font-size: 14px;
     line-height: 1.3;
     font-weight:500;
@@ -31,18 +29,7 @@
 .custom_button:focus{
     outline-color: #61BD42;
 }
-/* .card-body p:last-child{
-    color: black;
-    font-size:20px;
-    font-weight: bold;
-    margin:0;
-}
-.card-body p:first-child{
-    color: #A0A0A9;
-    font-weight:400;
-    font-size:14px;
-    margin:0px;
-} */
+
 .sale_sticker{
     display: flex;
     position: absolute;
@@ -90,6 +77,12 @@
 
 .addedProduct{
     background-image: linear-gradient(0deg, #FDF5C6, rgba(255, 255, 255, 0));
+}
+
+@media screen and (min-width: 1199px){
+    .card:hover{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
 }
 @media screen and (max-width: 1199px){
     .card-img-top {

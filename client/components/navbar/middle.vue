@@ -138,16 +138,18 @@
                     <span id="price">{{getTotalPrice}} лв</span>           
                   </b-button>
                   <b-collapse id="collapse-4" v-model="visible" class="mt-2 cart_products" >
-                    <b-card class='d-none d-lg-block'>
+                    <b-card class='d-none d-lg-block' style="max-height: 340px;overflow-y: scroll;">
                       <div v-if="getCart == 0">Няма продукти в количката!</div>
                       <div style="display: flow-root; margin-bottom:1.25rem;" v-for="product in getCart" :key="product._id">
                         <img width="60" height="60" :src="product.photo.url" alt="" class="mr-3" style="float: left;">
-                        <span style="vertical-align: top; color:#2E2E2E; display: inline-block; font-size:16px; font-weight:700;">{{product.title}}</span>
+                        <span style="vertical-align: top; color:#2E2E2E; display: inline-block; font-size:16px; font-weight:700; width: 150px;height:24px;overflow: hidden;">{{product.title}}</span>
                         <button @click="$store.commit('removeProduct', product)" style="display:contents; margin:0 5px; display:contents"><span style="display: inline-table; font-weight:700; margin-left:20px">&times;</span></button>
                         <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400;">{{product.quantity}} </span>
                         <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400; padding:0 5px; ">&times;</span>
                         <span style="display: table-cell; color:#707070; font-size:14px; font-weight:400;"> {{product.price.$numberDecimal}}лв</span>
-                      </div> 
+                      </div>
+                      <span v-if="getCart!=0" style="font-size:16px; margin-right: 46px;" class="font-weight-bold">Общо: <span style="color: #5AA240;">{{getTotalPrice}}</span> лв</span>
+                      <button v-if="getCart!=0" style="background-color:transparent; border:none; background-color: #E52121;" class="border rounded pt-1 pb-1"><nuxt-link class="text-white" to='/shop/order'>Продължи</nuxt-link></button> 
                     </b-card>
                   </b-collapse>
                 </span>

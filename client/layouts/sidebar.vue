@@ -13,6 +13,7 @@
                     <nuxt/>        
                 </b-row>
             </div>
+            <Footer/>
         </div>
     </div>
     

@@ -14,10 +14,13 @@ opacity: 0;
     float: right;
 }
 .buy_btn:hover, .buy_btn:focus, .buy_btn:active{
-    background: transparent;
-    color: #61BD42;
-    margin: -2px;
-    border: solid 2px #61BD42;
+    background: #61BD42;
+    padding: 0 1px;
+    color: white;
+    border-radius: 10px;
     outline: none;
 }
+html {
+    scroll-behavior: smooth;
+  }
 

@@ -38,9 +38,6 @@ p, header{
 }
 header{
   position:sticky;
-  -webkit-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
   top:0;
   width:100%
 }
@@ -52,7 +49,6 @@ header{
 #inner_box_top, #inner_box_middle, #inner_box_bottom{
   width:1200px;
   margin:0 auto;
-  height:3rem;
 }
 #top_menu,#bottom_menu{
   padding:0;

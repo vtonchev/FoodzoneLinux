@@ -56,22 +56,39 @@ exports.get_Products_By_Category = async (req, res) => {
     try{
         const page = req.query.page;
         let sort = req.query.sort;
-        const offset = 10;
+        const offset = 26;
         let products = undefined;
         if(sort){
             switch(sort){
                 case '1':
-                products = await Product.find({category: req.params.id}).sort({price : 1}).skip((page-1)*offset).limit(offset).exec();
+                products = await Product
+                .find({category: req.params.id})
+                .sort({price : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
                 break;
                 case '2':
-                products = await Product.find({category: req.params.id}).sort({price: -1}).skip((page-1)*offset).limit(offset).exec();
+                products = await Product.find({category: req.params.id})
+                .sort({price: -1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
                 break;
                 case '3':
-                products = await Product.find({category: req.params.id}).sort({title : 1}).skip((page-1)*offset).limit(offset).exec();
+                products = await Product.find({category: req.params.id})
+                .sort({title : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
                 break;
             }
         } else {
-            products = await Product.find({category: req.params.id}).skip((page-1)*offset).limit(offset).exec();
+            products = await Product.find({category: req.params.id})
+            .sort({sale:-1})
+            .skip((page-1)*offset)
+            .limit(offset)
+            .exec();
         }
         // SORT LOGIC HERE
         const all = await Product.countDocuments({category: req.params.id});
@@ -94,22 +111,38 @@ exports.get_Products_By_Subcategory = async (req, res) =>{
     try {
         const page = req.query.page;
         let sort = req.query.sort;
-        const offset = 10;
+        const offset = 26;
         let products = undefined;
         if(sort){
             switch(sort){
                 case '1':
-                products = await Product.find({subcategory: req.params.id}).sort({price : 1}).skip((page-1)*offset).limit(offset).exec();
+                products = await Product.find({subcategory: req.params.id})
+                .sort({price : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
                 break;
                 case '2':
-                products = await Product.find({subcategory: req.params.id}).sort({price:-1}).skip((page-1)*offset).limit(offset).exec();
+                products = await Product.find({subcategory: req.params.id})
+                .sort({price:-1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
                 break;
                 case '3':
-                products = await Product.find({subcategory: req.params.id}).sort({title : 1}).skip((page-1)*offset).limit(offset).exec();
+                products = await Product.find({subcategory: req.params.id})
+                .sort({title : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
                 break;
             }
         } else {
-            products = await Product.find({subcategory: req.params.id}).skip((page-1)*offset).limit(offset).exec();
+            products = await Product.find({subcategory: req.params.id})
+            .sort({sale:-1})
+            .skip((page-1)*offset)
+            .limit(offset)
+            .exec();
         }
         const all = await Product.countDocuments({subcategory: req.params.id});
         res.json({

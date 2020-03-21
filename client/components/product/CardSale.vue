@@ -1,5 +1,5 @@
 <template>
-    <div class="card ml-lg-auto product_card" @mouseover='hover = true' @mouseleave='hover = false' >
+    <div class="card ml-lg-auto product_card">
         <div class="sale_text">ПРОМОЦИЯ</div>
         <div class="sale_sticker"><span class="m-auto" style="font-size:20px">-{{product.sale}}%</span></div>
         <img :src = product.photo.url class="card-img-top" alt="...">
@@ -26,7 +26,7 @@
                     :qty='qty'
                     />
                 </div>
-                <b-button v-else @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
+                <button v-else @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</button>
             </span>
         </div>
     </div>      
@@ -45,7 +45,6 @@ export default {
     props:['product'],
     data(){
         return{
-            hover: false,
             quantity:1
         }
     },

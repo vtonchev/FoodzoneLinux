@@ -1,10 +1,8 @@
 <template>
-    <div class="card ml-lg-auto product_card" @mouseover='hover = true' @mouseleave='hover = false' >
-        
+    <div class="card ml-lg-auto product_card">
         <img :src = product.photo.url class="card-img-top" alt="...">
-        
         <div class="card-body" :class="{ addedProduct: isInCart }">
-            <b-button @click="$bvModal.show(product._id)" class="card-title bg-transparent border-0 p-0 w-100 mb-1">{{product.title}}</b-button>
+            <button @click="$bvModal.show(product._id)" class="card-title bg-transparent border-0 p-0 w-100 mb-1">{{product.title}}</button>
             <FullInfo 
                 :id="product._id"
                 :product='product'
@@ -23,7 +21,7 @@
                     :qty='qty'
                     />
                 </div> 
-                <b-button v-else @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
+                <button v-else @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</button>
             </span>
         </div>
     </div>      
@@ -40,11 +38,7 @@ export default {
         QuantityController
     },
     props:['product'],
-    data(){
-        return{
-            hover: false,
-        }
-    },
+    
     methods:{
         ...mapActions(['addProductToCart']),
     },
