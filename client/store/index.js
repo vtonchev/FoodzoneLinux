@@ -53,12 +53,12 @@ export const state = () => ({
 
 export const actions = {
     addProductToCart({ state, commit}, product) {
-        // const cartProduct = state.cart.find(prod => prod._id === product._id);
-        // if(!cartProduct) {
+        const cartProduct = state.cart.find(prod => prod._id === product._id);
+        if(!cartProduct) {
             commit('pushProductToCart', product);
-        // } else {
-        //     commit('incrementProductQty', cartProduct);
-        // }
+        } else {
+            commit('incrementProductQty', cartProduct);
+        }
         commit('incrementTotalPrice');
     },
 }
@@ -81,8 +81,8 @@ export const mutations = {
             price:product.price,
             stockQuantity: product.stockQuantity
         }
-        product.quantity = 1;
-        state.cart.push(product);
+        // product.quantity = 1;
+        state.cart.push(newProd);
     },
 
     incrementProductQty(state, product){
@@ -113,6 +113,7 @@ export const mutations = {
             let indexOfProduct = state.cart.indexOf(cartProduct);
             state.cart.splice(indexOfProduct, 1, cartProduct);
         }  else {
+            // Delete the product (else === quantity <= 1)
             let indexOfProduct = state.cart.indexOf(cartProduct);
             state.cart.splice(indexOfProduct, 1);
             state.totalPrice = 0;
@@ -144,7 +145,10 @@ export const mutations = {
         let indexOfProduct = state.cart.indexOf(cartProduct);
         state.cart.splice(indexOfProduct, 1, cartProduct);
     },
-    
+    /* 
+        1.get the index of the product thet we want to delete  
+        2.remove that product by using splice
+    */
     removeProduct(state,product){
         let indexOfProduct = state.cart.indexOf(product);
         state.cart.splice(indexOfProduct, 1);

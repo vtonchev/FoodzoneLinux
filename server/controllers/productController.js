@@ -56,7 +56,7 @@ exports.get_Products_By_Category = async (req, res) => {
     try{
         const page = req.query.page;
         let sort = req.query.sort;
-        const offset = 36;
+        const offset = 10;
         let products = undefined;
         if(sort){
             switch(sort){
@@ -94,7 +94,7 @@ exports.get_Products_By_Subcategory = async (req, res) =>{
     try {
         const page = req.query.page;
         let sort = req.query.sort;
-        const offset = 36;
+        const offset = 10;
         let products = undefined;
         if(sort){
             switch(sort){
@@ -108,8 +108,7 @@ exports.get_Products_By_Subcategory = async (req, res) =>{
                 products = await Product.find({subcategory: req.params.id}).sort({title : 1}).skip((page-1)*offset).limit(offset).exec();
                 break;
             }
-        } 
-        else {
+        } else {
             products = await Product.find({subcategory: req.params.id}).skip((page-1)*offset).limit(offset).exec();
         }
         const all = await Product.countDocuments({subcategory: req.params.id});
@@ -141,30 +140,11 @@ exports.get_Single_Product =  async (req, res) => {
         })
     }
 }
-// SEARCH FOR PRODUCTS (shortList)
+// SEARCH FOR PRODUCTS 
 exports.get_Search_Products = async (req, res) => {
     try {
-        const page = req.query.page;
-        const offset = 36;
         const search = decodeURIComponent(req.params.search);
-        const products = await Product.find( { title: { $regex: '^'+search , $options:'i'} }).skip((page-1)*offset).limit(offset).exec();
-        res.json({
-            success: true,
-            products: products
-        })
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({
-            success:false,
-            message: err
-        })
-    }
-}
-// SEARCH FOR PRODUCT (longList)
-exports.get_Search_Products_Long = async (req, res) => {
-    try {
-        const search = decodeURIComponent(req.params.search);
-        const products = await Product.find( { title: { $regex: '^'+search , $options:'i'} }).limit();
+        const products = await Product.find( { title: { $regex: '^'+search , $options:'i'} }).limit(5);
         res.json({
             success: true,
             products: products
