@@ -1,5 +1,5 @@
 <template>
-    <b-modal :id='id' :title="product.title" class="product_info_modal" size='xl' hide-footer>
+    <b-modal :id='id' :title="product.title" scrollable class="product_info_modal" size='xl' hide-footer>
         <b-row style="color:#666666;">
             <b-col cols='12' lg='5' xl='4' class="p-0 mb-3 ">
                 <span v-if="product.sale">

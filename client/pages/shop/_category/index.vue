@@ -1,5 +1,4 @@
 <template>
-
     <b-col class="p-0 position-static">
         <div type='button' @click='currentPage++' class="position-fixed d-none d-md-flex next_page" style="right:0; top:0; z-index:100; height:100vh; width: 5%;">
             <span class='align-self-center mx-auto'>
@@ -48,13 +47,12 @@
             page-class='text-success'
             ></b-pagination>
         </b-col>
-    </b-col>
-
-    
+    </b-col>    
 </template>
 <script>
 import Card from "~/components/product/Card"
 import CardSale from "~/components/product/CardSale"
+import smoothscroll from 'smoothscroll-polyfill';
 export default {
     layout: 'sidebar',
     components:{
@@ -62,38 +60,15 @@ export default {
         CardSale,
     },
     scrollToTop: false,
-    head: {
-        script: [
-            { src: '/swipe-events.min.js' }
-        ]
+    beforeMount () {
+        smoothscroll.polyfill();
+        document.addEventListener('touchstart', this.handleTouchStart, false);        
+        document.addEventListener('touchmove', this.handleTouchMove, false);
     },
-    // beforeMount () {
-    //     document.addEventListener('swiped-left', () => {
-    //             if(this.currentPage > 1){
-    //                 this.currentPage--;
-    //             }
-    //         }
-    //     );
-    //     document.addEventListener('swiped-right', () => {
-    //         if(this.currentPage < (this.rows/36)){
-    //             this.currentPage++;
-    //         }
-    //     });
-    // },
-    // beforeDestroy() {
-    //     document.removeEventListener('swiped-left', () => {
-    //             if(this.currentPage > 1){
-    //                 this.currentPage--;
-    //             }
-    //         }
-    //     );
-    //     document.removeEventListener('swiped-right', () => {
-    //             if(this.currentPage > 1){
-    //                 this.currentPage--;
-    //             }
-    //         }
-    //     );
-    // },
+    beforeDestroy() {
+        document.removeEventListener('touchstart', this.handleTouchStart, false);  
+        document.removeEventListener('touchmove', this.handleTouchMove, false);
+    },
     async asyncData({$axios, params, store, route}){
         try {
             const response = await $axios.$get(`/api/products/categories/${params.category}`+ '?page=1' );
@@ -112,9 +87,13 @@ export default {
             products:[],      
             sort:'',
             sortTag:[],
+            count:null,
             //pagination nav 
             perPage: 36,
-            currentPage: 1
+            currentPage: 1,
+            // swipe events
+            xDown: null,                                                        
+            yDown: null,
         }
     },
     // created() {
@@ -128,24 +107,23 @@ export default {
     //     })
     // },
     watch: {
-        currentPage(currentPage) {
+        async currentPage(currentPage) {
             this.$axios.$get(`/api/products/categories/` + this.$route.params.category + '?page=' + this.currentPage + '&sort=' + this.sort)
             .then((response)=>{
                 this.products = response.products;
             });
             if(this.currentPage >= 1){
                 if(this.screenWidth > 991){
-                    window.scroll({
-                        top: 120,
+                    await window.scroll({
+                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
                         behavior: 'smooth'
                     })
                 } else {
-                    console.log(window.pageYOffset);
-                    console.log(this.$refs["scrollTo"].getBoundingClientRect().top)
-                    window.scroll({
+                    await window.scroll({
                         top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
                         behavior: 'smooth'
-                    })
+                    }) 
+                    
                 }      
             }
         },
@@ -177,10 +155,7 @@ export default {
         //         }
         //     }
         // }, 
-        nextPage(){
-            alert(this.currentPage)
-            return this.currentPage++;
-        },
+        
         sortBy(){
             this.currentPage = 1;
             console.log(this.sort);
@@ -188,9 +163,44 @@ export default {
             .then((response)=>{
                 this.products = response.products;
             })
-        }    
+        },
+        getTouches(evt) {
+            return evt.touches || evt.originalEvent.touches; 
+        },                                                  
+        handleTouchStart(evt) {
+            const firstTouch = this.getTouches(evt)[0];                                      
+            this.xDown = firstTouch.clientX;                                      
+            this.yDown = firstTouch.clientY;                                      
+        },                                                
+
+        async handleTouchMove(evt) {
+            if ( ! this.xDown || ! this.yDown ) {
+                return;
+            }
+            var xUp = evt.touches[0].clientX;                                    
+            var yUp = evt.touches[0].clientY;
+
+            var xDiff = this.xDown - xUp;
+            var yDiff = this.yDown - yUp;
+
+            if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+                if ( xDiff > 0 ) {
+                    // console.log('left swipe')
+                    if(this.currentPage < this.count/this.perPage){
+                        this.currentPage++ 
+                    }
+                } else {
+                    // console.log('right swipe') 
+                    if(this.currentPage > 1){
+                        this.currentPage--
+                    }
+                }                       
+            }
+            /* reset values */
+            this.xDown = null;
+            this.yDown = null;                                             
+        }   
     }
-    
 }
 </script>
 

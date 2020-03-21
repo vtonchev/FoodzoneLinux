@@ -26,6 +26,7 @@
 .next_page{
     transition: 0.2s;
     color: rgb(233,236,239,0.9);
+    background-color: transparent;
 }
 .next_page:hover{
     color: #64C042;
