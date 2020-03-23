@@ -9,7 +9,7 @@
                 <i class="fas fa-home"></i>
                     Начало
                 </b-breadcrumb-item>
-                <b-breadcrumb-item active :to="{name: 'shop-category', params: { category: $route.params.category} }">{{$store.state.categories[$route.params.category]}} ({{count}})</b-breadcrumb-item>
+                <b-breadcrumb-item active :to="{name: 'shop-category-id', params: { id: $route.params.id} }">{{$store.state.categories[$route.params.id]}} ({{count}})</b-breadcrumb-item>
             </b-breadcrumb>
             <div ref="scrollTo"></div>
             <b-form-group class="filter">
@@ -78,7 +78,7 @@ export default {
     },
     async asyncData({$axios, params, store, route}){
         try {
-            const response = await $axios.$get(`/api/products/categories/${params.category}`+'?page=1'); 
+            const response = await $axios.$get(`/api/products/categories/${params.id}`+'?page=1'); 
             
             return {
                 products: response.products,
@@ -112,29 +112,29 @@ export default {
     // },
     watch: {
         async currentPage(currentPage) { 
-                if(this.currentPage >= 1){
-                    if(this.screenWidth <= 991){
-                        await this.$axios.$get(`/api/products/categories/` + this.$route.params.category + '?page=' + this.currentPage + '&sort=' + this.sort)
-                            .then((response)=>{
-                                this.products = response.products;
-                            }
-                        )
-                        window.scroll({
-                            top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
-                            behavior: 'smooth'
-                        })
-                    } else {
-                        this.$axios.$get(`/api/products/categories/` + this.$route.params.category + '?page=' + this.currentPage + '&sort=' + this.sort)
-                            .then((response)=>{
-                                this.products = response.products;
-                            }
-                        )
-                        window.scroll({
-                            top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
-                            behavior: 'smooth'
-                        })
-                    }      
-                }
+            if(this.currentPage >= 1){
+                if(this.screenWidth <= 991){
+                    await this.$axios.$get(`/api/products/categories/` + this.$route.params.id + '?page=' + this.currentPage + '&sort=' + this.sort)
+                        .then((response)=>{
+                            this.products = response.products;
+                        }
+                    )
+                    window.scroll({
+                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
+                        behavior: 'smooth'
+                    })
+                } else {
+                    this.$axios.$get(`/api/products/categories/` + this.$route.params.id + '?page=' + this.currentPage + '&sort=' + this.sort)
+                        .then((response)=>{
+                            this.products = response.products;
+                        }
+                    )
+                    window.scroll({
+                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
+                        behavior: 'smooth'
+                    })
+                }      
+            }
         },
         sort(sort){
             this.sortBy();
@@ -149,7 +149,7 @@ export default {
         sortBy(){
             this.currentPage = 1;
             console.log(this.sort);
-            this.$axios.$get('/api/products/categories/'+ this.$route.params.category + '?page=' + this.currentPage + '&sort=' + this.sort).then((response)=>{
+            this.$axios.$get('/api/products/categories/'+ this.$route.params.id+ '?page=' + this.currentPage + '&sort=' + this.sort).then((response)=>{
                 this.products = response.products;
             })
         },

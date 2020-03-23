@@ -23,12 +23,26 @@
                     <!-- Title -->
                     <label for="title">Име</label>
                     <input class="width_100" id="title" type="text" name="title" v-model="title" required>
+                    <!-- ProductID -->
+                    <label for="productID">Продуктов код</label>
+                    <input class="width_100" id="title" type="number" v-model="productID" required>
                     <!-- Price -->
                     <label for="price">Цена</label>
                     <input id="price" type="number" step=".01" v-model="price"  placeholder="0" required>
+                    <!-- Suggested -->
+                    <hr class="w-100 m-2">
+                    <b-form-checkbox
+                    v-model="suggested"
+                    value = true
+                    unchecked-value = false
+                    >
+                    добави в топ предложения
+                    </b-form-checkbox>
+                    <hr class="w-100 m-2">
                     <!-- Weight -->
                     <label for="weight">Количество на единица продукт</label>
                     <input id="weight" type="number" v-model="weight" placeholder="0" required>
+                    <hr class="w-100 m-2">
                     <b-form-group label="Избери мерна единица">
                         <b-form-radio-group id="radio-group-2" v-model="unit">
                             <b-form-radio value="мл">мл</b-form-radio>
@@ -38,6 +52,7 @@
                             <b-form-radio value="бр">бр</b-form-radio>
                         </b-form-radio-group>
                     </b-form-group>
+                    <hr class="w-100 m-2">
                     <!-- StockQuantity -->
                     <label for="stockQuantity">Наличност <em>(брой)</em></label>
                     <input id="stockQuantity" type="number" v-model="stockQuantity"  placeholder="0" required>
@@ -171,6 +186,7 @@ export default {
             description: null,
             weight: null,
             unit: null,
+            suggested: null,
             stockQuantity: null,
             selectedFile: null,
             sale: null,
@@ -178,6 +194,7 @@ export default {
             imageUrl: null,
             message: null,
             err: null,
+            productID: null,
             properties:{
                 ingredients: null,
                 // storageConditions: null,
@@ -213,9 +230,11 @@ export default {
             data.append("categoryID", this.categoryID);
             data.append("subcategoryID", this.subcategoryID);
             data.append("title", this.title);
+            data.append("productID", this.productID);
             data.append("sale", this.sale); 
             data.append("oldPrice", this.oldPrice);   
             data.append("price", this.price);    
+            data.append("suggested", this.suggested);
             data.append("weight", this.weight);
             data.append('unit',this.unit);    
             data.append("stockQuantity", this.stockQuantity);    

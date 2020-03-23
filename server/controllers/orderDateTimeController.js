@@ -75,8 +75,6 @@ exports.create_Timeframe = async( req, res) => {
     }
 }
 
-
-
 //add new Days and set 
 exports.update_Days = async (req, res) => {
     try {
@@ -119,7 +117,6 @@ exports.update_Days = async (req, res) => {
     
 }
 
-
 //Update max properties of specific timeframes 
 exports.update_Max_Property = async (req, res) => {
     try {
@@ -151,8 +148,6 @@ exports.update_Max_Property = async (req, res) => {
     
 }
 
-
-
 //Send ALL DOCS
 exports.send_Date_Timeframes = async (req,res) =>{
     try{
@@ -169,6 +164,7 @@ exports.send_Date_Timeframes = async (req,res) =>{
         })
     }
 }
+
 //Check if timeframe is available before order
 exports.send_Specific_Timeframe = async (req, res) => {
     try {

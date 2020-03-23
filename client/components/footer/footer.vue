@@ -1,5 +1,5 @@
 <template>
-    <footer class="page-footer font-small ">
+    <footer class="page-footer font-small">
 
         <!-- Footer Links -->
         <div class="container text-center text-md-left">
@@ -35,7 +35,6 @@
 
             <!-- Grid column 2-->
             <div class="col-md-3 col-sm-6 mx-auto">
-
                 <!-- Links -->
                 <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
 
@@ -53,7 +52,6 @@
                     <a href="#!">Link 4</a>
                 </li>
                 </ul>
-
             </div>
             <!-- Grid column 2-->
 

@@ -19,15 +19,15 @@
               </b-col>
 
               <!-- SEARCH -->
-              <div class="col-5 order-3 order-sm-2 col-sm p-0 ml-sm-2 mr-sm-2 d-flex" >
+              <div @keyup.enter="fullSearch" class="col-5 order-3 order-sm-2 col-sm p-0 ml-sm-2 mr-sm-2 d-flex" >
                   <!-- SEARCH RESULTS BOX -->
                   <div class="d-none d-md-block h-100 position-relative ml-auto mr-2" style="width: inherit;">
                     <span
                      @mouseover="display = true" 
                      @mouseleave="display = false"
                     >
-                      <b-form-input  @input="searchCollapse" class="h-100 ml-auto border search" :class="{ search_focus: display}" v-model="searchText" placeholder="Потърси продукт..." />
-                      <b-button class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
+                      <b-form-input autocomplete="off" @input="searchCollapse" class="h-100 ml-auto border search" :class="{ search_focus: display}" v-model="searchText" placeholder="Потърси продукт..." />
+                      <b-button  @click='fullSearch' class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark" style="height:inherit;"></i></b-button>
                       <div v-if="searchProducts" :class="{ displayProduct: display, 'd-none': !display }" >
                         <div v-for="product in searchProducts" :key="product._id" class="position-relative">
                             <div class="promotion_text" v-if="product.sale">ПРОМОЦИЯ</div>
@@ -73,7 +73,7 @@
                   body-class="p-0"
                   >
                     <b-form-input @input="searchCollapse" v-model="searchText" class="form-control mr-sm-2 h-100" placeholder="Потърси продукт..." />
-                    <b-button class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
+                    <b-button :to="{name: 'shop-search', params: { search: searchText } }" class="border-0 bg-transparent search_button"><i  class="fas fa-search text-dark"></i></b-button>
                      <div v-if="searchProducts" class='displayProduct' >
                       <div v-for="product in searchProducts" :key="product._id" class="position-relative">
                           <div class="promotion_text" v-if="product.sale">ПРОМОЦИЯ</div>
@@ -137,7 +137,7 @@
                     <span class="fas fa-shopping-cart fa-1x"></span>
                     <span id="price">{{getTotalPrice}} лв</span>           
                   </b-button>
-                  <b-collapse id="collapse-4" v-model="visible" class="mt-2 cart_products" >
+                  <b-collapse id="collapse-4" v-model="visible" class="mt-2 cart_products">
                     <b-card class='d-none d-lg-block' style="max-height: 340px;overflow-y: scroll;">
                       <div v-if="getCart == 0">Няма продукти в количката!</div>
                       <div style="display: flow-root; margin-bottom:1.25rem;" v-for="product in getCart" :key="product._id">
@@ -166,8 +166,6 @@
                   </b-form-select>
                 </div>
               </div>
-              
-
             </div>
 
         </div>
@@ -356,6 +354,10 @@ export default {
       if (!this.searchText){
         this.searchProducts = []
       }
+    },
+    fullSearch(){
+        // this.$router({name:'shop-search',query:{search: this.searchText}});
+        window.location.replace("http://localhost:5000/shop/search?search="+this.searchText);
     },
     qty(prod){
       const prodQ = this.getCart.find(product => product._id === prod._id)

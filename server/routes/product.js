@@ -14,11 +14,17 @@ router.post("/products", upload.single("photo"), productController.create_Produc
 //GET request - get all products
 router.get("/products", productController.get_All_Products);
 
+//GET products filtered by productID
+router.get("/products/productID/:id", productController.get_Products_By_ProductID);
+
 //GET products filtered by category
 router.get("/products/categories/:id", productController.get_Products_By_Category);
 
 //GET products fillteres by subcategory
 router.get("/products/subcategories/:id", productController.get_Products_By_Subcategory);
+
+//GET products fillteres by suggested
+router.get("/products/suggested/true", productController.get_Products_By_Suggested);
 
 //GET request - get a single product
 router.get("/products/:id", productController.get_Single_Product);
@@ -31,5 +37,8 @@ router.delete("/products/:id", productController.delete_Single_Product);
 
 //Search Products
 router.get("/products/search/:search", productController.get_Search_Products);
+
+//Search Products Page
+router.get("/products/search/page/:search", productController.get_Search_Products_Page);
 
 module.exports = router;

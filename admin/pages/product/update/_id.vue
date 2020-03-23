@@ -17,9 +17,24 @@
                     <!-- Title -->
                     <label for="title">Име</label>
                     <input class="width_100" id="title" type="text" v-model="title"  :placeholder="product[0].title">
+                    <!-- ProductID -->
+                    <label for="productID">Продуктов код</label>
+                    <input class="width_100" id="title" type="number" v-model="productID" :placeholder="product[0].productID" required>
                     <!-- Price -->
                     <label for="price">Цена (с отстъпка)</label>
                     <input id="price" type="number"  v-model="price" :placeholder="product[0].price.$numberDecimal"  step=".01">
+                    <!-- Suggested -->
+                    <hr class="w-100 m-2">
+                    <b-form-checkbox
+                    id="checkbox-1"
+                    v-model="suggested"
+                    name="checkbox-1"
+                    value = true
+                    unchecked-value = false
+                    >
+                    добави в топ предложения
+                    </b-form-checkbox>
+                    <hr class="w-100 m-2">
                     <!-- On sale -->
                     <label for='sale'>Промоция<em>(в проценти)</em></label>
                     <input id='sale' type='number' v-model="sale" :placeholder="product[0].sale">
@@ -47,7 +62,6 @@
                     <!-- Description -->
                     <label for="description">Описание</label>
                     <textarea id="description" cols="30" rows="10" v-model="description" :placeholder="product[0].description"></textarea>
-                    
                     <!-- Photo -->
                     <label for="photo">Изберете снимка</label>
                     <input id="photo" type="file"  @change="onFileSelected" />
@@ -184,7 +198,8 @@ export default {
             // }
             // this.properties.expirationDate = expirationDate;
         } 
-        this.unit = this.product[0].unit;  
+        this.unit = this.product[0].unit;
+        this.suggested = this.product[0].suggested;  
         // this.oldPrice = this.product[0].oldPrice;
         // this.sale = this.product[0].sale                                                                                            
     },
@@ -195,6 +210,8 @@ export default {
             subcategoryID: null,
             selected:'',
             title: null,
+            suggested: null,
+            productID: null,
             price: null,
             oldPrice: null,
             description: null,
@@ -236,10 +253,10 @@ export default {
         },
         async onUpdateProduct({ params, $router }){
             const data = new FormData();
-            const productValues = ['title','price','weight','stockQuantity','description','unit', 'sale', 'oldPrice'];
+            const productValues = ['title','price','weight','stockQuantity','description','unit', 'sale', 'oldPrice', 'suggested', 'productID'];
             productValues.forEach(value => {
                 if(this[value]){
-                    data.append(value,this[value]);
+                    data.append(value , this[value]);
                 }
             })
             if(this.categoryID){

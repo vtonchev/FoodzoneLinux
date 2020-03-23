@@ -1,5 +1,6 @@
 const Product = require("../models/product");
-
+// Products per page 
+const offset = 24 
 // create a new Product 
 exports.create_Product = async (req, res) => {
     try{
@@ -7,6 +8,7 @@ exports.create_Product = async (req, res) => {
             category: req.body.categoryID,
             subcategory: req.body.subcategoryID,
             title: req.body.title,
+            productID: req.body.productID,
             description: req.body.description,
             photo: {
                 url: req.file.location,
@@ -18,6 +20,7 @@ exports.create_Product = async (req, res) => {
             weight: req.body.weight,
             unit: req.body.unit,
             stockQuantity: req.body.stockQuantity,
+            suggested: req.body.suggested,
             properties: JSON.parse(req.body.properties),    
         });
         await newProduct.save();
@@ -38,10 +41,14 @@ exports.create_Product = async (req, res) => {
 // GET all products 
 exports.get_All_Products = async (req, res) => {
     try{
-        const products = await Product.find().populate("category subcategory").exec();
+        const page = req.query.page;
+        let products = [];
+        products = await Product.find().skip((page-1)*offset).limit(offset).populate("category subcategory").exec();
+        const count = await Product.countDocuments({});
         res.json({
             success: true,
-            products: products
+            products: products,
+            count: count
         })
     } catch(err) {
         res.status(500).json({
@@ -50,19 +57,32 @@ exports.get_All_Products = async (req, res) => {
         })
     }
 }
-
+// Get product filtered by productID
+exports.get_Products_By_ProductID = async (req, res) => {
+    try{
+        const products = await Product.find({productID: req.params.id}).populate("category subcategory");
+        res.json({
+            success: true,
+            products: products,
+        })
+    } catch (err){
+        console.log(err)
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
 // GET products filtered by category
 exports.get_Products_By_Category = async (req, res) => {
     try{
         const page = req.query.page;
         let sort = req.query.sort;
-        const offset = 26;
-        let products = undefined;
+        let products = [];
         if(sort){
             switch(sort){
                 case '1':
-                products = await Product
-                .find({category: req.params.id})
+                products = await Product.find({category: req.params.id})
                 .sort({price : 1})
                 .skip((page-1)*offset)
                 .limit(offset)
@@ -91,11 +111,11 @@ exports.get_Products_By_Category = async (req, res) => {
             .exec();
         }
         // SORT LOGIC HERE
-        const all = await Product.countDocuments({category: req.params.id});
+        const count = await Product.countDocuments({category: req.params.id});
         res.json({
             success: true,
             products: products,
-            count: all
+            count: count
         })
     } catch (err){
         console.log(err)
@@ -105,14 +125,12 @@ exports.get_Products_By_Category = async (req, res) => {
         })
     }
 }
-
 // Get products filtered by subcategory
 exports.get_Products_By_Subcategory = async (req, res) =>{ 
     try {
         const page = req.query.page;
         let sort = req.query.sort;
-        const offset = 26;
-        let products = undefined;
+        let products = [];
         if(sort){
             switch(sort){
                 case '1':
@@ -144,11 +162,11 @@ exports.get_Products_By_Subcategory = async (req, res) =>{
             .limit(offset)
             .exec();
         }
-        const all = await Product.countDocuments({subcategory: req.params.id});
+        const count = await Product.countDocuments({subcategory: req.params.id});
         res.json({
             success: true,
             products: products,
-            count: all
+            count: count
         }) 
     } catch (err) {
         res.status(500).json({
@@ -157,7 +175,56 @@ exports.get_Products_By_Subcategory = async (req, res) =>{
         })
     }
 }
-
+//Get products filtered by suggested 
+exports.get_Products_By_Suggested = async(req, res) =>{
+    try {
+        const page = req.query.page;
+        let sort = req.query.sort;
+        let products = [];
+        if(sort){
+            switch(sort){
+                case '1':
+                products = await Product.find({suggested: true})
+                .sort({price : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+                case '2':
+                products = await Product.find({suggested: true})
+                .sort({price:-1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+                case '3':
+                products = await Product.find({suggested: true})
+                .sort({title : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+            }
+        } else {
+            products = await Product.find({suggested: true})
+            .sort({sale:-1})
+            .skip((page-1)*offset)
+            .limit(offset)
+            .exec();
+        }
+        const count = await Product.countDocuments({suggested: true});
+        res.json({
+            success: true,
+            products: products,
+            count: count
+        }) 
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
 // GET a single product 
 exports.get_Single_Product =  async (req, res) => {
     try{
@@ -190,10 +257,64 @@ exports.get_Search_Products = async (req, res) => {
         })
     }
 }
+//SEARCH FOR PRODUCTS PAGE
+exports.get_Search_Products_Page = async (req, res) => {
+    try {
+        const page = req.query.page;
+        let sort = req.query.sort;
+        let products = [];
+        const search = decodeURIComponent(req.params.search);
+        if(sort){
+            switch(sort){
+                case '1':
+                products = await Product.find( { $text: { $search: search } })
+                .sort({price : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+                case '2':
+                products = await Product.find( { $text: { $search: search } })
+                .sort({price:-1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+                case '3':
+                products = await Product.find( { $text: { $search: search } })
+                .sort({title : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+            }
+        } else {
+            products = await Product.find( { $text: { $search: search } })
+            .sort({sale:-1})
+            .skip((page-1)*offset)
+            .limit(offset)
+            .exec();
+        }
+        const count = await Product.countDocuments({ $text: { $search: search } });
+        res.json({
+            success: true,
+            products: products,
+            count: count
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            success:false,
+            message: err
+        })
+    }
+}
 // Update a single product
 exports.update_Single_Product = async (req, res) => {
     try{
-        req.body.properties = JSON.parse(req.body.properties);
+        if(req.body.properties){
+            req.body.properties = JSON.parse(req.body.properties);
+        }
         await Product.findOneAndUpdate({_id: req.params.id },
             {
                 $set: req.body
@@ -245,6 +366,6 @@ exports.delete_Single_Product = async (req, res) => {
 //////////////////////
 ///// SOME TRIES /////
 
-exports.try = async (req, res) => {
+// exports.try = async (req, res) => {
     
-}
+// }

@@ -33,8 +33,8 @@
                 <b-navbar-toggle target="nav-text-collapse" class="mb-2 border-0 pl-0 cat_collapse_btn"><span class="fas fa-bars text-white"></span></b-navbar-toggle>
                 <b-collapse id="nav-text-collapse" is-nav>
                     <b-navbar-nav fill class="w-100 text-white" >
-                        <b-nav-item :to="{name: 'shop-category', params: { category:'5e540324b4a1883840b9a7a4'} }" link-classes='cat_item'>Месо</b-nav-item>
-                        <b-nav-item :to="{name: 'shop-category', params: { category:'5e53ed71b4a1883840b9a7a0'} }" link-classes='cat_item'>Млечни продукти</b-nav-item>
+                        <b-nav-item :to="{name: 'shop-category-id', params: { id:'5e540324b4a1883840b9a7a4'} }" link-classes='cat_item'>Месо</b-nav-item>
+                        <b-nav-item :to="{name: 'shop-category-id', params: { id:'5e53ed71b4a1883840b9a7a0'} }" link-classes='cat_item'>Млечни продукти</b-nav-item>
                         <b-nav-item link-classes='cat_item'>Плодове и зеленчуци</b-nav-item>
                         <b-nav-item link-classes='cat_item'>Хляб и тестени</b-nav-item>
                         <b-nav-item link-classes='cat_item'>Риба и морски дарове</b-nav-item>

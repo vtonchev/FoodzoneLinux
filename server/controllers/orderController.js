@@ -1,9 +1,9 @@
 const Order = require('../models/order');
 const OrderDateTime = require('../models/orderDateTime')
-
+const Product = require('../models/product')
 exports.create_Order = async (req, res) => {
     try {
-        const cart = req.body.cart;
+        let cart = req.body.cart;
         const newOrder = new Order({
             address: req.body.address,
             contact: req.body.contact,
@@ -13,10 +13,20 @@ exports.create_Order = async (req, res) => {
         })
         cart.map(product => {
             newOrder.products.push({
-                productId: product._id,
+                _id: product._id,
                 quantity:parseInt(product.quantity),
             })
-        })
+        }) 
+        await newOrder.products.forEach(product => {
+            Product.update(
+                {_id: product._id},
+                {
+                    $addToSet: {
+                        $inc: { bought: 1} 
+                    }
+                }
+            ) 
+        });
         await newOrder.save();
         await OrderDateTime.updateOne(
             { date: req.body.orderDateTime.date, "timeframe.from" : req.body.orderDateTime.timeframe },

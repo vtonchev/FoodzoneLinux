@@ -48,7 +48,7 @@ export const state = () => ({
             }
         ]
 
-    }
+    },
 }) 
 
 export const actions = {
@@ -64,12 +64,6 @@ export const actions = {
 }
 
 export const mutations = {
-    setCategory(state, category){
-        state.category = category;
-    },
-    setSubcategories(state, subcategories){
-        state.subcategories = subcategories
-    },
     pushProductToCart(state,product){
         product.quantity = 1;
         // product.quantity = 1;

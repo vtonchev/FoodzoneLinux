@@ -8,7 +8,7 @@
             <div class="container-fluid container_fluid_width p-0 position-relative">
                 <b-row class="m-0">
                     <b-col cols='12' lg='auto' class="p-0 sidebar_column">
-                        <Sidebar/>
+                        <SidebarSearch/>
                     </b-col>
                     <nuxt/>        
                 </b-row>
@@ -21,15 +21,14 @@
 <script>
 import Loading from '~/components/loading.vue'
 import Navbar from "~/components/navbar/navbar"
-import Sidebar from "~/components/sidebar/sidebar"
+import SidebarSearch from "~/components/sidebar/sidebarSearch"
 import Footer from "~/components/footer/footer"
 export default {
-
   components:{
       Navbar,
       Footer,
       Loading,
-      Sidebar
+      SidebarSearch
   },
   created(){
     this.loaded = false;

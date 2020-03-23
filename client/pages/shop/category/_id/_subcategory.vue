@@ -1,6 +1,6 @@
 <template>
     <b-col class="p-0 position-static">
-        <div @click="nextPage" class="position-fixed h-100 next_page d-md-flex d-none" style="right:0; top:0; z-index:10; width:5%" >
+        <div @click="nextPage" class="position-fixed h-100 next_page d-md-flex d-none" style="right:0; top:0; z-index:10; width:5%">
             <i class="fas fa-arrow-circle-right align-self-center"></i>
         </div>
         <b-col cols="12" class="p-0 position-static">
@@ -9,8 +9,8 @@
                 <i class="fas fa-home"></i>
                     Начало
                 </b-breadcrumb-item>
-                <b-breadcrumb-item :to="{name: 'shop-category', params: { category: $route.params.category} }">{{$store.state.categories[$route.params.category]}}</b-breadcrumb-item>
-                <b-breadcrumb-item active>{{$store.state.subcategories[$route.params.category].find(({id}) => id === $route.params.subcategory).title}}({{count}})</b-breadcrumb-item>
+                <b-breadcrumb-item :to="{name: 'shop-category-id', params: { id: $route.params.id} }">{{$store.state.categories[$route.params.id]}}</b-breadcrumb-item>
+                <b-breadcrumb-item active>{{$store.state.subcategories[$route.params.id].find(({id}) => id === $route.params.subcategory).title}}({{count}})</b-breadcrumb-item>
             </b-breadcrumb>
             <div ref="scrollTo"></div>
             <b-form-group class="filter">
@@ -62,8 +62,7 @@ export default {
     layout: 'sidebar',
     components:{
         Card, 
-        CardSale,
-        
+        CardSale, 
     },
     scrollToTop: false,
     beforeMount () {

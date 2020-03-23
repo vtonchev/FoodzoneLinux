@@ -67,7 +67,7 @@
             <div v-if="getCart == 0" style="border:solid 1px #E1E1E1; background-color:#f6f6f6; margin-top:-20px; margin-bottom:20px; text-align:center;"> Няма продукти в количката !</div>
             <div class="checkoutMenuDesktop">
                 <p class="totalPrice">Общо: <span style="color: #5AA240;">{{getTotalPrice}}</span> лв</p>
-                <button class="checkout_button"><nuxt-link style="padding: 8px 0;" to='/shop/order'>Продължи</nuxt-link></button>
+                <button class="checkout_button"><nuxt-link style="padding: 8px 0; color: white;" to='/shop/order'>Продължи</nuxt-link></button>
             </div>
         </div>
         
@@ -165,11 +165,9 @@ a:hover{
     font-weight: 700;
     padding: 0.5rem;
     margin-left: auto;
-    color: white;
 }
 .checkout_button :focus{
     outline: none;
-    
 }
 
 .stick_menu{

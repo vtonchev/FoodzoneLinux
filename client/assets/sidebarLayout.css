@@ -1,0 +1,28 @@
+.container_fluid_width{
+    width: 1200px
+}
+@media only screen and (max-width: 1199px) {
+.container_fluid_width{
+    width:980px;
+    }
+.sidebar_column{
+    width: 200px;
+}
+}
+@media only screen and (max-width: 991px) {
+.container_fluid_width{
+        width:auto;
+        margin:0 3rem;
+    }  
+}
+@media only screen and (max-width: 767px) {
+.container_fluid_width{
+    margin:0 10px;
+}
+}
+@media only screen and (max-width: 575px) {
+.container_fluid_width{
+        width:auto;
+        height: fit-content;
+    }
+}
