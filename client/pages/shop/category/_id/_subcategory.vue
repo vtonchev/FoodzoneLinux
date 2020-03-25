@@ -10,7 +10,7 @@
                     Начало
                 </b-breadcrumb-item>
                 <b-breadcrumb-item :to="{name: 'shop-category-id', params: { id: $route.params.id} }">{{$store.state.categories[$route.params.id]}}</b-breadcrumb-item>
-                <b-breadcrumb-item active>{{$store.state.subcategories[$route.params.id].find(({id}) => id === $route.params.subcategory).title}}({{count}})</b-breadcrumb-item>
+                <b-breadcrumb-item active>{{$store.state.subcategories[$route.params.id].find(({id}) => id === $route.params.subcategory).title}} ({{count}} резултата)</b-breadcrumb-item>
             </b-breadcrumb>
             <div ref="scrollTo"></div>
             <b-form-group class="filter">
@@ -70,6 +70,12 @@ export default {
         document.addEventListener('touchstart', this.handleTouchStart, false);        
         document.addEventListener('touchmove', this.handleTouchMove, false);
         document.addEventListener('touchend', this.handleTouchEnd, false)
+    },
+    mounted(){
+        window.scroll({
+            top: 0,
+            behavior: 'smooth'
+        })
     },
     beforeDestroy() {
         document.removeEventListener('touchstart', this.handleTouchStart, false);

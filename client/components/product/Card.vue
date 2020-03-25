@@ -1,5 +1,5 @@
 <template>
-    <div class="card ml-lg-auto product_card">
+    <div class="card ml-lg-auto product_card" :class='cardClass' >
         <img :src = product.photo.url class="card-img-top" alt="...">
         <div class="card-body" :class="{ addedProduct: isInCart }">
             <button @click="$bvModal.show(product._id)" class="card-title bg-transparent border-0 p-0 w-100 mb-1">{{product.title}}</button>
@@ -37,7 +37,7 @@ export default {
         FullInfo,
         QuantityController
     },
-    props:['product'],
+    props:['product','cardClass'],
     
     methods:{
         ...mapActions(['addProductToCart']),

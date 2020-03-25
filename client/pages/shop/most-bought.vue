@@ -9,21 +9,19 @@
                 <i class="fas fa-home"></i>
                     Начало
                 </b-breadcrumb-item>
-                <b-breadcrumb-item >Търси</b-breadcrumb-item>
-                <b-breadcrumb-item active >{{decodeURI($route.query.search)}} ({{count}} резултата)</b-breadcrumb-item>
+                <b-breadcrumb-item active >Най-купувани ({{count}} резултата)</b-breadcrumb-item>
             </b-breadcrumb>
             <div ref="scrollTo"></div>
             <b-form-group class="filter">
                 <b-form-radio-group v-model="sort">
-                    <b-form-radio value="1"> Цена (ниска)</b-form-radio>
+                    <b-form-radio value="1">Цена (ниска)</b-form-radio>
                     <b-form-radio value="2">Цена (висока)</b-form-radio>
                     <b-form-radio value="3">Име</b-form-radio>
                 </b-form-radio-group>
             </b-form-group>
         </b-col>
-        <b-col cols="12" class='p-0' >
+        <b-col cols="12" class='p-0'>
             <b-row class="m-0">
-                <b-col v-if="!count" class="text-center text-weight-bold" style="height:100%">Няма намерени продукти</b-col>
                 <b-col cols='6' sm='4' md='4' lg='3' class="p-0 mb-3 card_col" v-for='product in products' :key='product._id'>
                     <Card 
                     v-if="product.sale == null || product.sale == 0"
@@ -49,7 +47,8 @@
             <span class="text-success" style="backgroud-color:red;">
                 <b v-if="active" class="text-white pagination_active">{{ page }}</b>
                 <i v-else>{{ page }}</i>
-            </span>  
+            </span>
+            
         </template>
         </b-pagination>
     </b-col>    
@@ -65,13 +64,6 @@ export default {
         CardSale, 
     },
     scrollToTop: false,
-    async asyncData({$axios, route}){
-        const response = await $axios.$get('/api/products/search/page/'+ encodeURI(route.query.search) +'?page=1');
-        return{
-            products: response.products,
-            count: response.count
-        }
-    },
     beforeMount () {
         smoothscroll.polyfill();
         document.addEventListener('touchstart', this.handleTouchStart, false);        
@@ -84,17 +76,23 @@ export default {
             behavior: 'smooth'
         })
     },
-    // created(){
-    //     this.$axios.$get('/api/products/search/page/'+ this.$route.query.search +'?page=1').then((response)=>{
-    //         this.products = response.products;
-    //         this.count = response.count
-    //     }); 
-    // },
     beforeDestroy() {
         document.removeEventListener('touchstart', this.handleTouchStart, false);
         document.addEventListener('touchmove', this.handleTouchMove, false);  
         document.removeEventListener('touchend', this.handleTouchEnd, false);
 
+    },
+    async asyncData({$axios, params, store, route}){
+        try {
+            const response = await $axios.$get('/api/products/bought/true'+'?page=1'); 
+            
+            return {
+                products: response.products,
+                count: response.count
+            }
+        } catch(err) {
+            console.log(err)
+        }
     },
     data(){
         return{
@@ -112,37 +110,31 @@ export default {
             swipe: '',
         }
     },
-    
-    // created() {
-    //     window.addEventListener('scroll', () => {
-    //         this.bottom = this.bottomVisible()
-    //     })
-    // },
     watch: {
         async currentPage(currentPage) { 
-                if(this.currentPage >= 1){
-                    if(this.screenWidth <= 991){
-                        await this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
-                            .then((response)=>{
-                                this.products = response.products;
-                            }
-                        )
-                        window.scroll({
-                            top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
-                            behavior: 'smooth'
-                        })
-                    } else {
-                        this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
-                            .then((response)=>{
-                                this.products = response.products;
-                            }
-                        )
-                        window.scroll({
-                            top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
-                            behavior: 'smooth'
-                        })
-                    }      
-                }
+            if(this.currentPage >= 1){
+                if(this.screenWidth <= 991){
+                    await this.$axios.$get('/api/products/bought/true' + '?page=' + this.currentPage + '&sort=' + this.sort)
+                        .then((response)=>{
+                            this.products = response.products;
+                        }
+                    )
+                    window.scroll({
+                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
+                        behavior: 'smooth'
+                    })
+                } else {
+                    this.$axios.$get('/api/products/bought/true' + '?page=' + this.currentPage + '&sort=' + this.sort)
+                        .then((response)=>{
+                            this.products = response.products;
+                        }
+                    )
+                    window.scroll({
+                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
+                        behavior: 'smooth'
+                    })
+                }      
+            }
         },
         sort(sort){
             this.sortBy();
@@ -157,7 +149,7 @@ export default {
         sortBy(){
             this.currentPage = 1;
             console.log(this.sort);
-            this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort).then((response)=>{
+            this.$axios.$get('/api/products/bought/true' + '?page=' + this.currentPage + '&sort=' + this.sort).then((response)=>{
                 this.products = response.products;
             })
         },
@@ -210,6 +202,7 @@ export default {
     }
 }
 </script>
+
 <style scoped src="~/assets/products_page.css">
 
 </style>

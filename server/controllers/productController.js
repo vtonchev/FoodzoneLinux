@@ -225,6 +225,106 @@ exports.get_Products_By_Suggested = async(req, res) =>{
         })
     }
 }
+//Get products filtered by sale
+exports.get_Products_By_Sale = async(req, res) =>{
+    try {
+        const page = req.query.page;
+        let sort = req.query.sort;
+        let products = [];
+        if(sort){
+            switch(sort){
+                case '1':
+                products = await Product.find({sale: { $ne: null }})
+                .sort({price : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+                case '2':
+                products = await Product.find({sale: { $ne: null }})
+                .sort({price:-1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+                case '3':
+                products = await Product.find({sale: { $ne: null }})
+                .sort({title : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+            }
+        } else {
+            products = await Product.find({sale: { $ne: null }})
+            .sort({sale:-1})
+            .skip((page-1)*offset)
+            .limit(offset)
+            .exec();
+        }
+        const count = await Product.countDocuments({sale: { $ne: null }});
+        res.json({
+            success: true,
+            products: products,
+            count: count
+        }) 
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+//Get products filtered by bought
+exports.get_Products_By_Bought = async(req, res) =>{
+    try {
+        const page = req.query.page;
+        let sort = req.query.sort;
+        let products = [];
+        if(sort){
+            switch(sort){
+                case '1':
+                products = await Product.find({bought: { $gt : 50 }})
+                .sort({price : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+                case '2':
+                products = await Product.find({bought: { $gt : 50 }})
+                .sort({price:-1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+                case '3':
+                products = await Product.find({bought: { $gt : 50 }})
+                .sort({title : 1})
+                .skip((page-1)*offset)
+                .limit(offset)
+                .exec();
+                break;
+            }
+        } else {
+            products = await Product.find({bought: { $gt : 50 }})
+            .sort({sale:-1})
+            .skip((page-1)*offset)
+            .limit(offset)
+            .exec();
+        }
+        const count = await Product.countDocuments({bought: { $gt : 50 }});
+        res.json({
+            success: true,
+            products: products,
+            count: count
+        }) 
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
 // GET a single product 
 exports.get_Single_Product =  async (req, res) => {
     try{

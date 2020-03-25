@@ -20,11 +20,17 @@ router.get("/products/productID/:id", productController.get_Products_By_ProductI
 //GET products filtered by category
 router.get("/products/categories/:id", productController.get_Products_By_Category);
 
-//GET products fillteres by subcategory
+//GET products filtered by subcategory
 router.get("/products/subcategories/:id", productController.get_Products_By_Subcategory);
 
-//GET products fillteres by suggested
+//GET products filtered by suggested
 router.get("/products/suggested/true", productController.get_Products_By_Suggested);
+
+//GET products filtered by sale
+router.get("/products/sale/true", productController.get_Products_By_Sale);
+
+//GET products filtered by bought
+router.get("/products/bought/true", productController.get_Products_By_Bought);
 
 //GET request - get a single product
 router.get("/products/:id", productController.get_Single_Product);

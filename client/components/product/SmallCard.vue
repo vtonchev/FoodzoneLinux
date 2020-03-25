@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ addedProduct: isInCart }" class="p-2">
+    <div class="p-2" :class="{ addedProduct: isInCart }">
         <div class="d-flex">
             <img :src='product.photo.url' style="width:60px;height:70px" class="card-img-bottom mr-2" :alt="'снимка на '+product.title"  >
             <button @click="$bvModal.show(product._id+'suggested')" class="card-title bg-transparent border-0 p-0 m-0" style="height:inherit">{{product.title}}</button>
@@ -7,14 +7,14 @@
        <div class="d-flex">
             
                 <span class="font-weight-bold float-left price">{{product.price.$numberDecimal}}<small>лв</small></span>
-                <div v-if="isInCart" class="float-right">
+                <div v-if="isInCart" class="ml-auto">
                     <!-- INCREASE/DECREASE QTY -->
                     <QuantityController
                     :product='product'
                     :qty='qty'
                     />
                 </div> 
-                <button v-else @click='addProductToCart(product)' class="buy_btn"><span class="fas fa-shopping-cart fa-1x"></span>Купи</button>
+                <button v-else @click='addProductToCart(product)' class="buy_btn ml-auto"><span class="fas fa-shopping-cart fa-1x"></span>Купи</button>
             
         </div>
         <FullInfo 

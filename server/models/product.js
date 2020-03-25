@@ -18,8 +18,8 @@ const productSchema = new Schema({
     unit: String,
     stockQuantity: Number,
     rating: [Number],
-    suggested: {type:Boolean, default:0},
-    bought: Number,
+    suggested: {type:Boolean, default: false},
+    bought: {type:Number, default:0},
     properties:  {}, 
 }, { minimize: true })
 

@@ -3,17 +3,12 @@
     <div>
         <h1>Редактирайте категорията</h1>
         <div class="w-50 m-auto">
-            <div id="image_preview" style="border:solid 1px; border-style:dashed; width:50%;">
-                <img :src="newImageUrl" style='width:100%; height:auto'/>
-            </div>
             <form id="form">
                 <div style="display:grid">
                 <!-- Title -->
                 <label for="title">Име</label>
                 <input class="width_100" id="title" type="text"  v-model="title">
-                <!-- Photo -->
-                <label for="photo">Изберете снимка</label>
-                <input id="photo" type="file"  @change="onFileSelected" />
+                <!-- Photo -->    
                 <button class="btn btn-success" @click="onUpdateCategory">Редактирай</button>
                 </div>
             </form>
@@ -30,29 +25,18 @@ export default {
         }
     },
     created(){
-        this.newImageUrl = this.category.photo.url;
         this.title = this.category.title;
     },
     data(){
         return{
-            newImageUrl: '',
             title: "",
             selectedFile: null
         }
     },
     methods:{
-        onFileSelected(event){
-            this.selectedFile = event.target.files[0];
-            this.newImageUrl = URL.createObjectURL(this.selectedFile);
-        },
-
         async onUpdateCategory(){
             let data = new FormData();
-            data.append("title", this.title)
-            if(this.selectedFile){
-                data.append("photo", this.selectedFile)   
-            } 
-            console.log(data)        
+            data.append("title", this.title)       
             let result = await this.$axios.$patch("/api/categories/" + this.category._id, data);
             await this.$router.go();
         }

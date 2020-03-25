@@ -4,14 +4,14 @@
             <b-col class="category_outer_box">
                 <b-button  v-b-toggle="category._id" variant="primary" @click="onSubcategories"  :value='category._id' >+</b-button>
                 <span class="category_title_box">{{category.title}}</span>
-                <img v-if='category.photo.url' :src="category.photo.url" alt="">
-                <n-link :to="{ name: 'category-update-id', params: {id: category._id} }"><b-button  size="sm" variant="outline-primary">Промени</b-button></n-link>
+                <!-- <img v-if='category.photo.url' :src="category.photo.url" alt=""> -->
+                <b-button :to="{ name: 'category-update-id', params: {id: category._id} }"  size="sm" variant="outline-primary">Промени</b-button>
             </b-col>
             <b-col>
                 <b-collapse :id="category._id" class="mt-2">
-                    <b-card v-for='subcategory in subcategories' :key='subcategory._id' >
+                    <b-card v-for='subcategory in subcategories' :key='subcategory._id'>
                         <span class="card-text"> {{subcategory.title}} </span>
-                        <n-link :to="{ name: 'subcategory-update-id', params: {id: subcategory._id} }" style="margin-right:10px"><b-button  size="sm" variant="outline-primary">Промени</b-button></n-link>
+                        <b-button :to="{ name: 'subcategory-update-id', params: {id: subcategory._id} }" style="margin-right:10px" size="sm" variant="outline-primary">Промени</b-button>
                     </b-card>
                 </b-collapse>
             </b-col>
@@ -39,14 +39,12 @@ export default {
         async onSubcategories(e){
             let id = e.target.value
             if(this.id) {           
-                    this.$root.$emit('bv::toggle::collapse', this.id)    
+                this.$root.$emit('bv::toggle::collapse', this.id)    
             }
-            
-            await this.$axios.$get('api/subcategories/categories/' + id).then(response => {
+            this.$axios.$get('api/subcategories/categories/' + id).then(response => {
                 console.log(response)
                 this.subcategories = response.subcategories
             }) 
-            
             this.id = id
         }
     }

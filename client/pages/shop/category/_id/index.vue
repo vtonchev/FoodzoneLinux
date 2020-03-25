@@ -9,7 +9,7 @@
                 <i class="fas fa-home"></i>
                     Начало
                 </b-breadcrumb-item>
-                <b-breadcrumb-item active :to="{name: 'shop-category-id', params: { id: $route.params.id} }">{{$store.state.categories[$route.params.id]}} ({{count}})</b-breadcrumb-item>
+                <b-breadcrumb-item active :to="{name: 'shop-category-id', params: { id: $route.params.id} }">{{$store.state.categories[$route.params.id]}} ({{count}} резултата)</b-breadcrumb-item>
             </b-breadcrumb>
             <div ref="scrollTo"></div>
             <b-form-group class="filter">
@@ -20,7 +20,7 @@
                 </b-form-radio-group>
             </b-form-group>
         </b-col>
-        <b-col cols="12" class='p-0' >
+        <b-col cols="12" class='p-0'>
             <b-row class="m-0">
                 <b-col cols='6' sm='4' md='4' lg='3' class="p-0 mb-3 card_col" v-for='product in products' :key='product._id'>
                     <Card 
@@ -70,6 +70,12 @@ export default {
         document.addEventListener('touchmove', this.handleTouchMove, false);
         document.addEventListener('touchend', this.handleTouchEnd, false)
     },
+    mounted(){
+        window.scroll({
+            top: 0,
+            behavior: 'smooth'
+        })
+    },
     beforeDestroy() {
         document.removeEventListener('touchstart', this.handleTouchStart, false);
         document.addEventListener('touchmove', this.handleTouchMove, false);  
@@ -104,12 +110,6 @@ export default {
             swipe: '',
         }
     },
-    
-    // created() {
-    //     window.addEventListener('scroll', () => {
-    //         this.bottom = this.bottomVisible()
-    //     })
-    // },
     watch: {
         async currentPage(currentPage) { 
             if(this.currentPage >= 1){

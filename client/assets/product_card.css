@@ -7,9 +7,11 @@
     width:min-content;
     transition: 0.5s;
 }
+.card-title,.sale_text{
+    font-size: 14px;
+}
 .card-title{
     outline: none;
-    font-size: 14px;
     line-height: 1.3;
     font-weight:500;
     color: #28324B;
@@ -26,7 +28,6 @@
 .custom_button:focus{
     outline-color: #61BD42;
 }
-
 .sale_sticker{
     display: flex;
     position: absolute;
@@ -46,9 +47,6 @@
     background-color: #FBDE44;
     text-align: center;
     color:  #28324B;
-    border-top-left-radius: 2px;
-    border-bottom-right-radius: 2px;
-    font-size:14px; 
     font-weight: 600;
     width:50%; 
 }
@@ -57,10 +55,11 @@
 }
 .price,.promo_price{
     font-weight: 700;
-    font-size: 22px;
+    font-size: 20px;
 }
 .old_price{
     position: absolute;
+    font-size: 14px;
     top:-20px; 
     text-decoration: line-through;
     color:#666666;

@@ -1,5 +1,5 @@
 <template>
-    <div class="card ml-lg-auto product_card">
+    <div class="card ml-lg-auto product_card" :class='cardClass' >
         <div class="sale_text">ПРОМОЦИЯ</div>
         <div class="sale_sticker"><span class="m-auto" style="font-size:20px">-{{product.sale}}%</span></div>
         <img :src = product.photo.url class="card-img-top" alt="...">
@@ -42,7 +42,7 @@ export default {
         FullInfo,
         QuantityController
     },
-    props:['product'],
+    props:['product', 'cardClass'],
     data(){
         return{
             quantity:1

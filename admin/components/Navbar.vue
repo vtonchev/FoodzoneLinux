@@ -15,7 +15,6 @@
                                 <b-nav-item-dropdown text="Промени/Изтрий"> 
                                     <b-dropdown-item href="/product/update-delete">Продукти</b-dropdown-item>
                                     <b-dropdown-item href='/category/update-delete'>Категории</b-dropdown-item>
-                                    <b-dropdown-item href='/subcategory/update-delete'>Подкатегории</b-dropdown-item>
                                 </b-nav-item-dropdown>
                                 <!-- Category dropdown -->
                                 <b-nav-item-dropdown text="Добави"> 

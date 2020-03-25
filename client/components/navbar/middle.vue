@@ -357,7 +357,7 @@ export default {
     },
     fullSearch(){
         // this.$router({name:'shop-search',query:{search: this.searchText}});
-        window.location.replace("http://localhost:5000/shop/search?search="+this.searchText);
+        window.location.replace("/shop/search?search="+this.searchText);
     },
     qty(prod){
       const prodQ = this.getCart.find(product => product._id === prod._id)
