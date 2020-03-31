@@ -11,11 +11,7 @@
   </span>
 </template>
 <script>
-import SmallCard from "~/components/product/SmallCard";
 export default {
-  components:{
-      SmallCard 
-    },
   data(){
     return{
       routeName: this.$route.name,

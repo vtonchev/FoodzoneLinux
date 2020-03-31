@@ -21,9 +21,11 @@ app.use(cors());
 // Database connection
 mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.DATABASE_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
+    user:"admin",
+    pass:process.env.DATABASE_PASS,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
 }, (err) => {
     if(!err){
         console.log("Connected to the database")
@@ -43,7 +45,8 @@ const categoryRoutes = require("./routes/category");
 const subcategoryRoutes = require("./routes/subcategory");
 const authRoutes = require('./routes/auth');
 const orderDateTimeRoutes = require('./routes/orderDateTime');
-const orderRoutes = require('./routes/order')
+const orderRoutes = require('./routes/order');
+const addressRoutes = require('./routes/address');
 //----------------------------------------------------------- SIMULATE LOT OF PROD
 // const Product = require("./models/product");
 // const faker = require('faker');
@@ -89,6 +92,8 @@ app.use("/api", subcategoryRoutes);
 app.use("/api", authRoutes);
 app.use("/api", orderDateTimeRoutes);
 app.use("/api", orderRoutes);
+app.use("/api", addressRoutes);
+
 app.listen(3000, (err) => {
     if(!err){
         console.log("Listening on PORT",3000);

@@ -20,10 +20,10 @@ const upload = multer({
       });
     },
     key:(req, file, cb) => {
-      cb(null, new Date().toISOString() + file.originalname)
+      cb(null, new Date().toISOString() + file.originalname )
     }
   })
 });
 
-  module.exports = upload;
+module.exports = upload;
 

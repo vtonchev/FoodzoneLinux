@@ -25,6 +25,7 @@ export default {
   ** Customize the progress-bar color
   */
   loading: false,
+  
   /*
   ** Global CSS
   */
@@ -53,9 +54,7 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://bootstrap-vue.js.org
     'bootstrap-vue/nuxt',
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     '@nuxtjs/auth'
@@ -91,6 +90,11 @@ export default {
           logout: true
         }
       }
+    },
+    redirect: {
+      login: '/',
+      logout:'/',
+      callback: '/',
     }
   }
 }

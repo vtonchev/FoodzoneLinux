@@ -328,7 +328,7 @@ exports.get_Products_By_Bought = async(req, res) =>{
 // GET a single product 
 exports.get_Single_Product =  async (req, res) => {
     try{
-        const product = await Product.find({_id: req.params.id }).populate("category subcategory").exec();
+        const product = await Product.findOne({_id: req.params.id }).populate("category subcategory").exec();
         res.json({
             success: true,
             product: product
@@ -340,7 +340,7 @@ exports.get_Single_Product =  async (req, res) => {
         })
     }
 }
-// SEARCH FOR PRODUCTS 
+//SEARCH FOR PRODUCTS 
 exports.get_Search_Products = async (req, res) => {
     try {
         const search = decodeURIComponent(req.params.search);
@@ -452,7 +452,6 @@ exports.delete_Single_Product = async (req, res) => {
                 message: "Successfully deleted"
             })
         }
-       
     } catch(err) {
         res.status(500).json({
             success: false,

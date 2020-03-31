@@ -9,4 +9,7 @@ router.post('/auth/signup', authController.register_New_User);
 router.get('/auth/user', verifyToken, authController.show_User);
 // Login Route
 router.post('/auth/login', authController.login_User);
+// Change password
+router.post('/auth/password', verifyToken, authController.change_Password);
+
 module.exports = router;

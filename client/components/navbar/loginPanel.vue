@@ -20,7 +20,7 @@
                     <!-- SIGN IN -->
                     <b-tab active>
                         <template v-slot:title>
-                            <p class="text-info">Вход</p>
+                            <p class="text-green">Вход</p>
                         </template>
                         <b-form class="mx-auto py-3" @submit.prevent="onSignin">
                             <div class="form-group" >
@@ -46,7 +46,7 @@
                     <!-- REGISTRATION -->
                     <b-tab>
                         <template v-slot:title>
-                            <p class="text-info">Регистрация</p>
+                            <p class="text-green">Регистрация</p>
                         </template>
                         <div id="registration_box">
                             <b-form @submit.prevent="onSignup" class="mx-auto py-3">
@@ -108,6 +108,7 @@
         font-weight: 600;
         color: black;
     }
+    
 </style>
 
 <script>
@@ -156,10 +157,7 @@ export default {
                     password: this.password
                 }
                 data['name'] = JSON.stringify(this.name)
-                console.log(data)
                 const response = await this.$axios.$post('/api/auth/signup', data);
-                console.log(response)
-                console.log(response.success)
                 if (response.success) {
                     this.$auth.loginWith('local', {
                         data: {
@@ -175,7 +173,7 @@ export default {
             
         },
         countDownChanged(dismissCountDown) {
-        this.dismissCountDown = dismissCountDown
+            this.dismissCountDown = dismissCountDown
         },
         
     }

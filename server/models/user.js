@@ -10,9 +10,8 @@ const userSchema = new Schema({
     email: {type: String, unique: true, required: true},
     phone: String,
     password: {type: String, required: true },
-    address: {type: Schema.Types.ObjectId, ref: "Address" },
+    // address: {type: Schema.Types.ObjectId, ref:"Address"},
 });
-
 
 userSchema.pre('save', function(next){
     let user = this;

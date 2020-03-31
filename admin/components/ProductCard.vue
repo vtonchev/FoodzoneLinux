@@ -23,7 +23,7 @@ export default {
     props:['product'],
     methods:{
         async onDelete(){ 
-            await this.$axios.$delete('api/products/'+ this.product._id);
+            await this.$axios.$delete('api/products/'+ this.product._id, { data: { key: this.product.photo.key } });
             this.$router.go();
         },
         async onSuggestedChange(){

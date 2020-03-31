@@ -1,6 +1,6 @@
-const multer = require("multer");
+// const multer = require("multer");
 const aws = require("aws-sdk");
-const multerS3 = require("multer-s3");
+// const multerS3 = require("multer-s3");
 
 aws.config.update({
   secretAccessKey: process.env.AWSSecretKey,
@@ -9,15 +9,22 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-const deletePhoto =  s3.deleteObject({  
- Bucket: MY_BUCKET, 
- Key: photo.key
-},function (err, data, next){
-    if(err){
-        console.log(err)
+exports.delete_Photo = function(req, res, next){
+    if(req.body.key){
+        var params = {
+            Bucket: "foodzoneuploads", 
+            Key: req.body.key
+        };
+        s3.deleteObject(params, function(err, data) {
+            if (err){
+                console.log('an error appeared the image isnt deleted')
+            } else {
+                console.log('the image is deleted');
+                next();
+            }               
+        });
     } else {
-        next();
+        console.log('no reqest.body')
+        next()
     }
-})
-
-module.exports = deletePhoto;
+}

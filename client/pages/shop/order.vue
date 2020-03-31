@@ -6,7 +6,7 @@
             <!-- CART -->
             <div class="cart d-flex my-4">
                 <span class="cart_img mr-4"><i class="fas fa-shopping-cart fa-2x"></i></span>
-                <span class="totalPrice">
+                <span class="orderTotalPrice">
                     <span style="color:#5AA240; font-weight:700; font-size:1.2rem; text-decoration:underline;">{{getTotalPrice}} лв</span>
                     <span style="color:#b6b6b6;">Обща сума</span>
                 </span>
@@ -29,6 +29,32 @@
                     <div v-if="address.city && address.street" class="d-inline-block align-self-center ml-auto"><i class="fas fa-check-circle fa-2x text-success"></i></div>
                 </b-list-group-item>
                 <b-collapse id="address" accordion="order_form" >
+                    <div class="collapse_content">
+                        <!-- <div class="col"> -->
+                            <b-form-select class="mt-3" v-if="$auth.user" v-model="address">
+                                <b-form-select-option 
+                                v-for="address in addresses" 
+                                :key="address._id" 
+                                :value='{
+                                    city:address.city,
+                                    housingArea:address.housingArea,
+                                    street: address.street,
+                                    outsideDoor:address.outsideDoor,
+                                    floor: address.floor,
+                                    apartment: address.apartment,
+                                }'>
+                                    <div class="d-flex font-weight-light flex-column">
+                                        <span>гр.{{address.city}}</span> 
+                                        <span v-if="address.housingArea">,кв.{{address.housingArea}}</span>
+                                        <div v-if="address.street">,ул.{{address.street}}</div>
+                                        <div v-if="address.outsideDoor">,вх.{{address.outsideDoor}}</div> 
+                                        <div v-if="address.floor">,ет.{{address.floor}}</div>
+                                        <div v-if="address.apartment">,ап.{{address.apartment}}</div> 
+                                    </div>
+                                </b-form-select-option>
+                            </b-form-select>
+                        <!-- </div> -->
+                    </div>
                     <b-form class="collapse_content" @submit.prevent="validateAddress">
                         <div class="row">
                             <div class="col-12 col-sm-6">
@@ -60,7 +86,7 @@
                                 <b-form-input v-model="address.apartment" type="text"></b-form-input>
                             </div>
                         </div>
-                        <b-button type='submit'>Запази</b-button>
+                        <b-button class="mt-4" type='submit' variant='outline-success'>Запази</b-button>
                     </b-form>
                 </b-collapse>
                 <!-- Contact -->
@@ -90,7 +116,7 @@
                                 <b-form-input v-model="contact.number" minlength="10" maxlength='10' type='tel' required></b-form-input>
                             </div>
                         </div>
-                        <b-button type='submit'>Запази</b-button>
+                        <b-button class="mt-4" type='submit' variant='outline-success'>Запази</b-button>
                     </b-form>
                 </b-collapse>
                 <!-- Additional info -->
@@ -122,7 +148,7 @@
                                 </b-form-checkbox>
                             </div>
                         </div>
-                        <b-button type='submit'>Запази</b-button>
+                        <b-button class="mt-4" type='submit' variant='outline-success'>Запази</b-button>
                     </b-form>
                 </b-collapse>
                 <!-- Order Timetimeframe -->
@@ -143,16 +169,19 @@
                                     vertical 
                                     pills 
                                     card
-                                    nav-class='text-success'
-                                    nav-wrapper-class='text-success'
                                     id="timeframe_tabs"
-                                    active-nav-item-class='font-weight-bold bg-success  text-white'
+                                    active-nav-item-class='font-weight-bold bg-success text-white'
+                                    nav-class='text-capitalize'
                                     >
-                                        <b-tab v-for="(dateTime,index) in orderDate7" :key="'dyn-tab-' + index" >
-                                            <template v-slot:title >
-                                                <span class="" v-if="$moment(dateTime.date,'DD-MM-YYYY').format('DD-MM-YYYY') == $moment().format('DD-MM-YYYY')">Днес</span>
-                                                <span class="" v-else-if=" $moment(dateTime.date,'DD-MM-YYYY').format('DD-MM-YYYY') == $moment().add(1,'d').format('DD-MM-YYYY')">Утре</span>
-                                                <span v-else class="text-capitalize">{{$moment(dateTime.date, 'DD-MM-YYYY').format('dddd')}}</span>
+                                        <b-tab title-item-class='text-success' v-for="(dateTime,index) in orderDate7" :key="'dyn-tab-' + index" >
+                                            <template v-slot:title v-if="$moment(dateTime.date,'DD-MM-YYYY').format('DD-MM-YYYY') == $moment().format('DD-MM-YYYY')">
+                                                Днес
+                                            </template>
+                                            <template v-slot:title v-else-if=" $moment(dateTime.date,'DD-MM-YYYY').format('DD-MM-YYYY') == $moment().add(1,'d').format('DD-MM-YYYY')">
+                                                Утре
+                                            </template>
+                                            <template v-slot:title v-else>
+                                                {{$moment(dateTime.date, 'DD-MM-YYYY').format('dddd')}}
                                             </template>
                                                 <div style='height: 278px; overflow: auto;'>
                                                 <h6 class="text-center">{{$moment(dateTime.date, 'DD-MM-YYYY').format('Do MMMM')}}</h6>
@@ -222,7 +251,7 @@
                             часа
                             </span>
                         </div>
-                        <div class="mb-4 mx-sm-auto w-100"><b-button type='submit' class="w-100">Запази</b-button></div>
+                        <div class="mb-4 mx-sm-auto w-100"><b-button type='submit' variant='outline-success' class="w-100">Запази</b-button></div>
                     </b-form>
                 </b-collapse>
                 <!-- Payment method -->
@@ -244,7 +273,7 @@
             </b-list-group>
         </b-form>
         <!-- Modal -->
-        <b-modal id="validationModal" content-class="shadow" title="Внимание!">
+        <b-modal id="validationModal" hide-footer content-class="shadow" title="Внимание!">
             <p class="my-2">
                 {{validationMessage}}
             </p>
@@ -253,93 +282,98 @@
     </main>
 </template>
 <style scoped>
+p{
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+hr{
+    width: 260px;
+    border: 1.2px solid #E52121;
+    border-radius: 10px;
+}
+.cart{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px -20px rgba(0, 0, 0, 0.19);
+    border: solid 1px #dddddd;
+    border-radius: 5px;
+    padding: 1.5rem;
+}
+.orderTotalPrice{
+    display:grid;
+}
+.cart_img{
+    align-self: center;
+}
 
-    p{
-        font-size: 1.2rem;
-        font-weight: 700;
+a:hover{
+    color: white;
+}
+.update{
+    width: 40px;
+    height: 40px;
+    background-color: #DAA328;
+    border-radius: 50%;
+}
+.icon{
+    width: 41px;
+}
+#order_page{
+    width:1200px;
+    margin:0 auto;
+    height:inherit;
+}
+.collapse_content{
+    padding: 1.5rem;
+}
+input:focus,select:focus{
+    border:initial;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+@media screen and (max-width: 1199px){
+    #order_page{
+        width:980px;
     }
-    hr{
-        width: 260px;
-        border: 1.2px solid #E52121;
-        border-radius: 10px;
-    }
-    .cart{
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px -20px rgba(0, 0, 0, 0.19);
-        border: solid 1px #dddddd;
-        border-radius: 5px;
-        padding: 1.5rem;
-    }
-    .totalPrice{
-        display:grid;
-    }
-    .cart_img{
-        align-self: center;
-    }
-    #order_page a{
-        align-self: center;
-        color: white;
-    }
-    a:hover{
-        color: white;
-    }
-    .update{
-        width: 40px;
-        height: 40px;
-        background-color: #DAA328;
-        border-radius: 50%;
-    }
-    .icon{
-        width: 41px;
+}
+
+@media screen and (max-width: 991px) {
+    #order_page{
+    width:auto;
+    margin:0 3rem;
     }
     #order_page{
-        width:1200px;
-        margin:0 auto;
-        height:inherit;
+    position:static;
     }
-    .collapse_content{
-        padding: 1.5rem;
+    #order_page{
+    height:auto;
     }
-    input:focus,select:focus{
-        border:initial;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-    
-    @media screen and (max-width: 1199px){
-        #order_page{
-            width:980px;
-        }
-    }
-
-    @media screen and (max-width: 991px) {
-        #order_page{
+}
+@media screen and (max-width: 767px) {
+    #order_page{
         width:auto;
-        margin:0 3rem;
-        }
-        #order_page{
-        position:static;
-        }
-        #order_page{
-        height:auto;
-        }
+        margin:0 10px;
     }
-    @media screen and (max-width: 767px) {
-        #order_page{
-            width:auto;
-            margin:0 10px;
-        }
-    }
+}
 </style>
 <script>
 import {mapActions} from 'vuex';
 import {mapGetters} from 'vuex';
 export default {
+    async asyncData({$auth,$axios}){
+        if($auth.user){
+            const response = await $axios.$get('api/address');
+            return {
+                addresses: response.addresses,
+                contact:{
+                    firstName:$auth.user.name.firstName,
+                    lastName:$auth.user.name.lastName,
+                    number:$auth.user.phone
+                }
+            }
+        }
+    },
     async created(){
-        try {
             const response = await this.$axios.$get("/api/orderDateTime");
             return this.orderDateTime = response.orderDateTime
-        } catch (err) {
-
-        }
     },
     data({$moment,$store}){
         return{
@@ -384,35 +418,8 @@ export default {
             visibleID: '',
         }
     },
-    mounted(){
-             try {
-        // if user AUTH set the values else check vuexLocal
-                if(localStorage){
-                    const loc = localStorage;
-                    if (loc.address) {
-                        this.address = JSON.parse(loc.address);
-                        this.visibleID = 'contact' 
-                    }
-                    if (loc.contact) {
-                        this.contact = JSON.parse(loc.contact);
-                        this.visibleID = 'additionalInfo'
-                    }
-                    if (loc.additionalInfo) {
-                        this.additionalInfo = JSON.parse(loc.additionalInfo);
-                        this.visibleID = 'order_timeframe'
-                    }
-                    if (loc.orderTimeframe) {
-                        this.orderTimeframe = JSON.parse(loc.orderTimeframe);
-                        this.visibleID = 'payment_method'
-                    }
-                    this.$root.$emit('bv::toggle::collapse', this.visibleID);
-                } else {
-                    this.$root.$emit('bv::toggle::collapse', 'address');
-                }
-
-            } catch (err) {
-                console.log(err)
-            }
+    mounted(){     
+        this.$root.$emit('bv::toggle::collapse', 'address');    
     },
         
     methods:{
@@ -421,6 +428,7 @@ export default {
         async onOrder(){
             if(
                 this.address.city && 
+                this.address.street && 
                 this.contact.firstName && 
                 this.contact.lastName && 
                 this.contact.number && 
@@ -430,6 +438,7 @@ export default {
             )  
                 {
                     const data = {
+                        userID: this.$auth.user._id,
                         address: this.address,
                         contact: this.contact,
                         additionalInfo: this.additionalInfo,
@@ -440,26 +449,32 @@ export default {
                     const response = await this.$axios.$get("/api/orderDateTime/"+ this.orderTimeframe.date +"/"+ this.orderTimeframe.timeframe);
                     if(response.timeframe.orders < response.timeframe.max){
                         if( this.$moment(this.orderTimeframe.date).isSame(this.$moment().format('DD-MM-YYYY'))){
-                            if(this.$moment(this.orderTimeframe.timeframe,'HH:mm').isAfter(this.$moment().add(2,'h'))){    
-                                await this.$axios.$post('api/order', data)
-                                if(response.success == true){
-                                    alert(response.message)
-                                    // this.$router.go('/successOrder');
-                                }  else {
-                                    // this.$router.go('/failureOrder');
-                                }
+                            if(this.$moment(this.orderTimeframe.timeframe,'HH:mm').isAfter(this.$moment().add(2,'h'))){ 
+                                try {
+                                    await this.$axios.$post('api/order', data)
+                                    this.validationMessage = 'Вие успешно направихте поръчка!';
+                                    this.$root.$emit('bv::show::modal', 'validationModal')
+                                    return
+                                } catch (err) {
+                                    this.validationMessage = 'Възникна грешка при поръчката';
+                                    this.$root.$emit('bv::show::modal', 'validationModal')
+                                    return
+                                }   
                             } else {
                                 this.validationMessage = 'Часът за доставка, който сте избрали вече не свободен, моля изберете друг!';
                                 this.$root.$emit('bv::show::modal', 'validationModal')
                                 return  
                             }
                         } else {    
-                                const response = await this.$axios.$post('api/order', data);
-                                if(response.success == true){
-                                    alert(response.message)
-                                    // this.$router.go('/successOrder');
-                                }  else {
-                                    // this.$router.go('/failureOrder');
+                                try {
+                                    await this.$axios.$post('api/order', data);
+                                    this.validationMessage = 'Вие успешно направихте поръчка!';
+                                    this.$root.$emit('bv::show::modal', 'validationModal')
+                                    return
+                                } catch (err) {
+                                    this.validationMessage = 'Възникна грешка при поръчката';
+                                    this.$root.$emit('bv::show::modal', 'validationModal')
+                                    return
                                 }   
                             }
                     } else {
@@ -478,18 +493,17 @@ export default {
             if(this.address.city && this.address.street){
                 this.$root.$emit('bv::toggle::collapse', 'contact');
                 this.visibleID = 'contact'
-                localStorage.setItem("address", JSON.stringify(this.address));
+                // localStorage.setItem("address", JSON.stringify(this.address));
             } else {
                 this.validationMessage = 'Не сте въвели всички необходими данни';
                 this.$root.$emit('bv::show::modal', 'validationModal');
-            }
-            
+            }  
         },
         validateContact(){
             if(this.contact.firstName && this.contact.lastName && this.contact.number){  
                 this.$root.$emit('bv::toggle::collapse', 'additional_info');
                 this.visibleID = 'additional_info'
-                localStorage.setItem("contact", JSON.stringify(this.contact));
+                // localStorage.setItem("contact", JSON.stringify(this.contact));
             } else {
                 this.validationMessage = 'Не сте въвели всички необходими данни';
                 this.$root.$emit('bv::show::modal', 'validationModal');
@@ -499,7 +513,7 @@ export default {
             if(this.additionalInfo.accept){
                 this.$root.$emit('bv::toggle::collapse', 'order_timeframe');
                 this.visibleID = 'order_timeframe'
-                localStorage.setItem("additionalInfo", JSON.stringify(this.additionalInfo));
+                // localStorage.setItem("additionalInfo", JSON.stringify(this.additionalInfo));
             } else {
                 this.validationMessage = 'Mоля приемете общите условия';
                 this.$root.$emit('bv::show::modal', 'validationModal');
@@ -509,7 +523,7 @@ export default {
             if(this.orderTimeframe.date && this.orderTimeframe.timeframe){
                 this.$root.$emit('bv::toggle::collapse', 'payment_method');
                 this.visibleID = 'payment_method'
-                localStorage.setItem("orderTimeframe", JSON.stringify(this.orderTimeframe));
+                // localStorage.setItem("orderTimeframe", JSON.stringify(this.orderTimeframe));
             } else {
                 this.validationMessage = 'Възникна грешка при избора моля опитайте пак';
                 this.$root.$emit('bv::show::modal', 'validationModal');
@@ -524,7 +538,7 @@ export default {
     computed:{
         ...mapGetters(['getTotalPrice','getCart']),
         orderDate7(){
-            return this.orderDateTime.slice(0,7);
+            return this.orderDateTime.slice(0,4);
         }
     }
 }

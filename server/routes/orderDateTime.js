@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const orderDateTimeController = require ("../controllers/orderDateTimeController");
+
 //Get request 
 router.get("/orderDateTime", orderDateTimeController.send_Date_Timeframes);
 
@@ -17,5 +18,8 @@ router.patch("/update/orderDateTime/max", orderDateTimeController.update_Max_Pro
 
 //GET request - send specific timeframe for a specific day
 router.get("/orderDateTime/:date/:from", orderDateTimeController.send_Specific_Timeframe);
+
+//GET request - send first available timeframe 
+router.get("/orderDateTime/available", orderDateTimeController.send_Available_Timeframe);
 
 module.exports = router;

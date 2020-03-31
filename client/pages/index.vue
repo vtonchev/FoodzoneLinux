@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div>
     <!-- Carousel -->
     <div class="inner_box_carousel mb-5">
       <b-carousel
@@ -45,9 +45,10 @@
       <h4 class="text-center font-weight-bold">ТОП ПРОДУКТИ</h4>
       <carousel 
       class="position-stabilisation"
+      :minSwipeDistance='50'
       :paginationEnabled='true'
       :paginationPadding='5'
-      :speed='800'
+      :speed='500'
       :paginationActiveColor="'#61BD42'"
       :perPageCustom="[[575, 2], [767, 3], [991, 5]]"
       :scrollPerPage="true" 
@@ -58,31 +59,21 @@
         v-for="product in products" :key="product._id" 
         >
           <Card 
-          v-if="product.sale == null || product.sale == 0"
           :product='product'
           :cardClass="'w-md-max-80'" 
           >
           </Card>
-
-          <CardSale
-          v-else
-          :cardClass="'w-md-max-80'"
-          :product='product'
-          >
-          </CardSale>
         </slide>
       </carousel>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
 import Card from "~/components/product/Card"
-import CardSale from "~/components/product/CardSale"
 export default {
   components:{
-        Card, 
-        CardSale, 
+        Card,  
     },
   async asyncData({$axios}){
     const response = await $axios.$get('api/products/suggested/true');

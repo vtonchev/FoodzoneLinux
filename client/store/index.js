@@ -52,97 +52,63 @@ export const state = () => ({
 }) 
 
 export const actions = {
-    addProductToCart({ state, commit}, product) {
-        const cartProduct = state.cart.find(prod => prod._id === product._id);
-        if(!cartProduct) {
-            commit('pushProductToCart', product);
-        } else {
-            commit('incrementProductQty', cartProduct);
-        }
-        commit('incrementTotalPrice');
+    addProductToCart({commit}, product) {
+        commit('pushProductToCart', product);
+        commit('refreshTotalPrice')
     },
+    incrementQty({state, commit}, id){
+        const cartProduct = state.cart.find(prod => prod._id === id)
+        if(cartProduct.quantity < cartProduct.stockQuantity){
+            commit('incrementProductQty', cartProduct);
+            commit('refreshTotalPrice')
+        } 
+    },
+    decrementQty({state, commit}, id){
+        const cartProduct = state.cart.find(prod => prod._id === id)
+        if(cartProduct.quantity > 1){
+            commit('decrementProductQty', cartProduct);
+        } else {
+            commit('removeProduct', cartProduct);
+        }
+        commit('refreshTotalPrice')
+    },
+    changeQty({state, commit}, {id, qty}){
+        let cartProduct = state.cart.find(prod => prod._id === id)
+        commit('changeQty', {cartProduct, qty})
+        commit('refreshTotalPrice')
+    },
+    removeProduct({commit}, cartProduct){
+        commit('removeProduct', cartProduct);
+        commit('refreshTotalPrice')
+    }
 }
 
 export const mutations = {
-    pushProductToCart(state,product){
+    pushProductToCart(state, product){
         product.quantity = 1;
-        // product.quantity = 1;
         state.cart.push(product);
     },
-
-    incrementProductQty(state, product){
-        let cartProduct = state.cart.find(prod => prod._id === product._id)
-        if(cartProduct.quantity < product.stockQuantity){
-            cartProduct.quantity++;
-            state.totalPrice = 0;
-            if (state.cart.length > 0) {
-                state.cart.map(product => {
-                    state.totalPrice += product.price.$numberDecimal*product.quantity
-                })
-            }
-            let indexOfProduct = state.cart.indexOf(cartProduct);
-            state.cart.splice(indexOfProduct, 1, cartProduct);
+    incrementProductQty(state, cartProduct){
+        cartProduct.quantity++;
+    },
+    decrementProductQty(state, cartProduct){
+        cartProduct.quantity--;
+    },
+    refreshTotalPrice(state){
+        state.totalPrice = 0
+        if(state.cart){
+            state.cart.map(product => {
+                state.totalPrice += product.price.$numberDecimal*product.quantity
+            })
         }
         
     },
-    decrementProductQty(state, product){
-        let cartProduct = state.cart.find(prod => prod._id === product._id)
-        if(cartProduct.quantity > 1){
-            cartProduct.quantity--;
-            state.totalPrice = 0;
-            if (state.cart.length > 0) {
-                state.cart.map(product => {
-                    state.totalPrice += product.price.$numberDecimal*product.quantity
-                })
-            }
-            let indexOfProduct = state.cart.indexOf(cartProduct);
-            state.cart.splice(indexOfProduct, 1, cartProduct);
-        }  else {
-            // Delete the product (else === quantity <= 1)
-            let indexOfProduct = state.cart.indexOf(cartProduct);
-            state.cart.splice(indexOfProduct, 1);
-            state.totalPrice = 0;
-            if (state.cart.length > 0) {
-                state.cart.map(product => {
-                    state.totalPrice += product.price.$numberDecimal*product.quantity
-                })
-            }
-        }
-    },
-
-    incrementTotalPrice(state){
-        state.totalPrice = 0;
-        if (state.cart.length > 0) {
-            state.cart.map(product => {
-                state.totalPrice += product.price.$numberDecimal*product.quantity
-            })
-        }
-    },
-    changeQty( state, {product, qty} ){
-        let cartProduct = state.cart.find(prod => prod._id === product._id)
+    changeQty( state, {cartProduct, qty} ){
         cartProduct.quantity = qty;
-        state.totalPrice = 0;
-        if (state.cart.length > 0) {
-            state.cart.map(product => {
-                state.totalPrice += product.price.$numberDecimal*product.quantity
-            })
-        }
-        let indexOfProduct = state.cart.indexOf(cartProduct);
-        state.cart.splice(indexOfProduct, 1, cartProduct);
+        // state.cart.splice(state.cart.indexOf(cartProduct), 1, cartProduct);
     },
-    /* 
-        1.get the index of the product thet we want to delete  
-        2.remove that product by using splice
-    */
-    removeProduct(state,product){
-        let indexOfProduct = state.cart.indexOf(product);
-        state.cart.splice(indexOfProduct, 1);
-        state.totalPrice = 0;
-        if (state.cart.length > 0) {
-            state.cart.map(product => {
-                state.totalPrice += product.price.$numberDecimal*product.quantity
-            })
-        }
+    removeProduct(state, cartProduct){
+        state.cart.splice(state.cart.indexOf(cartProduct), 1); //replace 
     },
 }
 

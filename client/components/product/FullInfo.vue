@@ -1,6 +1,7 @@
 <template>
     <b-modal :id='id' :title="product.title" scrollable class="product_info_modal" size='xl' hide-footer>
         <b-row style="color:#666666;">
+            <!-- IMAGE -->
             <b-col cols='12' lg='5' xl='4' class="p-0 mb-3 ">
                 <span v-if="product.sale">
                     <div class="sale_text_info">ПРОМОЦИЯ</div>
@@ -11,35 +12,35 @@
             <!-- Описание -->
             <b-col cols='12' lg='6' xl='4' style="min-width:300px;" class="p-0 pl-3 mb-3 ml-lg-auto ml-xl-0">
                 <h5><b-badge>{{product.weight.$numberDecimal}} {{product.unit}}</b-badge></h5>
-                <div  v-if="isInCart">
-                    <!-- INCREASE/DECREASE QTY -->
+                <div v-show="isInCart">
                     <QuantityController
-                    :product='product'
-                    :qty='qty'
                     style="float:none !important;"
+                    :id='product._id'
                     />
                 </div>
-                <b-button v-else @click='addProductToCart(product)' class='buy_btn' style="float:none;"><span class="fas fa-shopping-cart fa-1x"></span>Купи</b-button>
+                <button v-show='!isInCart' @click='addProductToCart(product)' class='buy_btn' style="float:none;"><span class="fas fa-shopping-cart fa-1x"></span>Купи</button>
                 <span v-if="product.sale">
                     <p class="old_price_info">{{product.oldPrice}}<small>лв</small></p>
                     <p class="promo_price_info">{{product.price.$numberDecimal}}<small>лв</small></p>
                 </span>
                 <div v-else class="font-weight-bold" style="font-size:40px; color:black;">{{product.price.$numberDecimal}}<small>лв</small></div>
-                <div v-if="product.properties" class="mb-3">
-                    <span>
-                        <div v-if='product.properties.manufacturer'>
-                            <span>Производител:</span>
-                            <span  class="font-weight-bold" style="color:black;">{{product.properties.manufacturer}}</span>
-                        </div>
-                        <div v-if='product.properties.brand'>
-                            <span>Марка:</span>
-                            <span class="font-weight-bold" style="color:black;">{{product.properties.brand}}</span>
-                        </div>
-                        <div v-if='product.properties.origin'>
-                            <span>Произход:</span>
-                            <span class="font-weight-bold" style="color:black;">{{product.properties.origin}}</span>
-                        </div>
-                    </span>
+                <div v-if="product.properties">
+                    <div v-if='product.properties.manufacturer'>
+                        <span>Производител:</span>
+                        <span  class="font-weight-bold" style="color:black;">{{product.properties.manufacturer}}</span>
+                    </div>
+                    <div v-if='product.properties.brand'>
+                        <span>Марка:</span>
+                        <span class="font-weight-bold" style="color:black;">{{product.properties.brand}}</span>
+                    </div>
+                    <div v-if='product.properties.origin'>
+                        <span>Произход:</span>
+                        <span class="font-weight-bold" style="color:black;">{{product.properties.origin}}</span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <span>Продуктов код:</span>
+                    <span class="font-weight-bold" style="color:black;">{{product.productID}}</span>
                 </div>
                 <div v-if="product.description !== 'null'">
                     <span class="font-weight-bold" style="color:black;">Описание:</span>
@@ -101,23 +102,23 @@
 
 <script>
 import {mapActions} from 'vuex'
+import {mapGetters} from 'vuex'
 import QuantityController from "~/components/product/QuantityController"
 export default {
     components:{
         QuantityController
     },
-    props:['product','isInCart','qty','id'],
-    data(){
-        return{
-            
-        }
-    },
+    props:['product','id'],
     methods:{
         ...mapActions(['addProductToCart']),
     },
+    computed:{
+        ...mapGetters(['getCart']),
+        isInCart(){
+            return this.getCart.some(product => product._id === this.product._id)
+        }
+    }
 }
 </script>
 
-<style scoped src="~/assets/full_info.css">
 
-</style>

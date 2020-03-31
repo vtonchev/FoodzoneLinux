@@ -1,6 +1,6 @@
 <template>
     <div >
-        <div v-if="loaded == false"> 
+        <div v-if="loaded==false"> 
             <Loading/>
         </div>
         <div v-else>
@@ -16,7 +16,6 @@
             <Footer/>
         </div>
     </div>
-    
 </template>
 <script>
 import Loading from '~/components/loading.vue'
@@ -24,7 +23,6 @@ import Navbar from "~/components/navbar/navbar"
 import Sidebar from "~/components/sidebar/sidebar"
 import Footer from "~/components/footer/footer"
 export default {
-
   components:{
       Navbar,
       Footer,
@@ -45,6 +43,3 @@ export default {
 }
 </script>
 
-<style scoped src="~/assets/sidebarLayout.css">
-
-</style>

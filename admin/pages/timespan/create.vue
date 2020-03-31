@@ -14,13 +14,13 @@
                     <label class='d-block'>Избери ден от седмица<span class="d-block ">(ако не е избрано се прилага за всички)</span></label>
                     <select v-model='dayOfWeek'>
                         <option value="">Всички</option>
-                        <option value="Monday">Понеделник</option>
-                        <option value="Tuesday">Вторник</option>
-                        <option value="Wednesday">Сряда</option>
-                        <option value="Thursday">Четвъртък</option>
-                        <option value="Friday">Петък</option>
-                        <option value="Saturday">Събота</option>
-                        <option value="Sunday">Неделя</option>
+                        <option value="понеделник">Понеделник</option>
+                        <option value="вторник">Вторник</option>
+                        <option value="сряда">Сряда</option>
+                        <option value="четвъртък">Четвъртък</option>
+                        <option value="петък">Петък</option>
+                        <option value="събота">Събота</option>
+                        <option value="неделя">Неделя</option>
                     </select> 
                 </div>
                 <div class="border rounded p-2">
@@ -53,7 +53,7 @@
                             v-for="(timeframe, index) in orderDateTime.timeframe" 
                             :key='index' :value="timeframe"
                             >
-                            {{timeframe.from}} : {{timeframe.to}} <span class="font-weight-bold">лимит:</span>   <span class="text-danger font-weight-bold">{{timeframe.max}}</span>
+                            {{timeframe.from}} : {{timeframe.to}} <span class="font-weight-bold">лимит:</span><span class="text-danger font-weight-bold">{{timeframe.max}}</span>
                             </b-form-checkbox>
                         </b-form-checkbox-group>
                     </b-form-group> 
@@ -123,13 +123,18 @@ export default {
             const response = await this.$axios.$post("api/update/orderDateTime");
         },
         async onTimeframeUpdate(){
-            const data = {
+            if( this.allSelected || this.selectedTimeframe && this.orderDateTime.date && this.newMax   ){
+                const data = {
                 date: this.orderDateTime.date,
                 selectedTimeframe: this.selectedTimeframe,
                 max: this.newMax,
                 allSelected: this.allSelected
+                } 
+                await this.$axios.$patch('/api/update/orderDateTime/max', data)
+            } else {
+                alert('моля въведете вс необходимо')
             }
-            await this.$axios.$patch('/api/update/orderDateTime/max', data)
+            
         }
     }
 }

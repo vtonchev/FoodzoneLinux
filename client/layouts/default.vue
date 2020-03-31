@@ -1,6 +1,6 @@
 <template>
   <div >
-    <div v-if="loaded == false"> 
+    <div v-if="loaded==false"> 
       <Loading/>
     </div>
     <div v-else>
@@ -12,33 +12,24 @@
 </template>
 
 <script>
-import Loading from '~/components/loading.vue'
+import Loading from '~/components/loading'
 import Navbar from "~/components/navbar/navbar"
 import Footer from "~/components/footer/footer"
 export default {
-
   components:{
       Navbar,
       Footer,
       Loading
   },
-  created(){
-    
-    this.loaded = false;
-    
-  },
-  mounted(){
-    this.loaded = true;
-    
-  },
   data(){
     return{
       loaded:false
     }
-  }
+  },
+  mounted(){
+    this.loaded = true;
+  },
+  
 }
 </script>
 
-<style>
-
-</style>

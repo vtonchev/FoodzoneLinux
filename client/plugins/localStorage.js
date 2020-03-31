@@ -2,6 +2,6 @@ import createPersistedState from 'vuex-persistedstate';
 
 export default ({ store }) => {
     window.onNuxtReady(() => {
-        createPersistedState({paths:['cart','totalPrice']})(store);
+        createPersistedState({ paths:['cart','totalPrice']})(store); 
     }
 )};

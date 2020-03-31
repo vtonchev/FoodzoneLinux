@@ -1,8 +1,5 @@
 <template>
     <b-col class="p-0 position-static">
-        <div @click="nextPage" class="position-fixed h-100 next_page d-md-flex d-none" style="right:0; top:0; z-index:10; width:5%" >
-            <i class="fas fa-arrow-circle-right align-self-center"></i>
-        </div>
         <b-col cols="12" class="p-0 position-static">
             <b-breadcrumb class="route">
                 <b-breadcrumb-item to='/'>
@@ -24,15 +21,9 @@
             <b-row class="m-0">
                 <b-col cols='6' sm='4' md='4' lg='3' class="p-0 mb-3 card_col" v-for='product in products' :key='product._id'>
                     <Card 
-                    v-if="product.sale == null || product.sale == 0"
                     :product='product'
                     >
                     </Card> 
-                    <CardSale
-                    v-else
-                    :product='product'
-                    >
-                    </CardSale>
                 </b-col>
             </b-row>
         </b-col>
@@ -55,32 +46,18 @@
 </template>
 <script>
 import Card from "~/components/product/Card"
-import CardSale from "~/components/product/CardSale"
 import smoothscroll from 'smoothscroll-polyfill'
 export default {
     layout: 'sidebarSearch',
     components:{
         Card,
-        CardSale, 
     },
     scrollToTop: false,
-    beforeMount () {
-        smoothscroll.polyfill();
-        document.addEventListener('touchstart', this.handleTouchStart, false);        
-        document.addEventListener('touchmove', this.handleTouchMove, false);
-        document.addEventListener('touchend', this.handleTouchEnd, false)
-    },
     mounted(){
         window.scroll({
             top: 0,
             behavior: 'smooth'
         })
-    },
-    beforeDestroy() {
-        document.removeEventListener('touchstart', this.handleTouchStart, false);
-        document.addEventListener('touchmove', this.handleTouchMove, false);  
-        document.removeEventListener('touchend', this.handleTouchEnd, false);
-
     },
     async asyncData({$axios, params, store, route}){
         try {
@@ -105,9 +82,6 @@ export default {
             perPage: 26,
             currentPage: 1,
             // swipe events
-            xDown: null,                                                        
-            yDown: null,
-            swipe: '',
         }
     },
     watch: {
@@ -141,68 +115,14 @@ export default {
         }
     },
     methods:{
-        nextPage(){
-            if(this.currentPage < this.count/this.perPage){
-                this.currentPage++ 
-            }
-        },
         sortBy(){
             this.currentPage = 1;
             console.log(this.sort);
             this.$axios.$get('/api/products/bought/true' + '?page=' + this.currentPage + '&sort=' + this.sort).then((response)=>{
                 this.products = response.products;
             })
-        },
-        getTouches(evt) {
-            return evt.touches || evt.originalEvent.touches; 
-        },                                                  
-        handleTouchStart(evt) {
-            const firstTouch = this.getTouches(evt)[0];                                      
-            this.xDown = firstTouch.clientX;                                      
-            this.yDown = firstTouch.clientY;                                      
-        },                                                
-        async handleTouchEnd(){
-            if(this.swipe == 'left'){
-                if(this.currentPage < this.count/this.perPage){
-                    this.swipe = '';    
-                    this.currentPage++  
-                }
-            }
-            else if (this.swipe == 'right'){
-                 if(this.currentPage > 1){
-                     this.swipe = ''; 
-                    this.currentPage--
-                }
-            }
-        },
-        async handleTouchMove(evt) {
-            if ( ! this.xDown || ! this.yDown ) {
-                return;
-            }
-            let xUp = evt.touches[0].clientX;                                    
-            let yUp = evt.touches[0].clientY;
-
-            let xDiff = this.xDown - xUp;
-            let yDiff = this.yDown - yUp;
-
-            if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
-                if ( xDiff > 0 ) {
-                    return this.swipe = 'left'
-                    // console.log('left swipe')
-                    
-                } else {
-                    return this.swipe = 'right'
-                    // console.log('right swipe') 
-                }                       
-            }
-            /* reset values */
-            this.xDown = null;
-            this.yDown = null;                                             
-        }   
+        }      
     }
 }
 </script>
 
-<style scoped src="~/assets/products_page.css">
-
-</style>

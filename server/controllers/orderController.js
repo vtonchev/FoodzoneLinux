@@ -1,41 +1,49 @@
 const Order = require('../models/order');
 const OrderDateTime = require('../models/orderDateTime')
-const Product = require('../models/product')
+// const Product = require('../models/product');
 exports.create_Order = async (req, res) => {
     try {
         let cart = req.body.cart;
         const newOrder = new Order({
+            user: req.body.userID,
             address: req.body.address,
             contact: req.body.contact,
             additionalInfo: req.body.additionalInfo,
             orderDateTime: req.body.orderDateTime,
             paymentMethod: req.body.paymentMethod,
+            status: 'неизпълнена'
         })
         cart.map(product => {
             newOrder.products.push({
-                _id: product._id,
+                product: product._id,
                 quantity:parseInt(product.quantity),
             })
-        }) 
-        await newOrder.products.forEach(product => {
-            Product.update(
-                {_id: product._id},
-                {
-                    $addToSet: {
-                        $inc: { bought: 1} 
-                    }
-                }
-            ) 
+        })  
+        const queries = [
+            newOrder.save(),
+            OrderDateTime.updateOne(
+                { date: req.body.orderDateTime.date, "timeframe.from" : req.body.orderDateTime.timeframe },
+                {$inc: { "timeframe.$.orders": 1}}      
+            ),
+
+        ]
+        Promise.all(queries).then(() => {
+            res.json({
+                status: true,
+                message: "Вашата поръчка беше успешна"
+            });
+        }).catch((err) => {
+            res.status(500).json({
+                status: false,
+                message: err.message
+            })
         });
-        await newOrder.save();
-        await OrderDateTime.updateOne(
-            { date: req.body.orderDateTime.date, "timeframe.from" : req.body.orderDateTime.timeframe },
-            {$inc: { "timeframe.$.orders": 1}}      
-        )
-        res.json({
-            success: true,
-            message: "Вашата поръчка беше успешна"
-        });
+        // newOrder.products.forEach(product => {
+        //     Product.updateOne(
+        //         {_id: product._id},
+        //         {$inc: { bought: 1}}
+        //     ) 
+        // });
     } catch (err) {
         console.log(err)
         res.status(500).json({
@@ -44,14 +52,25 @@ exports.create_Order = async (req, res) => {
         })
     }
 }
-
-exports.get_Orders = async (req, res) => {
+exports.get_Orders_By_Timeframe = async (req, res) => {
     try {
-        const orders = await Order.findMany(
-            {"orderDateTime.date" : req.params.id}
-        );  
+        let orders = []
+        if(req.params.time != 'all'){
+            orders = await Order.find( 
+                { 
+                    $and: [ 
+                        { "orderDateTime.date": req.params.date }, 
+                        { "orderDateTime.timeframe": req.params.time } 
+                    ] 
+                } 
+            )
+            .populate('products.product').exec(); 
+        } else {
+            orders = await Order.find({"orderDateTime.date" : req.params.date})
+            .populate('products.product').exec();  
+        }
         res.json({
-            success:false,
+            success:true,
             orders: orders,
         }); 
     } catch (err) {
@@ -61,12 +80,39 @@ exports.get_Orders = async (req, res) => {
         })
     }
 }
-
-
 exports.update_Order = async (req, res) => {
     try {
-        
-    } catch (err) {
-        
+        await Order.updateOne(
+            {_id:req.params.id},
+            {
+                $set: req.body
+            }
+        )
+        res.json({
+            success: true, 
+        })
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({
+            success:false,
+            message: err.message 
+        })
+    }
+}
+exports.get_Orders_By_User = async (req, res) => {
+    try {
+        const orders = await Order.find(
+            {user:req.decoded._id},
+        ).populate('products.product').exec(); 
+        res.json({
+            success: true,
+            orders: orders, 
+        })
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({
+            success:false,
+            message: err.message 
+        })
     }
 }

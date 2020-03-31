@@ -44,6 +44,3 @@ export default {
 }
 </script>
 
-<style scoped src="~/assets/sidebarLayout.css">
-
-</style>

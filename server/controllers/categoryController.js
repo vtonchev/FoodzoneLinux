@@ -75,7 +75,10 @@ exports.update_A_Single_Category = async (req, res) => {
                     }
                 }
             })
-        }   
+        } 
+        res.json({
+            success:true,
+        })  
     } catch(err) {
         res.status(500).json({
             success:false,

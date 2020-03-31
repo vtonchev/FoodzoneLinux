@@ -18,7 +18,7 @@ exports.register_New_User =  async function (req, res) {
                 password: req.body.password
             });
             await newUser.save();
-            let token = jwt.sign(newUser.toJSON(), process.env.TOKEN_SECRET, {
+            const token = jwt.sign(newUser.toJSON(), process.env.TOKEN_SECRET, {
                 expiresIn: 604800 // 1week
             });
             res.json({
@@ -37,7 +37,7 @@ exports.register_New_User =  async function (req, res) {
 
 exports.show_User = async (req,res) => {
     try{
-        let foundUser = await User.findOne({_id: req.decoded._id})
+        let foundUser = await User.findOne({_id: req.decoded._id});
         if (foundUser) {
             res.json({
                 success: true,
@@ -82,4 +82,29 @@ exports.login_User = async (req, res) => {
             message: err.message
         })
     }
-}
+};
+
+exports.change_Password = async (req, res) => {
+    try {
+        console.log(req.body.password)
+        let foundUser = await User.findOne({ _id: req.decoded._id });
+        if (foundUser.comparePassword(req.body.password)) {
+            foundUser.password = req.body.newPassword;
+            await foundUser.save()
+            res.json({ 
+                success: true, 
+            })
+        } else {
+            res.status(403).json({
+                success:false,
+                message: 'Грешна парола'
+            })
+        }
+        
+    } catch (err) {
+        res.status(500).json({
+            success:false,
+            message: err.message
+        })
+    }
+};

@@ -5,13 +5,13 @@
         <!-- SHOW ON XS AND SM  SCREENS -->
         <div class='cart_table d-block d-md-none'>
             <div v-for="product in getCart" :key="product._id" >
-                <button @click="$store.commit('removeProduct', product)" class="close_button">&times;</button>
+                <button @click="removeProduct(product)" class="close_button">&times;</button>
                 <img class="image_table_data" :src="product.photo.url">
-                <button @click="onMinusClick(product)" style="display:contents">
+                <button @click="decrementQty(product._id)" style="display:contents">
                     <span  class="fas fa-minus fa-2x minus"></span>
                 </button>
                 
-                <button @click="onPlusClick(product)" style="display:contents">
+                <button @click="incrementQty(product._id)" style="display:contents">
                     <span class="fas fa-plus fa-2x plus"></span>
                 </button>  
                 <p class="title_table_data">{{product.title}}</p>
@@ -24,8 +24,8 @@
             <div v-if="getCart == 0" style="border:solid 1px #E1E1E1; background-color:#f6f6f6; margin-top:-20px; margin-bottom:20px; text-align:center;"> Няма продукти в количката !</div>
             <div ref="lastElement"></div>
             <div ref="checkoutMenu"  class="stick_menu" v-bind:class="{ stick_to_bottom: isBottom }">
-                <p class="totalPrice" style="font-size:1.3rem;">Общо: <span style="color: #5AA240;">{{getTotalPrice}}</span> лв</p>
-                <button class="checkout_button"><nuxt-link style="padding: 8px 0;" to='/shop/order'>Продължи</nuxt-link></button>
+                <p class="totalPrice" style="font-size:1.1rem;">Общо: <span style="color: #5AA240;">{{getTotalPrice}}</span> лв</p>
+                <b-button class="checkout_button" to='/shop/order'>Продължи</b-button>
             </div>
         </div>
         <!-- SHOW ON MD SCREEN AND BIGGER -->
@@ -44,7 +44,7 @@
                 <tbody class="table_body">
                     <tr v-for="product in getCart" :key="product._id" >
                         <td class="cart_table_data">
-                            <button @click="$store.commit('removeProduct', product)" class="close_button">&times;</button>
+                            <button @click="removeProduct(product)" class="close_button">&times;</button>
                         </td>
                         <td class="image_table_data">
                             <img height="60" width="60" :src="product.photo.url" alt="">
@@ -67,7 +67,7 @@
             <div v-if="getCart == 0" style="border:solid 1px #E1E1E1; background-color:#f6f6f6; margin-top:-20px; margin-bottom:20px; text-align:center;"> Няма продукти в количката !</div>
             <div class="checkoutMenuDesktop">
                 <p class="totalPrice">Общо: <span style="color: #5AA240;">{{getTotalPrice}}</span> лв</p>
-                <button class="checkout_button"><nuxt-link style="padding: 8px 0; color: white;" to='/shop/order'>Продължи</nuxt-link></button>
+                <b-button class="checkout_button" to='/shop/order'>Продължи</b-button>
             </div>
         </div>
         
@@ -75,9 +75,6 @@
     </div>
 </template>
 <style scoped>
-a:hover{
-    color: white;
-}
 #cart_page{
     width:1200px;
     margin:0 auto;
@@ -102,10 +99,8 @@ a:hover{
 .totalProductPrice_table_data{
     border-bottom: solid 1px #E1E1E1;
 }
-
-.cart_table_data{
+.cart_table_data,.title_table_data{
     font-weight: 600;
-    color: #b6b6b6;
 }
 .product_table_data, .image_table_data{
     padding-left: 2rem;
@@ -114,8 +109,8 @@ a:hover{
     width: 140px;
 }
 .title_table_data{
+    max-width: 200px;
     font-size: 16px;
-    font-weight: 600;
 }
 .cart_table_heading{
     background-color: #f6f6f6;
@@ -139,7 +134,7 @@ a:hover{
     border: solid 4px
 }
 .close_button{
-    background-color: white;
+    background-color: transparent;
     vertical-align: text-bottom;
     border: none;
     float:right;
@@ -159,6 +154,7 @@ a:hover{
 }
 .checkout_button{
     background-color: #E52121;
+    padding: 8px 0; 
     border: none;
     border-radius: 4px;
     font-size: 1rem;
@@ -194,7 +190,7 @@ a:hover{
     float: right;
     color: white;
 }
- .checkoutMenuDesktop{
+.checkoutMenuDesktop{
     width: fit-content;
     margin-left: auto;
     margin-right: 100px;
@@ -203,14 +199,14 @@ a:hover{
     #cart_page{
       width:980px;
     }
-  }
+}
 
 @media screen and (max-width: 991px) {
     #cart_page{
       width:auto;
       margin:0 3rem;
     }
-  }
+}
 @media screen and (max-width: 767px) {
   #cart_page{
     width:auto;
@@ -234,6 +230,7 @@ a:hover{
       padding: 10px;
       border: none;
       text-align: center;
+      max-width: 100%;
   }
   .cart_table_data,.totalProductPrice_table_data_xs{
       border:none;
@@ -259,6 +256,7 @@ a:hover{
     margin-top: -45px;
     top: 45px;
   }
+}
 @media screen and (max-width: 438px){
     .product_data{
         width: auto;
@@ -275,10 +273,10 @@ a:hover{
         padding: 5px 0;
     }   
 }
-}
 </style>
 <script>
 import {mapGetters} from 'vuex';
+import {mapActions} from 'vuex';
 export default {
     data(){
         return{
@@ -295,28 +293,18 @@ export default {
         ...mapGetters(['getTotalPrice','getCart']),
     },
     methods: {
+        ...mapActions(['changeQty','incrementQty','decrementQty','removeProduct']),
         onChangeQuantity(event, product){
             let qty = event.target.value;
+            const id = product._id;
             if(qty < 1){
                 qty = 1
             }
             else if(qty > product.stockQuantity){
                 qty = product.stockQuantity;
             }
-            this.$store.commit("changeQty", {product, qty })
+            this.changeQty({id, qty})
         },
-        onPlusClick(product){
-            if(product.quantity < product.stockQuantity){
-                const qty = parseInt(product.quantity) + 1;
-                this.$store.commit("changeQty", {product, qty})
-            }
-        },
-        onMinusClick(product){
-            if(product.quantity > 1){
-                const qty = parseInt(product.quantity) - 1;
-                this.$store.commit("changeQty", {product, qty })
-            }
-        }, 
         handleScroll(){
             if(this.$refs["checkoutMenu"].offsetTop + window.scrollY >= this.$refs["lastElement"].offsetTop){
                 this.isBottom = true;

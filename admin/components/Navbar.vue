@@ -23,6 +23,7 @@
                                     <b-dropdown-item href="/subcategory/create">Подкатегории</b-dropdown-item>
                                     <b-dropdown-item href='/timespan/create'>Дни за доставка</b-dropdown-item>
                                 </b-nav-item-dropdown>
+                                <b-nav-item href="/orders">Доставки</b-nav-item>
                                 <!-- Subcategory dropdown -->
                                 <!-- <b-nav-item-dropdown text="Подкатегории"> 
                                     <b-dropdown-item href="/subcategory/create">Добави</b-dropdown-item>
