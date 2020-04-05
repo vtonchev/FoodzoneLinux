@@ -53,12 +53,10 @@
     }
     .disabled_btn{
         color:#C4C8CB; 
-        font-weight:600;
-        font-size: 20px;
-        background: transparent;
-        padding: 0;
-        border: none;
-        float: right;
+    }
+    .disabled_btn:hover, .disabled_btn:focus, .disabled_btn:active{
+        background: transparent !important;
+        color:#C4C8CB !important;
     }
 /* --------------------------------------------------MIDDLE NAVBAR---------- */
     .search_product_img{

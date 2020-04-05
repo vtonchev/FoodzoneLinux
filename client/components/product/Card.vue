@@ -42,7 +42,8 @@
                 @click.prevent='addProductToCart(product)' 
                 v-show='!isInCart' 
                 ref="buy_btn" 
-                :class="{ 'buy_btn' : !outOfStock, 'disabled_btn' : outOfStock }"
+                class="buy_btn"
+                :class="{ 'disabled_btn' : outOfStock }"
                 :disabled='outOfStock'
                 >
                 <span class="fas fa-shopping-cart fa-1x"></span>

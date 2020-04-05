@@ -92,7 +92,7 @@ export default {
         }
     },
     watch: {
-        async currentPage(currentPage) { 
+        currentPage(currentPage) { 
             if(this.currentPage >= 1){
                 if(this.screenWidth <= 991){
                     this.asyncScrollToTopMobile();
