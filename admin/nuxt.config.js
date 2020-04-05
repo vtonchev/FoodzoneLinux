@@ -1,6 +1,7 @@
 
 export default {
   server: {
+    host: '0.0.0.0',
     port: 4000, 
     timing: false
   },
@@ -62,6 +63,9 @@ export default {
   */
   axios: {
     baseURL: "http://localhost:3000"
+  },
+  proxy:{
+    '/api': "http://localhost:3000"
   },
   /*
   ** Build configuration

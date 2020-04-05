@@ -199,8 +199,8 @@ export default {
         FullInfo,  
     },
     async asyncData({$axios}){
-        let addressRes = $axios.$get('api/address');
-        let orderRes = $axios.$get('api/order/user');
+        let addressRes = $axios.$get('/api/address');
+        let orderRes = $axios.$get('/api/order/user');
         await Promise.all([addressRes, orderRes]).then((responses)=>{
             addressRes = responses[0].addresses,
             orderRes = responses[1].orders
@@ -241,9 +241,9 @@ export default {
             if(this.newAddress.city && this.newAddress.street){
                 if(this.addresses.length < 5){
                     const data = this.newAddress
-                    const response = this.$axios.$post('api/address', data)
+                    const response = this.$axios.$post('/api/address', data)
                     if(response){
-                        const response = await this.$axios.$get('api/address')
+                        const response = await this.$axios.$get('/api/address')
                         return this.addresses = response.addresses
                     } else {
                         alert('възникна грешка')

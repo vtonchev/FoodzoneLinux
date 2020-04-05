@@ -117,13 +117,13 @@ export default {
     methods:{
         sortBy(){
             this.currentPage = 1;
-            this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            this.$axios.$get(`/api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
             .then((response)=>{
                 this.products = response.products;
             })
         },
         async asyncScrollToTopMobile(){
-            await this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            await this.$axios.$get(`/api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
             .then((response)=>{
                 this.products = response.products;
                 }
@@ -134,7 +134,7 @@ export default {
             })
         },
         async asyncScrollToTop(){
-            await this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            await this.$axios.$get(`/api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
             .then((response)=>{
                 this.products = response.products;
                 }
@@ -145,7 +145,7 @@ export default {
             })
         },
         scrollToTop(){
-            this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)  
+            this.$axios.$get(`/api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)  
             .then((response)=>{
                 this.products = response.products;
                 }

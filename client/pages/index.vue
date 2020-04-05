@@ -76,7 +76,7 @@ export default {
         Card,  
     },
   async asyncData({$axios}){
-    const response = await $axios.$get('api/products/suggested/20');
+    const response = await $axios.$get('/api/products/suggested/20');
     return {
       products: response.products
     }
