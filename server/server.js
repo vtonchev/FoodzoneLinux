@@ -17,8 +17,6 @@ app.use(cors());
 // Database connection
 mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.DATABASE_URL, {
-    user:"admin",
-    pass:process.env.DATABASE_PASS,
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
