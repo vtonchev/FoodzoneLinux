@@ -62,6 +62,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    proxy:true,
     baseURL: "http://localhost:3000"
   },
   proxy:{
