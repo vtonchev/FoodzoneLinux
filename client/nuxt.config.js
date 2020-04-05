@@ -25,14 +25,13 @@ export default {
   ** Customize the progress-bar color
   */
   loading: false,
-  
   /*
   ** Global CSS
   */
   css: [
-    '~/assets/main.css'
+    '~/assets/main.css',
+    '~/assets/fonts/roboto/roboto.css'
   ],
-  
   /*
   ** Plugins to load before mounting the App
   */

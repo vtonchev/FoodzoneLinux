@@ -202,7 +202,6 @@ export default {
         let addressRes = $axios.$get('api/address');
         let orderRes = $axios.$get('api/order/user');
         await Promise.all([addressRes, orderRes]).then((responses)=>{
-            console.log(responses[0].addresses);
             addressRes = responses[0].addresses,
             orderRes = responses[1].orders
                 

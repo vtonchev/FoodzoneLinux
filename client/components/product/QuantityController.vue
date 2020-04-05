@@ -33,6 +33,7 @@ export default {
     },
     methods:{
         ...mapActions(['incrementQty','decrementQty']),
+        
     },
     data(){
         return{

@@ -10,7 +10,7 @@
                   <n-link to="/"><b-img  class= "brandLogo mr-3" src="/img/brandlogo.png" alt="brand logo"/></n-link>
                   <n-link to='/delivery' class="text-uppercase align-self-center text-left transparent_btn" style="font-size:12px; color:black">
                     <span>Първи свободен час</span>
-                    <span class="font-weight-bold d-block">{{from}}-{{$moment(from,'HH:mm').add(1,'h').format('HH:mm')}}</span>
+                    <span class="font-weight-bold d-block" v-if="from">{{from}}-{{$moment(from,'HH:mm').add(1,'h').format('HH:mm')}}</span>
                   </n-link>
                 </div>
               </b-col>
@@ -41,7 +41,7 @@
                               :id="product._id+'search'"
                               :product='product'
                           />
-                          <b-badge class=" mb-0 mr-2 position-absolute" style="width:min-content; bottom:0; left:0;">{{product.weight.$numberDecimal}} {{product.unit}}</b-badge>
+                          <b-badge class=" mb-0 mr-2 position-absolute" style=" bottom:0; left:0;z-index:100;">{{product.weight.$numberDecimal}} {{product.unit}}</b-badge>
                         </span>
                         <span class="ml-auto" style="min-width:90px;">
                           <div class="ml-auto font-weight-bold mr-2" style="color:#666666; flex-shrink: 0;">{{product.price.$numberDecimal}} лв</div>
@@ -174,7 +174,7 @@ export default {
     QuantityController,
     FullInfo
   },
-  async created(){
+  async mounted(){
     const response = await this.$axios.get('api/orderDateTime/available');
     this.from = response.data.from
   },

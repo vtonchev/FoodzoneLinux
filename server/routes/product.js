@@ -27,6 +27,9 @@ router.get("/products/subcategories/:id", productController.get_Products_By_Subc
 //GET products filtered by suggested
 router.get("/products/suggested/true", productController.get_Products_By_Suggested);
 
+//GET 20 products filltered by suggested
+router.get("/products/suggested/20", productController.get_Products_By_Suggested_20);
+
 //GET products filtered by sale
 router.get("/products/sale/true", productController.get_Products_By_Sale);
 

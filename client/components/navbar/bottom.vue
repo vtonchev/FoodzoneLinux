@@ -1,37 +1,19 @@
 <template>
     <div id = "outer_box_bottom">
         <div id = "inner_box_bottom" class="rounded-bottom">
-            <!-- <nav class="navbar navbar-expand-sm bg-light" id = "bottom_menu">
-                <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="fas fa-bars"></span>
-                </button>
-
-                <div class="collapse navbar-collapse navbar-bottom" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto ">
-                    <li class="nav-item">
-                        <nuxt-link to="/" class="nav-link pl-0 ">Начало</nuxt-link>
-                    </li>
-                    <li class="nav-item">
-                        <nuxt-link to="/shop" class="nav-link">Магазин</nuxt-link>
-                    </li>
-                    <li class="nav-item">
-                        <nuxt-link to="/sales" class="nav-link">Промоции</nuxt-link>
-                    </li>
-                    <li class="nav-item">
-                        <nuxt-link to="/blog" class="nav-link">Блог</nuxt-link>
-                    </li>
-                    <li class="nav-item">
-                        <nuxt-link to="/about" class="nav-link">За нас</nuxt-link>
-                    </li>
-                    <li class="nav-item">
-                        <nuxt-link to="/contacts" class="nav-link">Контакти</nuxt-link>
-                    </li>
-                    </ul>
-                </div>
-            </nav> -->
-              <b-navbar toggleable="lg" type='none' class="pb-0">
-                <b-navbar-toggle target="nav-text-collapse" class="mb-2 border-0 pl-0 cat_collapse_btn"><span class="fas fa-bars text-white"></span></b-navbar-toggle>
-                <b-collapse id="nav-text-collapse" is-nav>
+              <b-navbar toggleable="lg" type='none' class="pb-lg-0">
+                <b-navbar-toggle target="nav-text-collapse" class="border-0 pl-0 cat_collapse_btn d-flex d-lg-none">
+                    <div id="nav-icon2" :class="{ 'open' : isOpen }">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span class="text-white font-weight-bold ml-3 align-self-center" style="font-size:14px">Категории</span>    
+                </b-navbar-toggle>
+                <b-collapse @show="isOpen = true" @hide='isOpen = false' id="nav-text-collapse" is-nav>
                     <b-navbar-nav fill class="w-100 text-white" >
                         <b-nav-item :to="{name: 'shop-category-id', params: { id:'5e540324b4a1883840b9a7a4'} }" link-classes='cat_item'>Месо</b-nav-item>
                         <b-nav-item :to="{name: 'shop-category-id', params: { id:'5e53ed71b4a1883840b9a7a0'} }" link-classes='cat_item'>Млечни продукти</b-nav-item>
@@ -56,7 +38,8 @@ import {mapGetters} from 'vuex';
 export default {
     data(){
         return{
-            categories:[]
+            categories:[],
+            isOpen:false
         }
     },
     computed:{
@@ -64,3 +47,101 @@ export default {
     }
 }
 </script>
+<style scoped>
+#nav-icon2{
+  display: inline-block;
+  width: 32px;
+  height: 21px;
+  position: relative;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .5s ease-in-out;
+  -moz-transition: .5s ease-in-out;
+  -o-transition: .5s ease-in-out;
+  transition: .5s ease-in-out;
+  cursor: pointer;
+}
+#nav-icon2 span {
+  display: block;
+  position: absolute;
+  height: 4px;
+  width: 50%;
+  background: white;
+  opacity: 1;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .25s ease-in-out;
+  -moz-transition: .25s ease-in-out;
+  -o-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+}
+
+#nav-icon2 span:nth-child(even) {
+  left: 50%;
+  border-radius: 0 9px 9px 0;
+}
+
+#nav-icon2 span:nth-child(odd) {
+  left:0px;
+  border-radius: 9px 0 0 9px;
+}
+
+#nav-icon2 span:nth-child(1), #nav-icon2 span:nth-child(2) {
+  top: 0px;
+}
+
+#nav-icon2 span:nth-child(3), #nav-icon2 span:nth-child(4) {
+  top: 8px;
+}
+
+#nav-icon2 span:nth-child(5), #nav-icon2 span:nth-child(6) {
+  top: 16px;
+}
+
+#nav-icon2.open span:nth-child(1),#nav-icon2.open span:nth-child(6) {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+#nav-icon2.open span:nth-child(2),#nav-icon2.open span:nth-child(5) {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+#nav-icon2.open{
+    height: 26px;
+}
+#nav-icon2.open span:nth-child(1) {
+  top: 4px;
+}
+
+#nav-icon2.open span:nth-child(2) {
+  left: calc(50% - 5px);
+  top: 4px;
+}
+
+#nav-icon2.open span:nth-child(3) {
+  left: -50%;
+  opacity: 0;
+}
+
+#nav-icon2.open span:nth-child(4) {
+  left: 100%;
+  opacity: 0;
+}
+
+/* #nav-icon2.open span:nth-child(5) {
+  
+} */
+
+#nav-icon2.open span:nth-child(6) {
+  left: calc(50% - 5px);
+}
+</style>

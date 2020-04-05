@@ -79,35 +79,23 @@ export default {
             sortTag:[],
             count:null,
             //pagination nav 
-            perPage: 26,
+            perPage: 24,
             currentPage: 1,
             // swipe events
         }
     },
     watch: {
-        async currentPage(currentPage) { 
+        async currentPage(currentPage) {
             if(this.currentPage >= 1){
                 if(this.screenWidth <= 991){
-                    await this.$axios.$get('/api/products/sale/true' + '?page=' + this.currentPage + '&sort=' + this.sort)
-                        .then((response)=>{
-                            this.products = response.products;
-                        }
-                    )
-                    window.scroll({
-                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
-                        behavior: 'smooth'
-                    })
+                    this.asyncScrollToTopMobile();
                 } else {
-                    this.$axios.$get('/api/products/sale/true' + '?page=' + this.currentPage + '&sort=' + this.sort)
-                        .then((response)=>{
-                            this.products = response.products;
-                        }
-                    )
-                    window.scroll({
-                        top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
-                        behavior: 'smooth'
-                    })
-                }      
+                    if(this.currentPage == Math.ceil(this.count/this.perPage)){
+                        this.asyncScrollToTop()
+                    } else {
+                        this.scrollToTop();
+                    }
+                }     
             }
         },
         sort(sort){
@@ -118,10 +106,44 @@ export default {
         sortBy(){
             this.currentPage = 1;
             console.log(this.sort);
-            this.$axios.$get('/api/products/sale/true' + '?page=' + this.currentPage + '&sort=' + this.sort).then((response)=>{
+            this.$axios.$get('/api/products/sale/true' + '?page=' + this.currentPage + '&sort=' + this.sort)
+            .then((response)=>{
                 this.products = response.products;
             })
-        },       
+        },
+        async asyncScrollToTopMobile(){
+            await this.$axios.$get('/api/products/sale/true' + '?page=' + this.currentPage + '&sort=' + this.sort)
+            .then((response)=>{
+                this.products = response.products;
+                }
+            )
+            window.scroll({
+                top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
+                behavior: 'smooth'
+            })
+        },
+        async asyncScrollToTop(){
+            await this.$axios.$get('/api/products/sale/true' + '?page=' + this.currentPage + '&sort=' + this.sort)
+            .then((response)=>{
+                this.products = response.products;
+                }
+            )
+            window.scroll({
+                top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
+                behavior: 'smooth'
+            })
+        },
+        scrollToTop(){
+            this.$axios.$get('/api/products/sale/true' + '?page=' + this.currentPage + '&sort=' + this.sort)
+            .then((response)=>{
+                this.products = response.products;
+                }
+            ) 
+            window.scroll({
+                top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
+                behavior: 'smooth'
+            })
+        }        
     }
 }
 </script>

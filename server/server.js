@@ -4,10 +4,6 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv"); 
 const cors = require('cors');
-// FAKER //
-
-
-// FAKER //
 const app = express();
 dotenv.config();
 
@@ -61,7 +57,7 @@ const addressRoutes = require('./routes/address');
 //             url: 'https://picsum.photos/id/1/800',
 //             key: 'name.jpeg'
 //         },
-//         sale: null,
+//         sale: 0,
 //         oldPrice: null,
 //         price: 3.20,
 //         weight: 1,

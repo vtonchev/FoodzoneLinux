@@ -1,6 +1,10 @@
 <template>
     <div class="sidebar mb-3">
-        <nuxt-link class=" font-weight-bold pl-md-3" :to="{name: 'shop-category-id', params: { id: $route.params.id} }" >{{$store.state.categories[$route.params.id]}}</nuxt-link>
+        <nuxt-link 
+        class=" font-weight-bold pl-md-3" 
+        :to="{name: 'shop-category-id', params: { id: $route.params.id} }">
+        {{$store.state.categories[$route.params.id]}}
+        </nuxt-link>
         <hr class="ml-md-3">
         <nuxt-link 
         class="d-block pl-md-3 py-1" 

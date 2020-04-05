@@ -3,23 +3,22 @@
         <b-row style="color:#666666;">
             <!-- IMAGE -->
             <b-col cols='12' lg='5' xl='4' class="p-0 mb-3 ">
-                <span v-if="product.sale">
+                <span v-if="product.sale && !outOfStock">
                     <div class="sale_text_info">ПРОМОЦИЯ</div>
                     <div class="sale_sticker_info"><span class="m-auto" style="font-size:20px">-{{product.sale}}%</span></div>
                 </span>
-                <img class="product_img" style="min-width:200px" :src="product.photo.url" alt="">
+                <div v-if="outOfStock" 
+                class="position-absolute text-center out_of_stock" 
+                >
+                    <span class="align-self-center mx-auto font-weight-bold">Не е наличен</span>
+                </div>
+                <img class="product_img" style="min-width:200px" :class="{ opacity : outOfStock }" :src="product.photo.url" alt="">
             </b-col>
             <!-- Описание -->
-            <b-col cols='12' lg='6' xl='4' style="min-width:300px;" class="p-0 pl-3 mb-3 ml-lg-auto ml-xl-0">
+            <b-col cols='12' lg='6' xl='4' style="min-width:300px;" class="p-0 pl-3 mb-3 ml-lg-auto ml-xl-0 d-flex flex-column">
                 <h5><b-badge>{{product.weight.$numberDecimal}} {{product.unit}}</b-badge></h5>
-                <div v-show="isInCart">
-                    <QuantityController
-                    style="float:none !important;"
-                    :id='product._id'
-                    />
-                </div>
-                <button v-show='!isInCart' @click='addProductToCart(product)' class='buy_btn' style="float:none;"><span class="fas fa-shopping-cart fa-1x"></span>Купи</button>
-                <span v-if="product.sale">
+                <!-- button -->
+                <span v-if="product.sale && !outOfStock">
                     <p class="old_price_info">{{product.oldPrice}}<small>лв</small></p>
                     <p class="promo_price_info">{{product.price.$numberDecimal}}<small>лв</small></p>
                 </span>
@@ -52,6 +51,20 @@
                         <span>{{product.properties.ingredients}}</span>
                     </div>
                 </span>
+                <button 
+                    v-show='!isInCart' 
+                    @click='addProductToCart(product)' 
+                    :class="{ 'buy_btn' : !outOfStock, 'disabled_btn' : outOfStock }"
+                    :disabled='outOfStock'
+                    class="border rounded mr-3 mt-auto"
+                    style="float:none; height:30px;"
+                ><span class="fas fa-shopping-cart fa-1x"></span>Купи</button>
+                <div v-show="isInCart" class="mt-auto">
+                    <QuantityController
+                    style="float:none !important; height:30px"
+                    :id='product._id'
+                    />
+                </div>
             </b-col>
             <!-- Хранителна стойност таблица -->
             <b-col cols='12' lg='6' xl='4' class="ml-lg-auto ml-xl-0">
@@ -108,7 +121,7 @@ export default {
     components:{
         QuantityController
     },
-    props:['product','id'],
+    props:['product','id','outOfStock'],
     methods:{
         ...mapActions(['addProductToCart']),
     },

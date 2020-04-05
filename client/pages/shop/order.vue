@@ -12,7 +12,7 @@
                 </span>
                 <nuxt-link to="/shop/cart" class="ml-auto">
                     <div class="update">
-                        <i style="margin: 12px;" class="fas fa-pencil-alt"></i>
+                        <i style="margin: 12px;" class="fas fa-pencil-alt text-white"></i>
                     </div>
                 </nuxt-link>
             </div>
@@ -170,10 +170,10 @@
                                     pills 
                                     card
                                     id="timeframe_tabs"
-                                    active-nav-item-class='font-weight-bold bg-success text-white'
+                                    active-nav-item-class='font-weight-bold green_background text-white'
                                     nav-class='text-capitalize'
                                     >
-                                        <b-tab title-item-class='text-success' v-for="(dateTime,index) in orderDate7" :key="'dyn-tab-' + index" >
+                                        <b-tab v-for="(dateTime,index) in orderDate7" :key="'dyn-tab-' + index" >
                                             <template v-slot:title v-if="$moment(dateTime.date,'DD-MM-YYYY').format('DD-MM-YYYY') == $moment().format('DD-MM-YYYY')">
                                                 Днес
                                             </template>
@@ -543,3 +543,16 @@ export default {
     }
 }
 </script>
+<style scoped>
+/* .nav-link:not(.active) {
+    background-color: rgba(255, 0, 0, 0.5) !important;
+} */
+/* .nav-pills .pill-2 .nav-link:not(.active) {
+    background-color: rgba(0, 250, 0, 0.5);
+}
+
+.nav-pills .pill-3 .nav-link:not(.active) {
+    background-color: rgba(0, 0, 250, 0.5);
+    color: white;
+} */
+</style>

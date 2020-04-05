@@ -1,7 +1,8 @@
 const Product = require("../models/product");
 // Products per page 
 const offset = 24 
-// create a new Product 
+// create a new Product
+// .sort({sale: -1, stockQuantity: -1}) first sorts sale and then where sale field are equal it sorts them by stockquantity 
 exports.create_Product = async (req, res) => {
     try{
         const newProduct = new Product({
@@ -105,7 +106,7 @@ exports.get_Products_By_Category = async (req, res) => {
             }
         } else {
             products = await Product.find({category: req.params.id})
-            .sort({sale:-1})
+            .sort({sale: -1, stockQuantity: -1})
             .skip((page-1)*offset)
             .limit(offset)
             .exec();
@@ -157,7 +158,7 @@ exports.get_Products_By_Subcategory = async (req, res) =>{
             }
         } else {
             products = await Product.find({subcategory: req.params.id})
-            .sort({sale:-1})
+            .sort({sale: -1, stockQuantity: -1})
             .skip((page-1)*offset)
             .limit(offset)
             .exec();
@@ -207,7 +208,7 @@ exports.get_Products_By_Suggested = async(req, res) =>{
             }
         } else {
             products = await Product.find({suggested: true})
-            .sort({sale:-1})
+            .sort({sale: -1, stockQuantity: -1})
             .skip((page-1)*offset)
             .limit(offset)
             .exec();
@@ -257,7 +258,7 @@ exports.get_Products_By_Sale = async(req, res) =>{
             }
         } else {
             products = await Product.find({sale: { $ne: null }})
-            .sort({sale:-1})
+            .sort({sale: -1, stockQuantity: -1})
             .skip((page-1)*offset)
             .limit(offset)
             .exec();
@@ -307,7 +308,7 @@ exports.get_Products_By_Bought = async(req, res) =>{
             }
         } else {
             products = await Product.find({bought: { $gt : 50 }})
-            .sort({sale:-1})
+            .sort({sale: -1, stockQuantity: -1})
             .skip((page-1)*offset)
             .limit(offset)
             .exec();
@@ -317,6 +318,25 @@ exports.get_Products_By_Bought = async(req, res) =>{
             success: true,
             products: products,
             count: count
+        }) 
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+// Get 20 products filltered by suggested
+exports.get_Products_By_Suggested_20 = async(req, res) =>{
+    try {
+        let products = [];
+        products = await Product.find({suggested: true, stockQuantity: { $ne: 0 }})
+        .sort({sale: -1})
+        .limit(20)
+        .exec();
+        res.json({
+            success: true,
+            products: products,
         }) 
     } catch (err) {
         res.status(500).json({
@@ -390,7 +410,7 @@ exports.get_Search_Products_Page = async (req, res) => {
             }
         } else {
             products = await Product.find( { $text: { $search: search } })
-            .sort({sale:-1})
+            .sort({sale: -1, stockQuantity: -1})
             .skip((page-1)*offset)
             .limit(offset)
             .exec();
@@ -459,7 +479,6 @@ exports.delete_Single_Product = async (req, res) => {
         })
     }
 }
-
 
 
 //////////////////////

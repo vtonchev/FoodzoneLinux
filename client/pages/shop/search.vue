@@ -84,7 +84,7 @@ export default {
             sortTag:[],
             count:null,
             //pagination nav 
-            perPage: 26,
+            perPage: 24,
             currentPage: 1,
             // swipe events
             
@@ -97,30 +97,18 @@ export default {
     //     })
     // },
     watch: {
-        async currentPage(currentPage) { 
-                if(this.currentPage >= 1){
-                    if(this.screenWidth <= 991){
-                        await this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
-                            .then((response)=>{
-                                this.products = response.products;
-                            }
-                        )
-                        window.scroll({
-                            top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
-                            behavior: 'smooth'
-                        })
+        async currentPage(currentPage) {
+            if(this.currentPage >= 1){
+                if(this.screenWidth <= 991){
+                    this.asyncScrollToTopMobile();
+                } else {
+                    if(this.currentPage == Math.ceil(this.count/this.perPage)){
+                        this.asyncScrollToTop()
                     } else {
-                        this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
-                            .then((response)=>{
-                                this.products = response.products;
-                            }
-                        )
-                        window.scroll({
-                            top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
-                            behavior: 'smooth'
-                        })
-                    }      
-                }
+                        this.scrollToTop();
+                    }
+                }     
+            }
         },
         sort(sort){
             this.sortBy();
@@ -129,11 +117,44 @@ export default {
     methods:{
         sortBy(){
             this.currentPage = 1;
-            console.log(this.sort);
-            this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort).then((response)=>{
+            this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            .then((response)=>{
                 this.products = response.products;
             })
-        },   
+        },
+        async asyncScrollToTopMobile(){
+            await this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            .then((response)=>{
+                this.products = response.products;
+                }
+            )
+            window.scroll({
+                top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 16,
+                behavior: 'smooth'
+            })
+        },
+        async asyncScrollToTop(){
+            await this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            .then((response)=>{
+                this.products = response.products;
+                }
+            )
+            window.scroll({
+                top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
+                behavior: 'smooth'
+            })
+        },
+        scrollToTop(){
+            this.$axios.$get(`api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)  
+            .then((response)=>{
+                this.products = response.products;
+                }
+            ) 
+            window.scroll({
+                top: this.$refs["scrollTo"].getBoundingClientRect().top + window.pageYOffset - 116,
+                behavior: 'smooth'
+            })
+        }     
     }
 }
 </script>

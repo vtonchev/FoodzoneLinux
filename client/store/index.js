@@ -61,7 +61,7 @@ export const actions = {
         if(cartProduct.quantity < cartProduct.stockQuantity){
             commit('incrementProductQty', cartProduct);
             commit('refreshTotalPrice')
-        } 
+        }
     },
     decrementQty({state, commit}, id){
         const cartProduct = state.cart.find(prod => prod._id === id)

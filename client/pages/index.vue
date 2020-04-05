@@ -76,9 +76,9 @@ export default {
         Card,  
     },
   async asyncData({$axios}){
-    const response = await $axios.$get('api/products/suggested/true');
+    const response = await $axios.$get('api/products/suggested/20');
     return {
-      products: response.products.slice(0,20)
+      products: response.products
     }
   },
 }
