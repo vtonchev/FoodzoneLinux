@@ -14,4 +14,7 @@ router.get("/subcategories/categories/:id", subcategoryController.get_Subcategor
 
 //GET request - get a single subcategory
 router.get('/subcategories/:id', subcategoryController.get_A_Single_Subcategory);
+
+//Patch request - update subcat
+router.patch('/subcategories/:id', subcategoryController.update_A_Single_Subcategory);
 module.exports = router;

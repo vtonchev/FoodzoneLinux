@@ -48,3 +48,23 @@ exports.get_Subcategories_By_Category = async (req, res) => {
         })
     }
 }
+exports.update_A_Single_Subcategory = async (req, res) => {
+    try{
+        await Subcategory.updateOne({_id: req.params.id },
+            {
+                $set: {
+                    title: req.body.title
+                }
+            }
+        )
+        res.json({
+            success: true,
+            message: 'subcategory successfully updated'
+        })
+    } catch(err) {
+        res.status(500).json({
+            success:false,
+            message: err.message
+        })
+    }
+}
