@@ -104,8 +104,8 @@ exports.update_Days = async (req, res) => {
                 {
                     $set:
                         {
-                            "timeframe.$.orders" : 0,
-                            "timeframe.$.max" : process.env.MAX_ORDERS,
+                            "timeframe.$[].orders" : 0,
+                            "timeframe.$[].max" : process.env.MAX_ORDERS,
                         } 
                 }
             )
