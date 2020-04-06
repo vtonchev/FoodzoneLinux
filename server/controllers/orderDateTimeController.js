@@ -87,13 +87,11 @@ exports.update_Days = async (req, res) => {
         const firstDay = await OrderDateTime.findOne();
         const lastDay = alldays[0];
         const sameWeekDay = await OrderDateTime.findOne({dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd')});
-        console.log(sameWeekDay)
         const newOrderDateTime = new OrderDateTime({
             date: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('DD-MM-YYYY'),
             dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd'),
             timeframe: sameWeekDay.timeframe
         })
-        console.log(newOrderDateTime)
         const queries = [
             OrderDateTime.deleteOne(firstDay),
             newOrderDateTime.save(),
@@ -114,6 +112,7 @@ exports.update_Days = async (req, res) => {
                 message: "Успешно създадохте датите"
             });
         }).catch((err) => {
+            console.log(err)
             res.status(500).json({
                 status: false,
                 message: err.message
