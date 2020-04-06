@@ -83,10 +83,10 @@ exports.create_Timeframe = async( req, res) => {
 //add new Days and set 
 exports.update_Days = (req, res) => {
     try {
-        const alldays = await OrderDateTime.find().sort({ _id: -1 });
-        const firstDay = await OrderDateTime.findOne();
+        const alldays = OrderDateTime.find().sort({ _id: -1 });
+        const firstDay = OrderDateTime.findOne();
         const lastDay = alldays[0];
-        const sameWeekDay = await OrderDateTime.findOne({dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd')});
+        const sameWeekDay = OrderDateTime.findOne({dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd')});
         const newOrderDateTime = new OrderDateTime({
             date: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('DD-MM-YYYY'),
             dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd'),
