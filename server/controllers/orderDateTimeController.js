@@ -81,17 +81,19 @@ exports.create_Timeframe = async( req, res) => {
 }
 
 //add new Days and set 
-exports.update_Days = (req, res) => {
+exports.update_Days = async (req, res) => {
     try {
-        const alldays = OrderDateTime.find().sort({ _id: -1 });
-        const firstDay = OrderDateTime.findOne();
+        const alldays = await OrderDateTime.find().sort({ _id: -1 });
+        const firstDay = await OrderDateTime.findOne();
         const lastDay = alldays[0];
-        const sameWeekDay = OrderDateTime.findOne({dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd')});
-        const newOrderDateTime = new OrderDateTime({
-            date: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('DD-MM-YYYY'),
-            dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd'),
-            timeframe: sameWeekDay.timeframe   //is gonna give an Error when there is no timeframe 
-        })
+        const sameWeekDay = await OrderDateTime.findOne({dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd')});
+        const newOrderDateTime = new OrderDateTime();
+        console.log('create empty orderdatetime')
+        newOrderDateTime.date = moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('DD-MM-YYYY');
+        console.log('add date')
+        newOrderDateTime.dayOfWeek = moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd');
+        console.log('add dayOfWeek')
+        newOrderDateTime.timeframe = sameWeekDay.timeframe; //is gonna give an Error when there is no timeframe 
         const queries = [
             OrderDateTime.deleteOne(firstDay),
             newOrderDateTime.save(),
@@ -106,7 +108,7 @@ exports.update_Days = (req, res) => {
             )
         ];
         
-        Promise.all(queries).then(() => {
+        await Promise.all(queries).then(() => {
             res.json({
                 success: true,
                 message: "Успешно създадохте датите"
