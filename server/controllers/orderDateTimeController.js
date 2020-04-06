@@ -86,7 +86,6 @@ exports.update_Days = async (req, res) => {
         const alldays = await OrderDateTime.find({}).sort({ _id: -1 });
         const firstDay = await OrderDateTime.findOne();
         await Promise.resolve(lastDay = alldays[0])
-        console.log(lastDay)
         const sameWeekDay = await OrderDateTime.findOne({dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd')});
         await Promise.resolve(
             newOrderDateTime = new OrderDateTime({
@@ -95,8 +94,6 @@ exports.update_Days = async (req, res) => {
                 timeframe : sameWeekDay.timeframe  //is gonna give an Error when there is no timeframe 
             })   
         )
-       
-        console.log(newOrderDateTime.timeframe +' '+ newOrderDateTime.dayOfWeek +' '+ newOrderDateTime.date);
         const queries = [
             OrderDateTime.deleteOne(firstDay),
             newOrderDateTime.save(),
@@ -146,7 +143,6 @@ exports.update_Max_Property = async (req, res) => {
                     } 
                 }
             )
-            console.log("whyyy")
         } else {
             for(i = 0; i < req.body.selectedTimeframe.length; i++){
                 await OrderDateTime.updateOne(
@@ -211,10 +207,21 @@ exports.send_Available_Timeframe = async (req, res) => {
         const timeframe = await OrderDateTime.aggregate([
             {$unwind : "$timeframe"},
             {
-                $match:
-                {
-                    $expr:{$lt:["$timeframe.orders", "$timeframe.max"]}
+                $match : 
+                { 
+                    $or:[
+                        {
+                            date: moment().format('DD-MM-YYYY'),
+                            'timeframe.from' : {$gt: moment().add(2,'H').format('HH:mm')},
+                            $expr: {$lt:["$timeframe.orders", "$timeframe.max"]} 
+                        },
+                        {
+                            date:{$ne:moment().format('DD-MM-YYYY')},
+                            $expr:{$lt:["$timeframe.orders", "$timeframe.max"]}
+                        }
+                    ]
                 },
+                
             },    
         ])
         res.json({
