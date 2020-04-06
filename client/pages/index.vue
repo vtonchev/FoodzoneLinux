@@ -22,20 +22,20 @@
         ></b-carousel-slide>
       </b-carousel>
     </div>
-    <!-- Categories -->
+    <!-- PROMO, MOST BOUGHT, CHOSEN -->
     <b-row class="outer-wrapper justify-content-between mb-5" >
-      <b-col cols='12' sm='6' lg='4' class="p-0 " >
-        <div @click="$router.push('/shop/sale')" class='subnavigation_img' style="background-image: url('/img/most-popular.jpg');"> 
+      <b-col cols='12' sm='6' lg='4' class="p-0" >
+        <div @click="$router.push('/shop/sale')" class='subnavigation_img ' style="background-image: url('/img/sale.jpg'); background-position: left center;"> 
           <div class="badge_text" style="background: #E52121;"><span>На промоция</span></div>
         </div>
       </b-col>
-      <b-col cols='12' sm='6' lg='4' class="p-0 mt-3 mt-sm-0">
+      <b-col cols='12' sm='6' lg='4' class="p-0 mt-3 mt-sm-0 ">
         <div @click="$router.push('/shop/most-bought')" class='subnavigation_img ml-auto mx-lg-auto' style="background-image: url('/img/most-popular.jpg');"> 
           <div class="badge_text" style="background: #64C042;"><span>Най Купувани</span></div>
         </div>
       </b-col>
       <b-col cols='12' sm='6' lg='4' class="p-0 mx-auto mt-3 mt-lg-0">
-        <div @click="$router.push('/shop/suggested')" class='subnavigation_img mx-auto mr-lg-0 ml-lg-auto' style="background-image: url('/img/most-popular.jpg');"> 
+        <div @click="$router.push('/shop/suggested')" class='subnavigation_img mx-auto mr-lg-0 ml-lg-auto' style="background-image: url('/img/suggested1.jpg');"> 
           <div class="badge_text" style="background: #FBDE44;"><span>Избрани Продукти</span></div>
         </div>
       </b-col>
@@ -83,4 +83,5 @@ export default {
   },
 }
 </script>
+
 

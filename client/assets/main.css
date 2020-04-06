@@ -286,6 +286,10 @@
         width: 95%;
         height: 14rem;
         object-fit: cover;
+        transition: .2s;
+    }
+    .subnavigation_img:hover{
+        box-shadow: 5px 4px 8px 5px rgba(0, 0, 0, 0.2), 10px 8px 20px 10px rgba(0, 0, 0, 0.2);
     }
     .badge_text{
         display: flex;
