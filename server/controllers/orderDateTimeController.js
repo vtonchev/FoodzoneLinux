@@ -81,7 +81,7 @@ exports.create_Timeframe = async( req, res) => {
 }
 
 //add new Days and set 
-exports.update_Days = async (req, res) => {
+exports.update_Days = (req, res) => {
     try {
         const alldays = await OrderDateTime.find().sort({ _id: -1 });
         const firstDay = await OrderDateTime.findOne();
@@ -90,12 +90,12 @@ exports.update_Days = async (req, res) => {
         const newOrderDateTime = new OrderDateTime({
             date: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('DD-MM-YYYY'),
             dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd'),
-            timeframe: sameWeekDay.timeframe
+            timeframe: sameWeekDay.timeframe   //is gonna give an Error when there is no timeframe 
         })
         const queries = [
             OrderDateTime.deleteOne(firstDay),
             newOrderDateTime.save(),
-            OrderDateTime.findOneAndUpdate({date: newOrderDateTime.date},
+            OrderDateTime.updateOne({date: newOrderDateTime.date},
                 {
                     $set:
                         {
