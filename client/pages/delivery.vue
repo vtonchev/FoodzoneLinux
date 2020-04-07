@@ -10,8 +10,7 @@
             <b-col cols='12' lg='6' style="overflow-x: auto;">
                 <div class="collapse_content p-0" style="width: max-content;">
                     <b-card no-body header-text-variant='success'>
-                        <b-tabs 
-                        vertical 
+                        <b-tabs  
                         pills 
                         card
                         id="timeframe_tabs"
@@ -40,11 +39,32 @@
                                                 <div class="px-2 align-self-center">
                                                     {{timeframe.from}}
                                                 </div>
-                                                <b-button 
-                                                class="border rounded bg-white text-dark mr-4" 
+                                                <div 
+                                                class="border rounded transparent_btn text-dark mx-auto p-2" 
                                                 :disabled='timeframe.orders >= timeframe.max'
                                                 >
-                                                <h6>
+                                                    <h6 class="m-0">
+                                                        <small>
+                                                            Доставка между 
+                                                            <span class="font-weight-bold">{{timeframe.from}}</span> 
+                                                            и 
+                                                            <span class="font-weight-bold">{{timeframe.to}}</span>
+                                                            <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
+                                                        </small>
+                                                    </h6>
+                                                </div>
+                                            </span>    
+                                            
+                                        </div> 
+                                        <div class='d-flex mb-3' v-else>
+                                            <div class="px-2 align-self-center">
+                                                {{timeframe.from}}
+                                            </div>
+                                            <div  
+                                            class="border rounded transparent_btn text-dark mx-auto p-2" 
+                                            :disabled='timeframe.orders >= timeframe.max'
+                                            >
+                                                <h6 class="m-0">
                                                     <small>
                                                         Доставка между 
                                                         <span class="font-weight-bold">{{timeframe.from}}</span> 
@@ -53,28 +73,7 @@
                                                         <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
                                                     </small>
                                                 </h6>
-                                                </b-button>
-                                            </span>    
-                                            
-                                        </div> 
-                                        <div class='d-flex mb-3' v-else>
-                                            <div class="px-2 align-self-center">
-                                                {{timeframe.from}}
-                                            </div>
-                                            <b-button  
-                                            class="border rounded bg-white text-dark mr-4" 
-                                            :disabled='timeframe.orders >= timeframe.max'
-                                            >
-                                            <h6>
-                                                <small>
-                                                    Доставка между 
-                                                    <span class="font-weight-bold">{{timeframe.from}}</span> 
-                                                    и 
-                                                    <span class="font-weight-bold">{{timeframe.to}}</span>
-                                                    <div class="text-left" v-if="timeframe.orders >= timeframe.max">Капацитета е запълнен</div>
-                                                </small>
-                                            </h6>
-                                            </b-button> 
+                                            </div> 
                                         </div>       
                                     </div>
                                 </div>
