@@ -1,6 +1,6 @@
 <template>
     <div >
-        <div v-if="loaded==false"> 
+        <div v-if="loaded == false"> 
             <Loading/>
         </div>
         <div v-else>
@@ -13,8 +13,8 @@
                     <nuxt/>        
                 </b-row>
             </div>
-            <Footer/>
-        </div>
+            <Footer/> 
+        </div> 
     </div>
 </template>
 <script>
@@ -23,6 +23,7 @@ import Navbar from "~/components/navbar/navbar"
 import Sidebar from "~/components/sidebar/sidebar"
 import Footer from "~/components/footer/footer"
 export default {
+  layout: 'default',
   components:{
       Navbar,
       Footer,

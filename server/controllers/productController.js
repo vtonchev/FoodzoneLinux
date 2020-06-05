@@ -3,7 +3,7 @@ const Product = require("../models/product");
 const offset = 24 
 // create a new Product
 // .sort({sale: -1, stockQuantity: -1}) first sorts sale and then where sale field are equal it sorts them by stockquantity 
-exports.create_Product = async (req, res) => {
+exports.create_Product                  = async (req, res) => {
     try{
         const newProduct = new Product({
             category: req.body.categoryID,
@@ -27,11 +27,9 @@ exports.create_Product = async (req, res) => {
         await newProduct.save();
         res.json({
             status: true,
-            message: "Successfully saved"
+            message: "Продуктът е успешно създаден"
         });
-
     } catch(err) {
-        console.log(err)
         res.status(500).json({
             status: false,
             message: err.message
@@ -40,11 +38,13 @@ exports.create_Product = async (req, res) => {
     
 }
 // GET all products 
-exports.get_All_Products = async (req, res) => {
+exports.get_All_Products                = async (req, res) => {
     try{
         const page = req.query.page;
+        console.log(page)
         let products = [];
-        products = await Product.find().skip((page-1)*offset).limit(offset).populate("category subcategory").exec();
+        products = await Product.find().skip((page-1)*offset).limit(offset).populate("category subcategory");
+        console.log(products)
         const count = await Product.countDocuments({});
         res.json({
             success: true,
@@ -59,7 +59,7 @@ exports.get_All_Products = async (req, res) => {
     }
 }
 // Get product filtered by productID
-exports.get_Products_By_ProductID = async (req, res) => {
+exports.get_Products_By_ProductID       = async (req, res) => {
     try{
         const products = await Product.find({productID: req.params.id}).populate("category subcategory");
         res.json({
@@ -75,7 +75,7 @@ exports.get_Products_By_ProductID = async (req, res) => {
     }
 }
 // GET products filtered by category
-exports.get_Products_By_Category = async (req, res) => {
+exports.get_Products_By_Category        = async (req, res) => {
     try{
         const page = req.query.page;
         let sort = req.query.sort;
@@ -126,8 +126,8 @@ exports.get_Products_By_Category = async (req, res) => {
         })
     }
 }
-// Get products filtered by subcategory
-exports.get_Products_By_Subcategory = async (req, res) =>{ 
+// GET products filtered by subcategory
+exports.get_Products_By_Subcategory     = async (req, res) => { 
     try {
         const page = req.query.page;
         let sort = req.query.sort;
@@ -176,8 +176,8 @@ exports.get_Products_By_Subcategory = async (req, res) =>{
         })
     }
 }
-//Get products filtered by suggested 
-exports.get_Products_By_Suggested = async(req, res) =>{
+// GET products filtered by suggested 
+exports.get_Products_By_Suggested       = async (req, res) => {
     try {
         const page = req.query.page;
         let sort = req.query.sort;
@@ -226,8 +226,8 @@ exports.get_Products_By_Suggested = async(req, res) =>{
         })
     }
 }
-//Get products filtered by sale
-exports.get_Products_By_Sale = async(req, res) =>{
+// GET products filtered by sale
+exports.get_Products_By_Sale            = async (req, res) => {
     try {
         const page = req.query.page;
         let sort = req.query.sort;
@@ -276,8 +276,8 @@ exports.get_Products_By_Sale = async(req, res) =>{
         })
     }
 }
-//Get products filtered by bought
-exports.get_Products_By_Bought = async(req, res) =>{
+// GET products filtered by bought
+exports.get_Products_By_Bought          = async (req, res) => {
     try {
         const page = req.query.page;
         let sort = req.query.sort;
@@ -326,8 +326,8 @@ exports.get_Products_By_Bought = async(req, res) =>{
         })
     }
 }
-// Get 20 products filltered by suggested
-exports.get_Products_By_Suggested_20 = async(req, res) =>{
+// GET 20 products filltered by suggested
+exports.get_Products_By_Suggested_20    = async (req, res) => {
     try {
         let products = [];
         products = await Product.find({suggested: true, stockQuantity: { $ne: 0 }})
@@ -346,7 +346,7 @@ exports.get_Products_By_Suggested_20 = async(req, res) =>{
     }
 }
 // GET a single product 
-exports.get_Single_Product =  async (req, res) => {
+exports.get_Single_Product              = async (req, res) => {
     try{
         const product = await Product.findOne({_id: req.params.id }).populate("category subcategory").exec();
         res.json({
@@ -360,25 +360,27 @@ exports.get_Single_Product =  async (req, res) => {
         })
     }
 }
-//SEARCH FOR PRODUCTS 
-exports.get_Search_Products = async (req, res) => {
+// SEARCH for products 
+exports.get_Search_Products             = async (req, res) => {
     try {
+        console.log("searching ...")
         const search = decodeURIComponent(req.params.search);
-        const products = await Product.find( { title: { $regex: '^'+search , $options:'i'} }).limit(5);
+        console.log("searching ...")
+        const products = await Product.find( { title: { $regex: '^'+ search , $options:'i'} }).limit(5);
         res.json({
             success: true,
             products: products
         })
     } catch (err) {
-        console.log(err)
+        console.log('error: ' + err)
         res.status(500).json({
             success:false,
             message: err
         })
     }
 }
-//SEARCH FOR PRODUCTS PAGE
-exports.get_Search_Products_Page = async (req, res) => {
+// SEARCH for products FULL
+exports.get_Search_Products_Page        = async (req, res) => {
     try {
         const page = req.query.page;
         let sort = req.query.sort;
@@ -429,8 +431,8 @@ exports.get_Search_Products_Page = async (req, res) => {
         })
     }
 }
-// Update a single product
-exports.update_Single_Product = async (req, res) => {
+// UPDATE a single product
+exports.update_Single_Product           = async (req, res) => {
     try{
         if(req.body.properties){
             req.body.properties = JSON.parse(req.body.properties);
@@ -452,9 +454,9 @@ exports.update_Single_Product = async (req, res) => {
         }   
         res.json({
             success: true,
+            message: 'Продуктът е успешно редактиран'
         })
     } catch(err) {
-        console.log(err.message);
         res.status(500).json({
             success:false,
             message: err.message
@@ -462,14 +464,14 @@ exports.update_Single_Product = async (req, res) => {
         
     }
 }
-// delete  a single Product
-exports.delete_Single_Product = async (req, res) => {
+// DELETE a single Product
+exports.delete_Single_Product           = async (req, res) => {
     try{
-        const deletedProduct = await Product.findOneAndDelete({ _id: req.params.id })
+        const deletedProduct = await Product.deleteOne({ _id: req.params.id })
         if(deletedProduct){
             res.json({
                 success: true,
-                message: "Successfully deleted"
+                message: "Продуктът е успешно изтрит"
             })
         }
     } catch(err) {

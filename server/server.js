@@ -1,12 +1,12 @@
-const express = require("express");
-const morgan = require("morgan");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv"); 
-const cors = require('cors');
+const express       = require("express");
+const morgan        = require("morgan");
+const bodyParser    = require("body-parser");
+const mongoose      = require("mongoose");
+const dotenv        = require("dotenv"); 
+const cors          = require("cors");
+
 const app = express();
 dotenv.config();
-
 // CORS configurations - SECURITY IMPORTANT MIDDLEWARE !!!!!
 // var corsOptions = {
 //     origin: process.env.ADMIN_SERVER_URL,
@@ -14,15 +14,17 @@ dotenv.config();
 //   }
 app.use(cors());
 
-// Database connection
+// MongoDB connection 
+const options = {
+	useNewUrlParser: true,
+    	useUnifiedTopology: true,
+    	useCreateIndex: true,
+    	replicaSet: 'rs0' 
+}
 mongoose.set('useFindAndModify', false);
-mongoose.connect(process.env.DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-}, (err) => {
+mongoose.connect(process.env.DATABASE_URL, options, (err) => {
     if(!err){
-        console.log("Connected to the database")
+        console.log("Connected to Mongo database")
     } else {
         console.log(err);
     }
@@ -34,13 +36,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));  //false cant pass data normaly  check docs
 
 // require apis
-const productRoutes = require("./routes/product");
-const categoryRoutes = require("./routes/category");
-const subcategoryRoutes = require("./routes/subcategory");
-const authRoutes = require('./routes/auth');
-const orderDateTimeRoutes = require('./routes/orderDateTime');
-const orderRoutes = require('./routes/order');
-const addressRoutes = require('./routes/address');
+const productRoutes         = require("./routes/product");
+const categoryRoutes        = require("./routes/category");
+const subcategoryRoutes     = require("./routes/subcategory");
+const authRoutes            = require('./routes/auth');
+const orderDateTimeRoutes   = require('./routes/orderDateTime');
+const orderRoutes           = require('./routes/order');
+const addressRoutes         = require('./routes/address');
 //----------------------------------------------------------- SIMULATE LOT OF PROD
 // const Product = require("./models/product");
 // const faker = require('faker');

@@ -1,11 +1,21 @@
 const Order = require('../models/order');
 const OrderDateTime = require('../models/orderDateTime')
-// const Product = require('../models/product');
+const mongoose = require('mongoose'); // needed for transactions
+const Product = require('../models/product');
+
+//async forEach function
+async function asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+}
+// POST request - create Order
 exports.create_Order = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         let cart = req.body.cart;
-        const newOrder = new Order({
-            user: req.body.userID,
+        let newOrder = new Order({
             address: req.body.address,
             contact: req.body.contact,
             additionalInfo: req.body.additionalInfo,
@@ -13,43 +23,46 @@ exports.create_Order = async (req, res) => {
             paymentMethod: req.body.paymentMethod,
             status: 'неизпълнена'
         })
-        cart.map(product => {
+        if(req.body.userID){
+            newOrder.user = req.body.userID;
+        }
+        await cart.map(product => {
             newOrder.products.push({
                 product: product._id,
                 quantity:parseInt(product.quantity),
             })
         })  
-        const queries = [
-            newOrder.save(),
-            OrderDateTime.updateOne(
-                { date: req.body.orderDateTime.date, "timeframe.from" : req.body.orderDateTime.timeframe },
-                {$inc: { "timeframe.$.orders": 1}}      
-            ),
-
-        ]
-        Promise.all(queries).then(() => {
-            res.json({
-                status: true,
-                message: "Вашата поръчка беше успешна"
-            });
-        }).catch((err) => {
-            res.status(500).json({
-                status: false,
-                message: err.message
-            })
-        });
-        // newOrder.products.forEach(product => {
-        //     Product.updateOne(
-        //         {_id: product._id},
-        //         {$inc: { bought: 1}}
-        //     ) 
-        // });
+        // Save the new order 
+        await newOrder.save({ session }),
+        // Increment orders per timeframe (+1)
+        await OrderDateTime.updateOne(
+            { date: req.body.orderDateTime.date, "timeframe.from" : req.body.orderDateTime.timeframe },
+            { $inc: { "timeframe.$.orders": 1}},
+            { session }     
+        ),
+        // Increment bought index and decrement stockQuantity
+        await asyncForEach(newOrder.products, async (product) => {
+            await Product.updateOne(
+                { _id: product.product},
+                { $inc: { bought: parseInt(product.quantity), stockQuantity: -parseInt(product.quantity) }},
+                { session }
+            )
+        })
+        await session.commitTransaction();
+        res.json({
+            status: true,
+            message: "Вашата поръчка беше успешна"
+        })
     } catch (err) {
         console.log(err)
+        await session.abortTransaction();
         res.status(500).json({
             success:false,
             message: err.message
         })
+    } finally {
+        session.endSession();
+        
     }
 }
 exports.get_Orders_By_Timeframe = async (req, res) => {

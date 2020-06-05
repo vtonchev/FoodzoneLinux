@@ -16,7 +16,7 @@ const productSchema = new Schema({
     price: mongoose.Decimal128,
     weight: mongoose.Decimal128,
     unit: String,
-    stockQuantity: Number,
+    stockQuantity: {type:Number, minimum:0},
     rating: [Number],
     suggested: {type:Boolean, default: false},
     bought: {type:Number, default:0},

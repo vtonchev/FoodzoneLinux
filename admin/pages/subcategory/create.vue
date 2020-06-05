@@ -2,7 +2,7 @@
     <div id="page">
         <h1>Добавете нова подкатегория</h1>
             <div class="d-flex justify-content-between">
-                <form id="form" class="align-self-start">
+                <form id="form" @submit='onAddSubcategory' class="align-self-start">
                     <!-- Category selection -->
                     <label for="category">Изберете категория</label>
                     <select id="category" v-model="categoryID" @change="onCategorySelected">
@@ -11,6 +11,8 @@
                     <!-- title -->
                     <label for="type">Име</label>
                     <input class="width_100" id="title" type="text" v-model="title">
+                    <!-- Submit button -->
+                    <button type="submit">Добави</button>
                 </form>
                 <div class="show_subcategories">
                     <p style="font-size:1.5rem;color: #6c757d; margin-left:1.25rem; ">Подкатегории в избраната категория:</p>
@@ -53,7 +55,7 @@ export default {
     },
     methods:{
         async onCategorySelected({$axios}){
-            const response = await this.$axios.$get('/api/subcategories/categories/'+this.categoryID)
+            const response = await this.$axios.$get('/api/subcategories/categories/' + this.categoryID)
             this.subcategories = response.subcategories
         },
         async onAddSubcategory(){
@@ -61,7 +63,8 @@ export default {
                 categoryID: this.categoryID,
                 title: this.title
             }
-            await this.$axios.$post("/api/subcategories", data)
+            const response = await this.$axios.$post("/api/subcategories", data);
+            alert(response.message);
         }
     }
 }

@@ -11,7 +11,7 @@
                 @dismiss-count-down="countDownChanged" 
                 fade 
                 variant="danger"
-                >Грешен потребител или парола !</b-alert>
+                >Грешен потребител или парола</b-alert>
               
                 <b-tabs 
                 active-nav-item-class='font-weight-bold'
@@ -131,6 +131,7 @@ export default {
             email: '',
             password: '',
             // ALERT LOGIC
+            responseData: '',
             dismissSecs: 2,
             dismissCountDown: 0,
             showDismissibleAlert: false
@@ -143,8 +144,9 @@ export default {
                     data:{
                         email: this.signin.email,
                         password: this.signin.password
-                    }
+                    },
                 })
+                
             } catch (err) {
                 this.dismissCountDown = this.dismissSecs
             }
@@ -158,15 +160,8 @@ export default {
                 }
                 data['name'] = JSON.stringify(this.name)
                 const response = await this.$axios.$post('/api/auth/signup', data);
-                if (response.success) {
-                    this.$auth.loginWith('local', {
-                        data: {
-                            email: this.email,
-                            password: this.password
-                        }
-                    })
-                    this.$router.push('/')
-                }
+                alert(response.message)
+                await this.$router.go('/')
             } catch(err) {
                 console.log(err)
             }

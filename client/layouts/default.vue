@@ -3,7 +3,7 @@
     <div v-if="loaded==false"> 
       <Loading/>
     </div>
-    <div v-else>
+    <div v-else> 
       <Navbar />
       <nuxt />
       <Footer />

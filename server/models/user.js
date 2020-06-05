@@ -8,8 +8,10 @@ const userSchema = new Schema({
         lastName:String
     },
     email: {type: String, unique: true, required: true},
-    phone: String,
+    phone: {type: String},
     password: {type: String, required: true },
+    verified: {type: Boolean, default: false},
+    token: {type:String}
     // address: {type: Schema.Types.ObjectId, ref:"Address"},
 });
 

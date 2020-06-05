@@ -219,7 +219,7 @@ export default {
       }
     },
     fullSearch(){
-        window.location.replace("/shop/search?search="+this.searchText);
+        this.$router.push("/shop/search/" + this.searchText);
     },
     isInCart(product){
       return this.getCart.some(prod => prod._id === product._id);

@@ -64,7 +64,8 @@ export default {
   */
   axios: {
     proxy: true,
-    baseURL: "http://localhost:3000"
+    //I deleted baseURL !!!!
+    retry: { retries: 3 }
   },
   proxy:{
     '/api': "http://localhost:3000"

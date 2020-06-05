@@ -1,33 +1,25 @@
 const Category = require('../models/category');
-
-// create a new category 
-exports.create_Category = async (req, res) => {
+const Subcategory = require('../models/subcategory');
+// CREATE a new category 
+exports.create_Category             = async (req, res) => {
     try{
         const newCategory = new Category
         newCategory.title = req.body.title
-        if(req.file){
-            newCategory.photo.url = req.file.location 
-            newCategory.photo.key = req.file.key
-            await newCategory.save();
-        } else {
-            await newCategory.save();
-        }
-
+        await newCategory.save();
         res.json({
             success: true,
-            message: "Вие успешно създадохте нова категория: " + req.body.title
+            message: "Вие УСПЕШНО създадохте нова категория: " + req.body.title
         });
     } catch(err) {
         res.status(500).json({
             success:false,
-            message: err.message + "действието беше неуспешно" 
+            message: err.message + "действието беше НЕУСПЕШНО" 
         })
     }
 }
 
-
 // GET all categories 
-exports.get_All_Categories = async (req, res) => {
+exports.get_All_Categories          = async (req, res) => {
     try{
         const categories = await Category.find();
         res.json({
@@ -42,8 +34,8 @@ exports.get_All_Categories = async (req, res) => {
     }
 }
 
-//get a single category
-exports.get_A_Single_Category = async (req, res ) => {
+// GET a single category
+exports.get_A_Single_Category       = async (req, res ) => {
     try {
         const category = await Category.findOne({_id: req.params.id})
         res.json({
@@ -58,26 +50,17 @@ exports.get_A_Single_Category = async (req, res ) => {
     }
 }
 
-// update a single category
-exports.update_A_Single_Category = async (req, res) => { 
+// UPDATE a single category
+exports.update_A_Single_Category    = async (req, res) => { 
     try {
         await Category.findOneAndUpdate({_id: req.params.id },
             {
                 $set: req.body
             }
         )
-        if(req.file !== undefined){
-            await Category.findOneAndUpdate({_id:req.params.id},{
-                $set: {
-                    photo: {
-                        url: req.file.location,                                  
-                        key: req.file.key       
-                    }
-                }
-            })
-        } 
         res.json({
-            success:true,
+            success: true,
+            message: 'Категорията е УСПЕШНО редактирана'
         })  
     } catch(err) {
         res.status(500).json({
@@ -85,4 +68,22 @@ exports.update_A_Single_Category = async (req, res) => {
             message: err.message
         })
     };
+}
+
+// DELETE a single category
+exports.delete_A_Single_Category    = async (req, res) => {
+    try {
+        await Category.deleteOne({_id: req.params.id});
+        await Subcategory.deleteMany({category: req.params.id});
+        res.json({
+            success: true,
+            message: 'Категорията е УСПЕШНО изтрита'
+        })
+        
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
 }

@@ -2,15 +2,13 @@
     <div id="page">
         <h1>Добавете нова категория</h1>
         <div class="d-flex justify-content-between">
-            <form id="form" class="align-self-start">
+            <form id="form" @submit="onAddCategory" class="align-self-start">
                 <div style="display:grid">
                 <!-- Title -->
                 <label for="title">Име</label>
                 <input class="width_100" id="title" type="text"  v-model="title">
-                <!-- Photo -->
-                <label for="photo">Изберете снимка</label>
-                <input id="photo" type="file"  @change="onFileSelected" />
-                <button class="btn btn-success" @click="onAddCategory" >Добави</button>
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-success">Добави</button>
                 </div>
             </form>
             <div class="show_categories">
@@ -44,20 +42,15 @@ export default {
     data(){
         return{
             title: "",
-            selectedFile: null
         }
     },
     methods:{
-        onFileSelected(event){
-            this.selectedFile = event.target.files[0];
-        },
-
-        async onAddCategory(){
-            let data = new FormData();
-            data.append("title", this.title)         
-            data.append("photo", this.selectedFile)    
-            let result = await this.$axios.$post("/api/categories", data);
-            this.$router.push("/");
+        async onAddCategory(){     
+            const data = {
+                title: this.title
+            }  
+            const response = await this.$axios.$post('/api/categories', data);
+            alert(response.message);
         }
     }
 }

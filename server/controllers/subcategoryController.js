@@ -1,6 +1,6 @@
 const Subcategory = require("../models/subcategory");
 // create a new subcategory
-exports.create_Subcategory = async (req, res) => {
+exports.create_Subcategory              = async (req, res) => {
     try{
         const newSubcategory = new Subcategory({
             category: req.body.categoryID,
@@ -19,7 +19,7 @@ exports.create_Subcategory = async (req, res) => {
     }
 }
 //GET a single Subcategory
-exports.get_A_Single_Subcategory = async (req, res) => {
+exports.get_A_Single_Subcategory        = async (req, res) => {
     try{
         const subcategory = await Subcategory.findOne({_id: req.params.id}).populate('category').exec();
         res.json({
@@ -34,7 +34,7 @@ exports.get_A_Single_Subcategory = async (req, res) => {
     }
 }
 // GET Subcategories filltered by Category
-exports.get_Subcategories_By_Category = async (req, res) => {
+exports.get_Subcategories_By_Category   = async (req, res) => {
     try{
         const subcategories = await Subcategory.find({category: req.params.id});
         res.json({
@@ -48,7 +48,9 @@ exports.get_Subcategories_By_Category = async (req, res) => {
         })
     }
 }
-exports.update_A_Single_Subcategory = async (req, res) => {
+
+// UPDATE a single Subcategory
+exports.update_A_Single_Subcategory     = async (req, res) => {
     try{
         await Subcategory.updateOne({_id: req.params.id },
             {
@@ -59,7 +61,23 @@ exports.update_A_Single_Subcategory = async (req, res) => {
         )
         res.json({
             success: true,
-            message: 'subcategory successfully updated'
+            message: 'Подкатегорията е УСПЕШНО редактирана'
+        })
+    } catch(err) {
+        res.status(500).json({
+            success:false,
+            message: err.message
+        })
+    }
+}
+
+// DELETE a single Subcategory
+exports.delete_A_Single_Subcategory     = async (req, res) => {
+    try{
+        await Subcategory.deleteOne({_id: req.params.id })
+        res.json({
+            success: true,
+            message: 'Подкатегорията е УСПЕШНО изтрита'
         })
     } catch(err) {
         res.status(500).json({

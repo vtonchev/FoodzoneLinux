@@ -2,12 +2,12 @@
     <div>
         <h1>Редактирайте подкатегорията</h1>
         <div class="w-50 m-auto">
-            <form id="form">
+            <form id="form" @submit="updateSubcategory">
                 <div style="display:grid">
                 <!-- Title -->
                 <label for="title">Име</label>
                 <input class="width_100" id="title" type="text"  v-model="title">                
-                <button class="btn btn-success" @click="onUpdateCategory">Редактирай</button>
+                <button class="btn btn-success" type="submit">Редактирай</button>
                 </div>
             </form>
         </div>
@@ -23,19 +23,20 @@ export default {
         }
     },
     created(){
-        this.title = this.subcategory[0].title;
+        this.title = this.subcategory.title;
     },
     data(){
         return{
-            title: "",
+            title: ''
         }
     },
     methods:{
-        async onUpdateCategory(){
-            let data = new FormData();
-            data.append("title", this.title)     
-            let result = await this.$axios.$patch("/api/subcategories/" + this.subcategory._id, data);
-            await this.$router.go();
+        async updateSubcategory(){
+            const data = { 
+                title : this.title
+            }     
+            const response = await this.$axios.$patch("/api/subcategories/" + this.subcategory._id, data);
+            alert(response.message);
         }
     }
 }

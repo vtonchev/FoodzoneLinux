@@ -241,12 +241,8 @@ export default {
             data.append("description", this.description);    
             data.append("photo", this.selectedFile);
             data.append("properties", JSON.stringify(this.properties));
-            let result = await this.$axios.$post("/api/products", data);
-            if (result) {
-                this.message = "Успешно създадохте продукт"
-            } else {
-                this.err = 'Възникна грешка при създаването на продукта: '
-            }
+            const response = await this.$axios.$post("/api/products", data);
+            alert(response.message);
         }
     }
 }

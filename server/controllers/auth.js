@@ -1,5 +1,16 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const randomstring = require("randomstring");
+const nodemailer = require("nodemailer");
+
+//transporter for sending emails 
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASS
+    }
+});
 
 exports.register_New_User =  async function (req, res) {
     if(req.body.email == false || req.body.password == false) {
@@ -10,28 +21,82 @@ exports.register_New_User =  async function (req, res) {
     } else {
         try {
             req.body.name = JSON.parse(req.body.name)
-            console.log(req.body.name)
             const newUser = new User({
                 name: req.body.name,
                 phone:req.body.phone,
                 email: req.body.email,
                 password: req.body.password
             });
-            await newUser.save();
-            const token = jwt.sign(newUser.toJSON(), process.env.TOKEN_SECRET, {
-                expiresIn: 604800 // 1week
+
+            //create random string
+            const emailToken = randomstring.generate();
+
+            //assign the random string to the account
+            newUser.token = emailToken;
+
+            //send email 
+            const email = await transporter.sendMail({
+                from: process.env.EMAIL, // sender address
+                to: req.body.email, // list of receivers
+                subject: "Потвърждение на имейла", // Subject line
+                text: "", // plain text body
+                html: "<h4>Здравейте моля потвъдете си имейла като натиснете този линк</h4> <а>" + process.env.CLIENT_SERVER_DOMAIN_NAME + "/emailverification/" + emailToken + "</а>", // html body
             });
-            res.json({
+            console.log(email)
+            await newUser.save();
+            // const token = jwt.sign(newUser.toJSON(), process.env.TOKEN_SECRET, {
+            //     expiresIn: 604800 // 1week
+            // });
+            res.status(200).json({
                 success: true,
-                token: token,
-                message: 'Успешна регистрация'
+                // token: token,
+                message: 'За да потвърдите имейла си моля кликнете на линка, който ви изпратихме в пощата'
             });
         } catch (err) {
+            console.log(err)
             res.status(500).json({
                 success: false,
                 message: err.message
             });
         }
+    }
+};
+
+exports.verify_Email = async (req, res) => {
+    try {
+        const foundUser = await User.findOne({ token: req.body.token.toString()})
+        if (!foundUser) {
+            res.status(200).json({
+                success: false,
+                message: 'няма потребител с такъв имейл или имейлът е вече потвърден !'
+            })
+        } else {
+            if (foundUser.verified) {
+                res.status(200).json({
+                    success: true,
+                    message: 'имейлът е вече потвърден !'
+                })
+            } else {
+                await User.updateOne({token: req.body.token.toString()},
+                    {
+                        verified : true, 
+                        $unset: { token: req.body.token.toString()},
+                        multi: true, 
+                        safe: true
+                    },
+                )
+                res.status(200).json({
+                    success: true,
+                    message: 'Имейлът е успешно потвърден !'
+                })
+            }
+        } 
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
     }
 };
 
@@ -54,29 +119,39 @@ exports.show_User = async (req,res) => {
 
 exports.login_User = async (req, res) => {
     try {
-        let foundUser = await User.findOne({ email: req.body.email });
-        if (foundUser == false) {
-            res.status(403).json({
+        const foundUser = await User.findOne({ email: req.body.email });
+        if (!foundUser) {
+            res.status(401).json({
                 success: false,
-                message: 'Грешен потребител или парола'
+                message: 'Грешен потребител'
             })
         } else {
             if (foundUser.comparePassword(req.body.password)) {
-                const token = jwt.sign(foundUser.toJSON(), process.env.TOKEN_SECRET, {
-                    expiresIn: 604800 //1week
-                })
-                res.json({ 
-                    success: true, 
-                    token: token
-                })
+                if (foundUser.verified){
+                    foundUser.password = '';
+                    const token = jwt.sign(foundUser.toJSON(), process.env.TOKEN_SECRET, {
+                        expiresIn: 604800 //1 week 604800
+                    })
+                    res.status(200).json({ 
+                        success: true, 
+                        token: token
+                    })
+                } else {
+                    res.status(401).json({
+                        success:false,
+                        message: 'Моля потвърдете си имейла'
+                    })
+                }
+                
             } else {
-                res.status(403).json({
+                res.status(401).json({
                     success:false,
                     message: 'Грешен потребител или парола'
                 })
             }
         }
     } catch (err) {
+        console.log(err)
         res.status(500).json({
             success:false,
             message: err.message

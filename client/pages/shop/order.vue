@@ -4,13 +4,13 @@
             <p class="mt-4">Финализиране на поръчката</p>
             <hr class="mt-0 ml-0">
             <!-- CART -->
-            <div class="cart d-flex my-4">
+            <div class="cart d-flex my-4 p-2">
                 <span class="cart_img mr-4"><i class="fas fa-shopping-cart fa-2x"></i></span>
                 <span class="orderTotalPrice">
                     <span style="color:#5AA240; font-weight:700; font-size:1.2rem; text-decoration:underline;">{{getTotalPrice}} лв</span>
                     <span style="color:#b6b6b6;">Обща сума</span>
                 </span>
-                <nuxt-link to="/shop/cart" class="ml-auto">
+                <nuxt-link to="/shop/cart" class="ml-auto edit_cart_button">
                     <div class="update">
                         <i style="margin: 12px;" class="fas fa-pencil-alt text-white"></i>
                     </div>
@@ -20,8 +20,8 @@
             <!-- ORDER INFO -->
             <b-list-group class="my-4">
                 <!-- Address -->
-                <b-list-group-item button v-b-toggle.address class="d-flex p-4">
-                    <div class="d-inline-block align-self-center text-info icon mr-4"><i class="fas fa-map-marker-alt fa-2x ml-2"></i></div>
+                <b-list-group-item button v-b-toggle.address class="d-flex p-2">
+                    <div class="d-flex align-self-center text-info icon mr-4"><i class="fas fa-map-marker-alt fa-2x m-auto"></i></div>
                     <div class="d-grid w-75 mr-2">
                         <div class="text-dark"><span>Къде да доставим поръчката Ви?</span></div>
                         <div v-if="address.city&&address.street">{{address.city}}, {{address.street}}</div>
@@ -29,31 +29,30 @@
                     <div v-if="address.city && address.street" class="d-inline-block align-self-center ml-auto"><i class="fas fa-check-circle fa-2x text-success"></i></div>
                 </b-list-group-item>
                 <b-collapse id="address" accordion="order_form" >
-                    <div class="collapse_content">
-                        <!-- <div class="col"> -->
-                            <b-form-select class="mt-3" v-if="$auth.user" v-model="address">
-                                <b-form-select-option 
-                                v-for="address in addresses" 
-                                :key="address._id" 
-                                :value='{
-                                    city:address.city,
-                                    housingArea:address.housingArea,
-                                    street: address.street,
-                                    outsideDoor:address.outsideDoor,
-                                    floor: address.floor,
-                                    apartment: address.apartment,
-                                }'>
-                                    <div class="d-flex font-weight-light flex-column">
-                                        <span>гр.{{address.city}}</span> 
-                                        <span v-if="address.housingArea">,кв.{{address.housingArea}}</span>
-                                        <div v-if="address.street">,ул.{{address.street}}</div>
-                                        <div v-if="address.outsideDoor">,вх.{{address.outsideDoor}}</div> 
-                                        <div v-if="address.floor">,ет.{{address.floor}}</div>
-                                        <div v-if="address.apartment">,ап.{{address.apartment}}</div> 
-                                    </div>
-                                </b-form-select-option>
-                            </b-form-select>
-                        <!-- </div> -->
+                    <div v-if="$auth.user" class="collapse_content">
+                        <b-form-select class="mt-3" v-model="address">
+                            <b-form-select-option 
+                            v-for="address in addresses" 
+                            :key="address._id" 
+                            :value='{
+                                city:address.city,
+                                housingArea:address.housingArea,
+                                street: address.street,
+                                outsideDoor:address.outsideDoor,
+                                floor: address.floor,
+                                apartment: address.apartment,
+                            }'
+                            >
+                                <div class="d-flex font-weight-light flex-column">
+                                    <span>гр.{{address.city}}</span> 
+                                    <span v-if="address.housingArea">,кв.{{address.housingArea}}</span>
+                                    <div v-if="address.street">,ул.{{address.street}}</div>
+                                    <div v-if="address.outsideDoor">,вх.{{address.outsideDoor}}</div> 
+                                    <div v-if="address.floor">,ет.{{address.floor}}</div>
+                                    <div v-if="address.apartment">,ап.{{address.apartment}}</div> 
+                                </div>
+                            </b-form-select-option>
+                        </b-form-select>
                     </div>
                     <b-form class="collapse_content" @submit.prevent="validateAddress">
                         <div class="row">
@@ -90,8 +89,8 @@
                     </b-form>
                 </b-collapse>
                 <!-- Contact -->
-                <b-list-group-item button v-b-toggle.contact class="d-flex p-4">
-                    <div class="d-inline-block align-self-center text-info icon mr-4"><i class="far fa-address-card fa-2x ml-1"></i></div>
+                <b-list-group-item button v-b-toggle.contact class="d-flex p-2">
+                    <div class="d-flex align-self-center text-info icon mr-4"><i class="far fa-address-card fa-2x m-auto"></i></div>
                     <div class="d-grid w-75 mr-2">
                         <div class="text-dark"><span>Контакт</span></div>
                         <div v-if="contact.firstName && contact.lastName && contact.number">{{contact.firstName}} {{contact.lastName}}, {{contact.number}}</div>
@@ -120,8 +119,8 @@
                     </b-form>
                 </b-collapse>
                 <!-- Additional info -->
-                <b-list-group-item button v-b-toggle.additional_info class="d-flex p-4">
-                    <div class="d-inline-block align-self-center text-info icon mr-4"><i class="fas fa-info fa-2x ml-3"></i></div>
+                <b-list-group-item button v-b-toggle.additional_info class="d-flex p-2">
+                    <div class="d-flex align-self-center text-info icon mr-4"><i class="fas fa-info fa-2x m-auto"></i></div>
                     <div class="d-grid w-75 mr-2">
                         <div class="text-dark"><span>Допълнителна информация</span></div>
                         <div v-if="additionalInfo.accept">Приемам общите условия</div>
@@ -152,8 +151,8 @@
                     </b-form>
                 </b-collapse>
                 <!-- Order Timetimeframe -->
-                <b-list-group-item button v-b-toggle.order_timeframe class="d-flex p-4">
-                    <div class="d-inline-block align-self-center text-info icon mr-4"><i class="far fa-clock fa-2x ml-1"></i></div>
+                <b-list-group-item button v-b-toggle.order_timeframe class="d-flex p-2">
+                    <div class="d-flex align-self-center text-info icon mr-4"><i class="far fa-clock fa-2x m-auto"></i></div>
                     <div class="d-grid w-75 mr-2">
                         <div class="text-dark"><span>Ден и час за доставка</span></div>
                         <div v-if="orderTimeframe.timeframe">{{orderTimeframe.date.replace(/-/g,'.')}}, между {{orderTimeframe.timeframe}} и {{$moment(orderTimeframe.timeframe,'HH:mm').add(1,'h').format('HH:mm')}}</div>
@@ -333,8 +332,8 @@
                     </b-form>
                 </b-collapse>
                 <!-- Payment method -->
-                <b-list-group-item button v-b-toggle.payment_method class="d-flex p-4">
-                    <div class="d-inline-block text-info icon mr-4"><i class="far fa-credit-card fa-2x ml-1"></i></div>
+                <b-list-group-item button v-b-toggle.payment_method class="d-flex p-2">
+                    <div class="d-flex text-info icon mr-4"><i class="far fa-credit-card fa-2x m-auto"></i></div>
                     <div class="w-75 d-inline-block mr-2"><span>Начин на плащане</span></div>
                 </b-list-group-item>
                 <b-collapse id="payment_method" accordion="order_form">
@@ -374,6 +373,10 @@ hr{
     border: solid 1px #dddddd;
     border-radius: 5px;
     padding: 1.5rem;
+}
+.edit_cart_button{
+    height: min-content;
+    align-self: center;
 }
 .orderTotalPrice{
     display:grid;
@@ -515,8 +518,7 @@ export default {
                 this.additionalInfo.accept 
             )  
                 {
-                    const data = {
-                        userID: this.$auth.user._id,
+                    let data = {
                         address: this.address,
                         contact: this.contact,
                         additionalInfo: this.additionalInfo,
@@ -524,13 +526,17 @@ export default {
                         paymentMethod: this.paymentMethod,
                         cart: this.getCart
                     } 
+                    if(this.$auth.user){
+                        alert(JSON.stringify(this.$auth.user))
+                        data.userID = this.$auth.user._id
+                    }
                     const response = await this.$axios.$get("/api/orderDateTime/"+ this.orderTimeframe.date +"/"+ this.orderTimeframe.timeframe);
                     if(response.timeframe.orders < response.timeframe.max){
                         if( this.$moment(this.orderTimeframe.date).isSame(this.$moment().format('DD-MM-YYYY'))){
                             if(this.$moment(this.orderTimeframe.timeframe,'HH:mm').isAfter(this.$moment().add(2,'h'))){ 
                                 try {
-                                    await this.$axios.$post('api/order', data)
-                                    this.validationMessage = 'Вие успешно направихте поръчка!';
+                                    const response = await this.$axios.$post('api/order', data)
+                                    this.validationMessage = response.message
                                     this.$root.$emit('bv::show::modal', 'validationModal')
                                     return
                                 } catch (err) {
@@ -545,8 +551,8 @@ export default {
                             }
                         } else {    
                                 try {
-                                    await this.$axios.$post('api/order', data);
-                                    this.validationMessage = 'Вие успешно направихте поръчка!';
+                                    const response = await this.$axios.$post('api/order', data)
+                                    this.validationMessage = response.message
                                     this.$root.$emit('bv::show::modal', 'validationModal')
                                     return
                                 } catch (err) {
@@ -571,7 +577,6 @@ export default {
             if(this.address.city && this.address.street){
                 this.$root.$emit('bv::toggle::collapse', 'contact');
                 this.visibleID = 'contact'
-                // localStorage.setItem("address", JSON.stringify(this.address));
             } else {
                 this.validationMessage = 'Не сте въвели всички необходими данни';
                 this.$root.$emit('bv::show::modal', 'validationModal');
@@ -581,7 +586,6 @@ export default {
             if(this.contact.firstName && this.contact.lastName && this.contact.number){  
                 this.$root.$emit('bv::toggle::collapse', 'additional_info');
                 this.visibleID = 'additional_info'
-                // localStorage.setItem("contact", JSON.stringify(this.contact));
             } else {
                 this.validationMessage = 'Не сте въвели всички необходими данни';
                 this.$root.$emit('bv::show::modal', 'validationModal');
@@ -591,7 +595,6 @@ export default {
             if(this.additionalInfo.accept){
                 this.$root.$emit('bv::toggle::collapse', 'order_timeframe');
                 this.visibleID = 'order_timeframe'
-                // localStorage.setItem("additionalInfo", JSON.stringify(this.additionalInfo));
             } else {
                 this.validationMessage = 'Mоля приемете общите условия';
                 this.$root.$emit('bv::show::modal', 'validationModal');
@@ -601,7 +604,6 @@ export default {
             if(this.orderTimeframe.date && this.orderTimeframe.timeframe){
                 this.$root.$emit('bv::toggle::collapse', 'payment_method');
                 this.visibleID = 'payment_method'
-                // localStorage.setItem("orderTimeframe", JSON.stringify(this.orderTimeframe));
             } else {
                 this.validationMessage = 'Възникна грешка при избора моля опитайте пак';
                 this.$root.$emit('bv::show::modal', 'validationModal');

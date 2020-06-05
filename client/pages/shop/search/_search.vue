@@ -7,7 +7,7 @@
                     Начало
                 </b-breadcrumb-item>
                 <b-breadcrumb-item>Търси</b-breadcrumb-item>
-                <b-breadcrumb-item active >{{decodeURI($route.query.search)}} ({{count}} резултата)</b-breadcrumb-item>
+                <b-breadcrumb-item active >{{this.$route.params.search}} ({{count}} резултата)</b-breadcrumb-item>
             </b-breadcrumb>
             <div ref="scrollTo"></div>
             <b-form-group class="filter">
@@ -58,7 +58,7 @@ export default {
     },
     scrollToTop: false,
     async asyncData({$axios, route}){
-        const response = await $axios.$get('/api/products/search/page/'+ encodeURI(route.query.search) +'?page=1');
+        const response = await $axios.$get('/api/products/search/page/' + route.params.search +'?page=1');
         return{
             products: response.products,
             count: response.count
@@ -117,13 +117,14 @@ export default {
     methods:{
         sortBy(){
             this.currentPage = 1;
-            this.$axios.$get(`/api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            this.$axios.$get(`/api/products/search/page/` + this.$route.params.search + '?page=' + this.currentPage + '&sort=' + this.sort)
             .then((response)=>{
+                alert(this.$route.params.search)
                 this.products = response.products;
             })
         },
         async asyncScrollToTopMobile(){
-            await this.$axios.$get(`/api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            await this.$axios.$get(`/api/products/search/page/` + this.$route.params.search + '?page=' + this.currentPage + '&sort=' + this.sort)
             .then((response)=>{
                 this.products = response.products;
                 }
@@ -134,7 +135,7 @@ export default {
             })
         },
         async asyncScrollToTop(){
-            await this.$axios.$get(`/api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)
+            await this.$axios.$get(`/api/products/search/page/` + this.$route.params.search + '?page=' + this.currentPage + '&sort=' + this.sort)
             .then((response)=>{
                 this.products = response.products;
                 }
@@ -145,7 +146,7 @@ export default {
             })
         },
         scrollToTop(){
-            this.$axios.$get(`/api/products/search/page/` + decodeURI(this.$route.query.search) + '?page=' + this.currentPage + '&sort=' + this.sort)  
+            this.$axios.$get(`/api/products/search/page/` + this.$route.params.search + '?page=' + this.currentPage + '&sort=' + this.sort)  
             .then((response)=>{
                 this.products = response.products;
                 }

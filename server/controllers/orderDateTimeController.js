@@ -1,24 +1,30 @@
 const OrderDateTime = require('../models/orderDateTime');
+const mongoose = require('mongoose'); // needed for transactions
 const moment = require('moment');
 require('moment/locale/bg');
 
 //Create days
 exports.create_orderDate_7days_Ahead = async (req, res) => {
     try {
-        for(i = 0; i <= 7; i++){
-            const newOrderDateTime = new OrderDateTime({
-                date: moment().add(i,'days').format('DD-MM-YYYY'),
-                dayOfWeek: moment().add(i,'days').format('dddd')
-            })
-            await newOrderDateTime.save();
+        let orderDateTimes = []
+        for(i = 0; i <= 7; i++)
+        {
+            const currentTime = moment().add(i,'days');
+            orderDateTimes.push(
+                {
+                    UTC: currentTime.format("YYYY-MM-DD"),
+                    date: currentTime.format('DD-MM-YYYY'),
+                    dayOfWeek: currentTime.format('dddd')
+                })
         }
+        await OrderDateTime.insertMany(orderDateTimes);
         res.json({
             success: true,
             message: "Успешно създадохте датите"
         });
 
     } catch (err) {
-        console.log(err)
+        consol.log(err)
         res.status(500).json({
             success:false,
             message: err.message
@@ -82,50 +88,48 @@ exports.create_Timeframe = async( req, res) => {
 
 //add new Days and set 
 exports.update_Days = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
-        const alldays = await OrderDateTime.find({}).sort({ _id: -1 });
-        const firstDay = await OrderDateTime.findOne();
-        await Promise.resolve(lastDay = alldays[0])
-        const sameWeekDay = await OrderDateTime.findOne({dayOfWeek: moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd')});
-        await Promise.resolve(
-            newOrderDateTime = new OrderDateTime({
-                date : moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('DD-MM-YYYY'),
-                dayOfWeek : moment(lastDay.date, 'DD-MM-YYYY').add(1,'days').format('dddd'),
-                timeframe : sameWeekDay.timeframe  //is gonna give an Error when there is no timeframe 
-            })   
-        )
-        const queries = [
-            OrderDateTime.deleteOne(firstDay),
-            newOrderDateTime.save(),
-            OrderDateTime.updateOne({date: newOrderDateTime.date},
+        const firstDay = await OrderDateTime.find({}).sort({ UTC: 1 }).limit(1);
+        const lastDay = await OrderDateTime.find({}).sort({ UTC: -1 }).limit(1);
+        const nextDay = moment(lastDay[0].date, 'DD-MM-YYYY').add(1,'d');
+        const sameWeekDay = await OrderDateTime.findOne({dayOfWeek: nextDay.format('dddd')});
+        
+        newOrderDateTime = new OrderDateTime({
+            UTC: nextDay.format('YYYY-MM-DD'),
+            date: nextDay.format('DD-MM-YYYY'),
+            dayOfWeek: nextDay.format('dddd'),
+            timeframe: sameWeekDay.timeframe 
+        })
+
+        await OrderDateTime.deleteOne({date: firstDay[0].date},{session}),
+        await newOrderDateTime.save({session}),
+        await OrderDateTime.updateOne({date: newOrderDateTime.date},
                 {
                     $set:
                         {
                             "timeframe.$[].orders" : 0,
                             "timeframe.$[].max" : process.env.MAX_ORDERS,
                         } 
-                }
+                },
+                {session}
             )
-        ];
-        
-        await Promise.all(queries).then(() => {
-            res.json({
-                success: true,
-                message: "Успешно създадохте датите"
-            });
-        }).catch((err) => {
-            console.log(err)
-            res.status(500).json({
-                status: false,
-                message: err.message
-            })
+        await session.commitTransaction();
+        res.json({
+            success: true,
+            message: "Успешно създадохте датите"
         });
     } catch (err) {
         console.log(err)
+        await session.abortTransaction();
         res.status(500).json({
             success:false,
             message: err.message
         })
+    } finally {
+    	// ending the session
+    	session.endSession();
     }
     
 }
@@ -144,19 +148,29 @@ exports.update_Max_Property = async (req, res) => {
                 }
             )
         } else {
-            for(i = 0; i < req.body.selectedTimeframe.length; i++){
-                await OrderDateTime.updateOne(
-                        {date : req.body.date , "timeframe.from" : req.body.selectedTimeframe[i].from },
-                        { $set: { "timeframe.$.max": req.body.max } }
+            const session = await mongoose.startSession();
+            session.startTransaction();
+            try {
+                for(i = 0; i < req.body.selectedTimeframe.length; i++){
+                    await OrderDateTime.updateOne(
+                        { date : req.body.date , "timeframe.from" : req.body.selectedTimeframe[i].from },
+                        { $set: { "timeframe.$.max": req.body.max } },
+                        { session }
                     )
                 }
+                await session.commitTransaction();
+            } catch (err) {
+                await session.abortTransaction();
+                throw new Error(err)
+            } finally {
+                session.endSession();
+            }
         }
         res.json({
             success: true,
             message: 'Успешно'
         })
     } catch (err) {
-        console.log(err)
         res.status(500).json({
             success: false,
             message: err.message
@@ -168,7 +182,7 @@ exports.update_Max_Property = async (req, res) => {
 //Send ALL DOCS
 exports.send_Date_Timeframes = async (req,res) =>{
     try{
-        const orderDateTime = await OrderDateTime.find({});
+        const orderDateTime = await OrderDateTime.find({}).sort({UTC: 1});
         res.json({
             success: true,
             orderDateTime: orderDateTime
@@ -205,7 +219,8 @@ exports.send_Specific_Timeframe = async (req, res) => {
 exports.send_Available_Timeframe = async (req, res) => {
     try {
         const timeframe = await OrderDateTime.aggregate([
-            {$unwind : "$timeframe"},
+            { $sort : { UTC : 1 } },
+            { $unwind : "$timeframe"},
             {
                 $match : 
                 { 
@@ -230,7 +245,7 @@ exports.send_Available_Timeframe = async (req, res) => {
         })
     } catch (err) {
         console.log(err)
-        res.status(500).json({
+        res.status(204).json({
             success: false,
             message: err.message
         })

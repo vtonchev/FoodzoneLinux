@@ -1,11 +1,12 @@
-
+//ADMIN
+require('dotenv').config();
 export default {
   server: {
-    host: '0.0.0.0',
-    port: 4000, 
+    host: process.env.SERVER_URL,
+    port: process.env.SERVER_PORT, 
     timing: false
   },
-  mode: 'universal',
+  mode: process.env.MODE,
   /*
   ** Headers of the page
   */
@@ -61,12 +62,19 @@ export default {
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
+  // axios: {
+  //   proxy: true,
+  //  
+  // },
+  // proxy:{
+  //   '/api/': "http://127.0.0.1:3000/"
+  // },
   axios: {
     proxy: true,
-    baseURL: "http://localhost:3000"
+    retry: { retries: 3 }
   },
-  proxy:{
-    '/api': "http://localhost:3000"
+  proxy: {
+    '/api/': process.env.PROXY_URL + ':' + process.env.PROXY_PORT,
   },
   /*
   ** Build configuration

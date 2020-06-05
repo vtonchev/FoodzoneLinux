@@ -23,8 +23,11 @@ export default {
     props:['product'],
     methods:{
         async onDelete(){ 
-            await this.$axios.$delete('api/products/'+ this.product._id, { data: { key: this.product.photo.key } });
-            this.$router.go();
+            const confirmation = await this.confirm();
+            if(confirmation){
+                const response = await this.$axios.$delete('api/products/'+ this.product._id, { data: { key: this.product.photo.key } });
+                alert(response.message);
+            }
         },
         async onSuggestedChange(){
             const data = new FormData();
@@ -34,6 +37,29 @@ export default {
                 data.append('suggested', true);
             }
             await this.$axios.$patch('/api/products/'+ this.product._id, data);
+        },
+        confirm() {
+            return new Promise(resolve => {
+                    this.$bvModal.msgBoxConfirm('Сигурни ли сте че искате да изтриете продукта?', {
+                    title: 'Потвърждение',
+                    size: 'sm',
+                    buttonSize: 'sm',
+                    cancelVariant: 'outline-success',
+                    okVariant: 'outline-danger',
+                    okTitle: 'Да',
+                    cancelTitle: 'Не',
+                    footerClass: 'p-2',
+                    hideHeaderClose: false,
+                    centered: true
+                })
+                .then(value => {
+                    resolve (value)
+                })
+                .catch(err => {
+                    return new Error();
+                })
+            });
+            
         }
     }
 }
