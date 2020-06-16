@@ -527,7 +527,6 @@ export default {
                         cart: this.getCart
                     } 
                     if(this.$auth.user){
-                        alert(JSON.stringify(this.$auth.user))
                         data.userID = this.$auth.user._id
                     }
                     const response = await this.$axios.$get("/api/orderDateTime/"+ this.orderTimeframe.date +"/"+ this.orderTimeframe.timeframe);

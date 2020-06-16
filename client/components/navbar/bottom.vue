@@ -67,7 +67,7 @@ export default {
   display: block;
   position: absolute;
   height: 4px;
-  width: 50%;
+  width: 52%;
   background: white;
   opacity: 1;
   -webkit-transform: rotate(0deg);
@@ -116,14 +116,14 @@ export default {
   transform: rotate(-45deg);
 }
 #nav-icon2.open{
-    height: 26px;
+    height: 21px;
 }
 #nav-icon2.open span:nth-child(1) {
   top: 4px;
 }
 
 #nav-icon2.open span:nth-child(2) {
-  left: calc(50% - 5px);
+  left: calc(50% - 4px);
   top: 4px;
 }
 
@@ -142,6 +142,6 @@ export default {
 } */
 
 #nav-icon2.open span:nth-child(6) {
-  left: calc(50% - 5px);
+  left: calc(50% - 4px);
 }
 </style>

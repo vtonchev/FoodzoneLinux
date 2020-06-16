@@ -32,14 +32,17 @@ exports.create_Order = async (req, res) => {
                 quantity:parseInt(product.quantity),
             })
         })  
+        
         // Save the new order 
         await newOrder.save({ session }),
+
         // Increment orders per timeframe (+1)
         await OrderDateTime.updateOne(
             { date: req.body.orderDateTime.date, "timeframe.from" : req.body.orderDateTime.timeframe },
             { $inc: { "timeframe.$.orders": 1}},
             { session }     
         ),
+
         // Increment bought index and decrement stockQuantity
         await asyncForEach(newOrder.products, async (product) => {
             await Product.updateOne(
@@ -48,6 +51,7 @@ exports.create_Order = async (req, res) => {
                 { session }
             )
         })
+
         await session.commitTransaction();
         res.json({
             status: true,
@@ -62,7 +66,6 @@ exports.create_Order = async (req, res) => {
         })
     } finally {
         session.endSession();
-        
     }
 }
 exports.get_Orders_By_Timeframe = async (req, res) => {

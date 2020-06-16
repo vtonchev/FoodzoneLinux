@@ -1,10 +1,14 @@
 
 // CLIENT
 export default {
+  router: {
+    base: '/client/'
+  },
   server: {
     port: 5000, 
     timing: false,  
     host: '0.0.0.0',
+    base: '/client/'
   },
   mode: 'universal',
   /*
@@ -38,6 +42,7 @@ export default {
   plugins: [
     {src: '~/plugins/localStorage.js', ssr: false},
     {src: '~/plugins/vueCarousel.js' , ssr: false},
+    {src: '~/plugins/vueNotification.js', ssr: false}
   ],
   /*
   ** Nuxt.js dev-modules
@@ -68,7 +73,7 @@ export default {
     retry: { retries: 3 }
   },
   proxy:{
-    '/api': "http://localhost:3000"
+    '/api/': "http://localhost:3000/"
   },
   /*
   ** Build configuration

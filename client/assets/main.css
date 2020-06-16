@@ -31,6 +31,9 @@ html{
     color:#61BD42; 
     font-weight:600;
     font-size: 20px;
+    height: min-content;
+    margin-left: auto;
+    align-self: flex-end;
     background: transparent;
     padding: 0;
     border: none;
@@ -419,12 +422,9 @@ a{
     font-size: 20px;
 }
 .old_price{
-    position: absolute;
     font-size: 14px;
-    top:-20px; 
     text-decoration: line-through;
     color:#666666;
-    z-index:0;
 }
 .promo_price{
     color: #E52121;
@@ -455,6 +455,10 @@ a{
 }
 .plus_minus_outer:focus{
     outline: none;
+}
+.quantity_controller_wrapper{
+    margin-left: auto;
+    align-self: flex-end;
 }
 /*-------------------------------------------------------------------------------*/
 /* --------------------------------FULLINFO------------------------------------- */
@@ -533,8 +537,8 @@ footer a{
     }
     .buy_btn:hover, .buy_btn:focus, .buy_btn:active{
         background: #61BD42;
-        margin: 0 -5px;
         padding: 0 5px;
+        margin-right: -5px;
         color: white;
         border-radius: 3px;
         outline: none;
@@ -582,6 +586,9 @@ footer a{
 @media only screen and (min-width: 991px) and (max-width: 1199px){
     .promo_price,.price,.buy_btn{
         font-size: 20px;
+    }
+    .card_body_bottom{
+        flex-direction: column;
     }
 }
 @media only screen and (min-width: 958px) and (max-width: 1090px){
@@ -749,6 +756,9 @@ footer a{
     }
     .old_price{
         font-size: 14px;
+    }
+    .card_body_bottom{
+        flex-direction: column;
     }
     
 }

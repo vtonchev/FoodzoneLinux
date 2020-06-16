@@ -7,7 +7,7 @@
               <!-- LOGO -->
               <b-col sm='auto' class="mx-auto p-0 mb-3 mb-sm-0">
                 <div  class="d-flex mx-auto" style="width:fit-content;">
-                  <n-link to="/"><b-img  class= "brandLogo mr-3" src="/img/brandlogo.png" alt="brand logo"/></n-link>
+                  <n-link to="/"><b-img  class= "brandLogo mr-3" src="img/brandlogo.png" alt="brand logo"/></n-link>
                   <n-link to='/delivery' class="text-uppercase align-self-center text-left transparent_btn" style="font-size:12px; color:black">
                     <span>Първи свободен час</span>
                     <span class="font-weight-bold d-block" v-if="from">{{from}}-{{$moment(from,'HH:mm').add(1,'h').format('HH:mm')}}</span>
@@ -30,7 +30,7 @@
                     <div v-if="searchProducts" class='displayProduct' >
                     <div v-for="product in searchProducts" :key="product._id" class="position-relative">
                       <div class="promotion_text" v-if="product.sale">ПРОМОЦИЯ</div>
-                      <div v-if="product.sale" class="promotion_sticker"><span class="m-auto">{{product.sale}}%</span></div>
+                      <div v-show="product.sale" class="promotion_sticker"><span class="m-auto">{{product.sale}}%</span></div>
                       <div class="search_product_wrapper_xs">
                         <img :src="product.photo.url" alt="" class="float-left search_product_img">
                         <span class="ml-2 position-relative">
@@ -126,7 +126,7 @@
                     <span class="fas fa-shopping-cart fa-1x"></span>
                     <span id="price">{{getTotalPrice}} лв</span>           
                   </b-button>
-                  <b-collapse id="collapse-4" v-model="visible" class="mt-2 cart_products">
+                  <b-collapse id="collapse-4" v-model="visible" class="pt-2 cart_products">
                     <b-card class='d-none d-lg-block p-2' style="max-height: 340px;overflow-y: scroll;">
                       <div v-if="getCart == 0">Няма продукти в количката!</div>
                       <div style="display: flow-root; margin-bottom:1.25rem;" v-for="product in getCart" :key="product._id">
@@ -175,11 +175,20 @@ export default {
     FullInfo
   },
   async mounted(){
-    const response = await this.$axios.get('api/orderDateTime/available');
+    const response = await this.$axios.get('/api/orderDateTime/available');
     this.from = response.data.from
+    this.interval = setInterval(() => { 
+      this.$axios.get('/api/orderDateTime/available').then((response)=>{
+        this.from = response.data.from
+      });
+     }, 30000);
+  },
+  beforeDestroy: function(){
+      clearInterval(this.interval);
   },
   data(){
     return {
+        interval: null,
         from:'',
         visible: false,
         language: 'BG',
@@ -219,7 +228,7 @@ export default {
       }
     },
     fullSearch(){
-        this.$router.push("/shop/search/" + this.searchText);
+      this.$router.push("/shop/search/" + this.searchText);
     },
     isInCart(product){
       return this.getCart.some(prod => prod._id === product._id);

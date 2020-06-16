@@ -4,6 +4,7 @@
             <Loading/>
         </div>
         <div v-else>
+            <notifications position="bottom right" max='5' />
             <Navbar />
             <div class="container-fluid container_fluid_width p-0 position-relative">
                 <b-row class="m-0">
@@ -23,7 +24,6 @@ import Navbar from "~/components/navbar/navbar"
 import Sidebar from "~/components/sidebar/sidebar"
 import Footer from "~/components/footer/footer"
 export default {
-  layout: 'default',
   components:{
       Navbar,
       Footer,

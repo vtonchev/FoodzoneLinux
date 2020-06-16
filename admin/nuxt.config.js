@@ -1,6 +1,9 @@
 //ADMIN
 require('dotenv').config();
 export default {
+  router: {
+    base: '/admin/'
+  },
   server: {
     host: process.env.SERVER_URL,
     port: process.env.SERVER_PORT, 
@@ -17,9 +20,9 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
-    link: [
-      { rel: 'stylesheet', href: '/css/default.css' }
-    ],
+    // link: [
+    //   { rel: 'stylesheet', href: '/css/default.css' }
+    // ],
     script:[
       { src:"https://kit.fontawesome.com/bac9e42282.js", crossorigin:"anonymous" }
     ],
@@ -32,6 +35,7 @@ export default {
   ** Global CSS
   */
   css: [
+    '~/assets/default.css',
   ],
   /*
   ** Plugins to load before mounting the App

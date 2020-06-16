@@ -11,13 +11,39 @@
         active-nav-item-class="font-weight-bold text-green"
         >
             <!-- FAVOURITE PRODUCTS -->
-            <b-tab class="pt-0 pl-2" active>
+            <b-tab class="pt-3 pl-2" active>
                 <template v-slot:title>
                     <div class="d-flex">
                         <i class="fas fa-heart fa-2x ml-auto"></i>
                         <span class="align-self-center ml-3 mr-auto">Любими продукти</span>
                     </div>
                 </template>
+                <b-row class="m-0">
+                    <b-col cols='6' sm='4' md='4' lg='3' class="p-0 mb-3 card_col" v-for='product in favouriteProducts' :key='product._id'>
+                        <Card 
+                        :product='product'
+                        >
+                        </Card> 
+                    </b-col>
+                </b-row>
+                <div v-show="favouriteProducts == false" class="text-center">
+                    <h4 class="no_content_heading">Все още нямате любими продукти !</h4>
+                </div>
+                <b-pagination
+                    v-model="currentPage"
+                    :total-rows="count"
+                    :per-page="perPage"
+                    align="center"
+                    last-class='text-success'
+                >
+                    <template v-slot:page="{ page, active }" >
+                        <span class="text-success" style="backgroud-color:red;">
+                            <b v-if="active" class="text-white pagination_active">{{ page }}</b>
+                            <i v-else>{{ page }}</i>
+                        </span>
+                        
+                    </template>
+                </b-pagination>
             </b-tab>
             <!-- LAST ORDERS -->
             <b-tab class="pt-3">
@@ -28,21 +54,25 @@
                     </div>
                 </template>
                 <div class="d-flex">
-                    <b-row>
+                    <b-row
+                    class="m-0 w-100"
+                    >
                         <b-col
-                        cols='4'
+                        cols='12'
                         v-for="order in orders" 
                         :key="order._id" 
-                        class="justify-content-between mb-2 border-bottom"
+                        class="mb-2 border-bottom text-center"
                         >
                             <b-button 
                                 variant='outline-info mb-2' 
                                 @click="$bvModal.show('modal' + order._id)"
+                                class="last_order_button"
                             >
                                 <b-card-text>{{order.orderDateTime.date}}, {{order.orderDateTime.timeframe}}ч.</b-card-text>
                             </b-button>
                             <b-modal 
-                            ok-only size='md' 
+                            ok-only 
+                            size='md' 
                             :id="'modal'+order._id"
                             >
                                 <template v-slot:modal-title>
@@ -58,6 +88,9 @@
                         </b-col>
                     </b-row>
                 </div>
+                <div v-show="orders == false" class="text-center">
+                    <h4 class="no_content_heading">Все още нямате направена поръчка !</h4>
+                </div>
             </b-tab>
             <!-- ACOUNT SETTINGS -->
             <b-tab>
@@ -71,7 +104,7 @@
                     <!-- ADDRESSES -->
                     <b-col cols='12' sm='6' class="pt-4 border-bottom  pb-5">
                         <div>Настоящи адреси</div>
-                        <div class='my-3 text-warning' v-if="addresses.length == 0">Нямате добавени адреси</div>
+                        <div class='my-3 text-warning' v-if="addresses == false">Нямате добавени адреси</div>
                         <div class="d-flex flex-column my-3" v-for="address in addresses" :key="address._id">
                             <div class="border rounded mb-2 text-left d-flex">
                                 <span>{{address.city}},<span v-if="address.housingArea"> {{address.housingArea}},</span> {{address.street}}</span>
@@ -185,25 +218,33 @@
 </template>
 <script>
 const FullInfo = () => import('~/components/order/FullInfo');
+import Card from "~/components/product/Card";
 export default {
     middleware: 'auth',
     auth: 'user',
     components:{
         FullInfo, 
+        Card
     },
-    async asyncData({$axios}){
+    async asyncData({$axios})
+    {
         let addressRes = $axios.$get('/api/address');
         let orderRes = $axios.$get('/api/order/user');
-        await Promise.all([addressRes, orderRes]).then((responses)=>{
-            addressRes = responses[0].addresses,
+        let favouriteProductsRes = $axios.$get('/api/user/favouriteProduct?page=1');
+        let count = null
+        await Promise.all([addressRes, orderRes, favouriteProductsRes]).then((responses)=>{
+            addressRes = responses[0].addresses
             orderRes = responses[1].orders
-                
+            favouriteProductsRes = responses[2].favouriteProducts
+            count = responses[2].count
         }).catch(err => {
          console.log(err)
-        })
+        });
         return{
             addresses: addressRes,
-            orders: orderRes
+            orders: orderRes,
+            favouriteProducts: favouriteProductsRes,
+            count: count
         }
         
     },
@@ -227,56 +268,106 @@ export default {
                 { value: 'Несебър стария град', text: 'Несебър стария град' },
                 { value: 'Несебър новия град', text: 'Несебър новия град' }
             ],
+            //pagination nav
+            count: null, 
+            perPage: 24,
+            currentPage: 1,
         }
+    },
+    watch: {
+        async currentPage(currentPage) {
+            await this.$axios.$get('/api/user/favouriteProduct' + '?page=' + this.currentPage)
+            .then((response)=>{
+                this.favouriteProducts = response.favouriteProducts;
+                }
+            )
+            window.scroll({
+                top: 0,
+                behavior: 'smooth'
+            })
+        },
     },
     methods:{
         async addAddress(){
             if(this.newAddress.city && this.newAddress.street){
                 if(this.addresses.length < 5){
-                    const data = this.newAddress
-                    const response = this.$axios.$post('/api/address', data)
-                    if(response){
+                    try {
+                        const data = this.newAddress
+                        const response = await this.$axios.$post('/api/address', data)
+                        this.$notify({
+                            type: 'success',
+                            title: 'Успешно!',
+                            text: 'Адреса е успешно добавен в профила Ви.',
+                        }) 
+                    } catch (err) {
+                        this.$notify({
+                            type: 'error',
+                            title: 'Грешка!',
+                            text: 'Възникна грешка в сървъра, моля, опитайте отново да добавите адрес.'
+                        }) 
+                    } finally {
                         const response = await this.$axios.$get('/api/address')
-                        return this.addresses = response.addresses
-                    } else {
-                        alert('възникна грешка')
-                    }
+                        this.addresses = response.addresses
+                    }    
                 } else {
-                    alert('не може да създавате повече от 5 адреса')
+                    this.$notify({
+                        type: 'warn',
+                        title: 'Внимание !',
+                        text: 'Не може да запазвате повече от 5 адреса на вашия акаунт.',
+                    })
                 }
             } 
         },
         async updateAddress(id){
-            try {
-                const address = this.addresses.find(address => address._id === id)
-                if(address.city && address.street){
+            const address = this.addresses.find(address => address._id === id)
+            if(address.city && address.street){
+                try {
                     const response = await this.$axios.$patch('api/address/'+id ,address)
-                    if(response){
-                        const response = await this.$axios.$get('api/address')
-                        return this.addresses = response.addresses
-                    } else {
-                        alert('възникна грешка')
-                    }
+                    this.$notify({
+                        type: 'success',
+                        title: 'Успешно!',
+                        text: 'Адреса е успешно променен.',
+                    }) 
+                } catch (err) {
+                    this.$notify({
+                        type: 'error',
+                        title: 'Грешка!',
+                        text: 'Възникна грешка в сървъра, моля опитайте отново.'
+                    })
+                } finally {
+                    const response = await this.$axios.$get('api/address')
+                    this.addresses = response.addresses
                 }
-            } catch (err) {
-                alert('възникна грешка')
+            } else {
+                this.$notify({
+                    type: 'warn',
+                    title: 'Внимание!',
+                    text: 'Не сте въвели всички необходими полета.'
+                }) 
             }
         },
         async deleteAddress(id){
-            try {
-                const confirmation = await this.confirm();
-                console.log(confirmation)
-                if(confirmation){
+            const confirmation = await this.confirm();
+            if(confirmation){
+                try {
                     const response = await this.$axios.$delete('api/address/'+ id);
-                    if(response.success){
-                        const response = await this.$axios.$get('api/address')
-                        return this.addresses = response.addresses
-                    } else {
-                        alert('възникна грешка')
-                    }
-                }
-            } catch (err) {
-                alert('възникна грешка')
+                    this.$notify({
+                        type: 'success',
+                        title: 'Успешно!',
+                        text: 'Адреса е успешно изтрит.',
+                    })
+                } catch (err) {
+                    this.$notify({
+                        type: 'error',
+                        title: 'Грешка!',
+                        text: 'Възникна грешка в сървъра, моля, опитайте да изтриете отново адреса.'
+                    })
+                } finally {
+                    const response = await this.$axios.$get('api/address')
+                    this.addresses = response.addresses
+                } 
+            } else {
+                return
             }
         },
         async changePassword(){
@@ -287,10 +378,19 @@ export default {
                         newPassword: this.newPassword
                     }
                 )
-                this.$auth.logout('local');
-                alert('Успешна промяна на паролата')
+                this.$notify({
+                    type: response.type,
+                    title: response.title,
+                    text: response.message,
+                })
+                if(response.type == 'success') this.$auth.logout('local')
+                else return
             } catch (err) {
-                alert('грешна парола');
+                this.$notify({
+                    type: 'error',
+                    title: 'Грешка !',
+                    text: 'Възникна грешка от страна на сървъра, моля опитайте пак.',
+                })
             }
             
         },
@@ -320,3 +420,13 @@ export default {
     }
 }
 </script>
+<style scoped>
+.last_order_button{
+    width: 100%;
+    max-width: 50%;
+    min-width: 240px;
+}
+.no_content_heading{
+    color: rgb(102, 102, 102);
+}
+</style>

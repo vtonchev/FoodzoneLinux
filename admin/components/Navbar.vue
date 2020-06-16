@@ -10,20 +10,20 @@
                         <b-collapse id="nav-collapse" is-nav>
                             <b-navbar-nav>
                                 <!-- Home button -->
-                                <b-nav-item href="/">Начало</b-nav-item>
+                                <b-nav-item href="/admin">Начало</b-nav-item>
                                 <!-- Product dropdown -->
                                 <b-nav-item-dropdown text="Промени/Изтрий"> 
-                                    <b-dropdown-item href="/product/update-delete">Продукти</b-dropdown-item>
-                                    <b-dropdown-item href='/category/update-delete'>Категории</b-dropdown-item>
+                                    <b-dropdown-item href="product/update-delete">Продукти</b-dropdown-item>
+                                    <b-dropdown-item href='category/update-delete'>Категории</b-dropdown-item>
                                 </b-nav-item-dropdown>
                                 <!-- Category dropdown -->
                                 <b-nav-item-dropdown text="Добави"> 
-                                    <b-dropdown-item href="/product/create">Продукти</b-dropdown-item>
-                                    <b-dropdown-item href="/category/create">Категории</b-dropdown-item>
-                                    <b-dropdown-item href="/subcategory/create">Подкатегории</b-dropdown-item>
-                                    <b-dropdown-item href='/timespan/create'>Дни за доставка</b-dropdown-item>
+                                    <b-dropdown-item href="product/create">Продукти</b-dropdown-item>
+                                    <b-dropdown-item href="category/create">Категории</b-dropdown-item>
+                                    <b-dropdown-item href="subcategory/create">Подкатегории</b-dropdown-item>
+                                    <b-dropdown-item href='timespan/create'>Дни за доставка</b-dropdown-item>
                                 </b-nav-item-dropdown>
-                                <b-nav-item href="/orders">Доставки</b-nav-item>
+                                <b-nav-item href="orders">Доставки</b-nav-item>
                                 <!-- Subcategory dropdown -->
                                 <!-- <b-nav-item-dropdown text="Подкатегории"> 
                                     <b-dropdown-item href="/subcategory/create">Добави</b-dropdown-item>

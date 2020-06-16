@@ -1,26 +1,26 @@
 <template>
     <div>
-        <b-row class="mt-3">
+        <b-row class="mt-3 table_wrapper">
             <table class="w-100" style="border:solid 3px black; font-size:14px">
                 <thead >
-                    <tr class="font-weight-bold">
+                    <tr class="font-weight-bold text-center">
                         <td class="border">Продукт</td>
                         <td class="border">Име</td>
-                        <td class="border d-none d-sm-table" >Код на продукта</td>
+                        <td class="border ">Код на продукта</td>
                         <td class="border">Количество</td>
                         <td class="border">Цена</td>
                         <td class="border">Общо</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="product in order.products" :key="product._id" class="border">
+                    <tr v-for="product in order.products" :key="product._id" class="border text-center">
                         <td class="border">
                             <img height="60" width="60" :src="product.product.photo.url" alt="">
                         </td>
                         <td class="border">
                             {{product.product.title}}
                         </td>
-                        <td class=" text-center d-none d-sm-table">
+                        <td class="">
                             {{product.product.productID}}
                         </td>
                         <td class="border">
@@ -37,7 +37,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <th class="d-none d-sm-table"></th>
+                        <th class=""></th>
                         <td>Общо:</td>
                         <td class="text-danger font-weight-bold" style="font-size:22px">
                             <span>{{totalPrice(order.products)}}</span>
@@ -62,3 +62,8 @@ export default {
     }
 }
 </script>
+<style>
+.table_wrapper{
+    overflow-x:auto;
+}
+</style>

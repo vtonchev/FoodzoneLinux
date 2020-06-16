@@ -7,6 +7,9 @@ const userSchema = new Schema({
         firstName: String,
         lastName:String
     },
+    favouriteProducts: [
+        { type: Schema.Types.ObjectId, ref:"Product"}
+    ],
     email: {type: String, unique: true, required: true},
     phone: {type: String},
     password: {type: String, required: true },

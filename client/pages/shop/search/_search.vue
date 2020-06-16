@@ -58,7 +58,7 @@ export default {
     },
     scrollToTop: false,
     async asyncData({$axios, route}){
-        const response = await $axios.$get('/api/products/search/page/' + route.params.search +'?page=1');
+        const response = await $axios.$get('/api/products/search/page/' + encodeURIComponent(route.params.search) +'?page=1');
         return{
             products: response.products,
             count: response.count

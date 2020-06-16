@@ -10,13 +10,13 @@
         fade 
       >
           <div class="carousel-item active">
-            <img src="/img/carousel2.jpg" class="d-block w-100" alt="...">
+            <img src="img/carousel2.jpg" class="d-block w-100" alt="...">
           </div>
           <div class="carousel-item">
-            <img src="/img/carousel1.jpg" class="d-block w-100"  alt="...">
+            <img src="img/carousel1.jpg" class="d-block w-100"  alt="...">
           </div>
           <div class="carousel-item">
-            <img src="/img/carousel3.png" class="d-block w-100"  alt="...">
+            <img src="img/carousel3.png" class="d-block w-100"  alt="...">
           </div>
       </b-carousel>
       <!-- <b-carousel
@@ -43,19 +43,19 @@
       <b-col cols='12' sm='6' lg='4' class="p-0" >
         <div @click="$router.push('/shop/sale')" class='subnavigation_img ' style=" background-position: left center;"> 
           <div class="badge_text" style="background: #E52121;"><span>На промоция</span></div>
-          <img src="/img/sale1.jpg" alt="">
+          <img src="/client/img/sale1.jpg" alt="">
         </div>
       </b-col>
       <b-col cols='12' sm='6' lg='4' class="p-0 mt-3 mt-sm-0 ">
         <div @click="$router.push('/shop/most-bought')" class='subnavigation_img ml-auto mx-lg-auto'> 
           <div class="badge_text" style="background: #64C042;"><span>Най Купувани</span></div>
-          <img src="/img/most-popular.jpg" alt="">
+          <img src="/client/img/most-popular.jpg" alt="">
         </div>
       </b-col>
       <b-col cols='12' sm='6' lg='4' class="p-0 mx-auto mt-3 mt-lg-0">
         <div @click="$router.push('/shop/suggested')" class='subnavigation_img mx-auto mr-lg-0 ml-lg-auto'> 
           <div class="badge_text" style="background: #FBDE44;"><span>Избрани Продукти</span></div>
-          <img style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" src="/img/suggested1.jpg" alt="">
+          <img style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" src="/client/img/suggested1.jpg" alt="">
         </div>
       </b-col>
     </b-row>

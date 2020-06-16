@@ -4,6 +4,7 @@
             <Loading/>
         </div>
         <div v-else>
+            <notifications position="bottom right" max='5' />
             <Navbar />
             <div class="container-fluid container_fluid_width p-0 position-relative">
                 <b-row class="m-0">

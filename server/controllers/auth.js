@@ -25,7 +25,8 @@ exports.register_New_User =  async function (req, res) {
                 name: req.body.name,
                 phone:req.body.phone,
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                favouriteProducts: []
             });
 
             //create random string
@@ -42,7 +43,6 @@ exports.register_New_User =  async function (req, res) {
                 text: "", // plain text body
                 html: "<h4>Здравейте моля потвъдете си имейла като натиснете този линк</h4> <а>" + process.env.CLIENT_SERVER_DOMAIN_NAME + "/emailverification/" + emailToken + "</а>", // html body
             });
-            console.log(email)
             await newUser.save();
             // const token = jwt.sign(newUser.toJSON(), process.env.TOKEN_SECRET, {
             //     expiresIn: 604800 // 1week
@@ -102,7 +102,7 @@ exports.verify_Email = async (req, res) => {
 
 exports.show_User = async (req,res) => {
     try{
-        let foundUser = await User.findOne({_id: req.decoded._id});
+        let foundUser = await (await User.findOne({_id: req.decoded._id})).populate('favouriteProducts');
         if (foundUser) {
             res.json({
                 success: true,
@@ -119,7 +119,7 @@ exports.show_User = async (req,res) => {
 
 exports.login_User = async (req, res) => {
     try {
-        const foundUser = await User.findOne({ email: req.body.email });
+        const foundUser = await User.findOne({ email: req.body.email }).populate('favouriteProducts');
         if (!foundUser) {
             res.status(401).json({
                 success: false,
@@ -161,17 +161,19 @@ exports.login_User = async (req, res) => {
 
 exports.change_Password = async (req, res) => {
     try {
-        console.log(req.body.password)
         let foundUser = await User.findOne({ _id: req.decoded._id });
         if (foundUser.comparePassword(req.body.password)) {
             foundUser.password = req.body.newPassword;
             await foundUser.save()
             res.json({ 
-                success: true, 
+                type: 'success',
+                title: 'Успешно !',
+                message: 'Вие променихте паролата си моля влезте отново в акаунта си.'
             })
         } else {
-            res.status(403).json({
-                success:false,
+            res.json({
+                type: 'error',
+                title: 'Грешка !',
                 message: 'Грешна парола'
             })
         }
@@ -183,3 +185,65 @@ exports.change_Password = async (req, res) => {
         })
     }
 };
+
+exports.favourite_Product = async (req, res) => {
+    try {
+        const foundUser = await User.findOne({ _id: req.decoded._id });
+        const isTheProductFavourite = foundUser.favouriteProducts.find((prod) => prod == req.body.favouriteProduct);
+        if(isTheProductFavourite){
+            await User.updateOne({ _id: req.decoded._id },
+                { $pull: { favouriteProducts: req.body.favouriteProduct } }
+            )
+            res.json({
+                type: 'success',
+                message: 'Успешно премахнахте продукта от любими продукти'
+            })
+        } else {
+            await User.updateOne({ _id: req.decoded._id },
+                {
+                    $push: { favouriteProducts: req.body.favouriteProduct}
+                }
+            )
+            res.json({
+                type: 'success',
+                message: 'Успешно добавихте любим продукт'
+            })
+        }
+    } catch (err) {
+        console.log(err)
+        res.json({
+            type: 'error',
+            message: 'Възникна ГРЕШКА при добавянето/премахването на любим продукт!'
+        })
+    }
+}
+
+exports.get_Favourite_Product = async (req, res) => {
+    try {
+        const offset = 24
+        const page = req.query.page;
+        const favouriteProducts = await User
+        .findOne({ _id: req.decoded._id }, 'favouriteProducts')
+        .populate({
+            path:'favouriteProducts',
+            options: {
+                limit: offset,
+                sort: {stockQuantity: -1},
+                skip: (page-1)*offset
+        
+            }
+        })
+        let count = await User.findOne({ _id: req.decoded._id },'favouriteProducts');
+        count = count.favouriteProducts.length
+        res.status(200).json({
+            success: true,
+            count: count,
+            favouriteProducts: favouriteProducts.favouriteProducts
+        })
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).json({
+            success: false,
+        })
+    }
+}

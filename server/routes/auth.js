@@ -13,5 +13,9 @@ router.get('/auth/user', verifyToken, authController.show_User);
 router.post('/auth/login', authController.login_User);
 // Change password
 router.post('/auth/password', verifyToken, authController.change_Password);
+// Add Favourite Product
+router.post('/user/favouriteProduct', verifyToken, authController.favourite_Product);
+// Get Favourite Products
+router.get('/user/favouriteProduct', verifyToken, authController.get_Favourite_Product)
 
 module.exports = router;

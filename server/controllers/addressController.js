@@ -13,29 +13,13 @@ exports.create_User_Address = async (req,res) => {
             apartment: req.body.apartment,
         });
         newAddress.save();
-        // const saveAddressAndUpdateUser = [
-        //     newAddress.save(),
-        //     User.findOneAndUpdate({_id: req.decoded._id},{
-        //         $set:{
-        //             address: newAddress._id
-        //         }
-        //     })
-        // ]
-        // Promise.all(saveAddressAndUpdateUser).then(() => {
-        //     res.json({
-        //         status: true,
-        //         message: "Successfully saved"
-        //     });
-        // }).catch((err) => {
-        //     res.status(500).json({
-        //         status: false,
-        //         message: err.message
-        //     })
-        // });
+        res.status(200).json({
+            success: true,
+        })
     } catch(err) {
         console.log(err)
         res.status(500).json({
-            status: false,
+            success: false,
             message: err.message
         })
     }
@@ -48,7 +32,7 @@ exports.update_User_Address = async (req,res) => {
                 $set: req.body
             }
         )
-        res.json({
+        res.status(200).json({
             success: true,
         })
     } catch (err) {

@@ -4,6 +4,7 @@
       <Loading/>
     </div>
     <div v-else> 
+      <notifications position="bottom right" max='5' />
       <Navbar />
       <nuxt />
       <Footer />

@@ -15,7 +15,7 @@
                 <img class="product_img" style="min-width:200px" :class="{ opacity : outOfStock }" :src="product.photo.url" alt="">
             </b-col>
             <!-- Описание -->
-            <b-col cols='12' lg='6' xl='4' style="min-width:300px;" class="p-0 pl-3 mb-3 ml-lg-auto ml-xl-0 d-flex flex-column">
+            <b-col cols='12' lg='6' xl='4' style="min-width:300px;" class="p-0 px-3 mb-3 ml-lg-auto ml-xl-0 d-flex flex-column">
                 <h5><b-badge>{{product.weight.$numberDecimal}} {{product.unit}}</b-badge></h5>
                 <!-- button -->
                 <span v-if="product.sale && !outOfStock">
@@ -56,8 +56,7 @@
                     @click='addProductToCart(product)' 
                     :class="{ 'buy_btn' : !outOfStock, 'disabled_btn' : outOfStock }"
                     :disabled='outOfStock'
-                    class="border rounded mr-3 mt-auto"
-                    style="float:none; height:30px;"
+                    class="border rounded mr-3 mt-auto w-100"
                 ><span class="fas fa-shopping-cart fa-1x"></span>Купи</button>
                 <div v-show="isInCart" class="mt-auto">
                     <QuantityController

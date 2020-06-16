@@ -15,7 +15,10 @@
             <img :src = product.photo.url class="card-img-top" :class="{ opacity : outOfStock }" :alt="'Продукт '+ product.title">
         </span>
         <div class="card-body" :class="{ addedProduct: isInCart }">
-            <button @click="$bvModal.show(product._id)" class="card-title bg-transparent transparent_btn border-0 p-0 w-100 mb-1">{{product.title}}</button>
+            <div class="d-flex position-relative">
+                <button @click="$bvModal.show(product._id)" class="card-title bg-transparent transparent_btn border-0 p-0 w-100 mb-1">{{product.title}}</button>
+                <div class="align-self-center heart_icon_wrapper" :class="{'is_favourite' : isFavourite(product._id)}" @click="addProductToFavourite(product._id)"><i class="fas fa-heart fa-2x heart_icon"></i></div>
+            </div>
             <FullInfo
                 :id="product._id" 
                 :product='product'
@@ -24,15 +27,15 @@
             <div class="w-100 text-center mb-1">
                 <h5><b-badge>{{product.weight.$numberDecimal}} {{product.unit}}</b-badge></h5>
             </div>
-            <span class="clearfix">
+            <span class="d-flex card_body_bottom">
                 <!-- SALE ONLY -->
                 <span v-if="product.sale && !outOfStock" class=" float-left position-relative">
                     <p class="old_price">{{product.oldPrice}}<small>лв</small></p>
                     <p class="promo_price">{{product.price.$numberDecimal}}<small>лв</small></p>
                 </span>
                 <!-- --------- -->
-                <span v-else class="font-weight-bold float-left price">{{product.price.$numberDecimal}}<small>лв</small></span>
-                <div v-show="isInCart" class="float-right">
+                <span v-else class="font-weight-bold price">{{product.price.$numberDecimal}}<small>лв</small></span>
+                <div v-show="isInCart" class="quantity_controller_wrapper">
                     <QuantityController
                     :id='product._id'
                     />
@@ -67,6 +70,30 @@ export default {
     props:['product','cardClass'],
     methods:{
         ...mapActions(['addProductToCart']),
+        async addProductToFavourite(productId){
+            if(this.$auth.loggedIn){
+                const response = await this.$axios.post('api/user/favouriteProduct', {favouriteProduct: productId});
+                this.$notify({
+                    type: response.data.type,
+                    max: 5,
+                    text: '<h6>' + response.data.message + '</h6>',
+                })
+                await this.$auth.fetchUser()
+            } else {
+                this.$notify({
+                    type: 'warn',
+                    title: 'Внимание !',
+                    text: '<h6>Трябва да се регистрирате за да добавите любим продукт.</h6>',
+                })
+            }
+        },
+        isFavourite(productId){
+            if(this.$auth.loggedIn){
+                return this.$auth.user.favouriteProducts.some(product => product === productId)  
+            } else {
+                return false
+            }
+        }
     },
     computed:{
         ...mapGetters(['getCart']),
@@ -79,4 +106,18 @@ export default {
     },
 }
 </script>
-
+<style>
+.heart_icon_wrapper{
+    position: absolute;
+    right: 0px;
+    top: -30px;
+    color: rgb(102, 102, 102);
+}
+.is_favourite {
+    color: rgb(230,69,40);
+}
+.heart_icon{
+    padding-left: 8px;
+    margin-right: -2px;
+}
+</style>
